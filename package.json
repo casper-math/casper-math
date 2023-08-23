@@ -1,0 +1,19 @@
+{
+    "name": "casper-math",
+    "version": "0.1.0",
+    "description": "Computer Algebra System in JavaScript",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "build": "tsc",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "math"
+    ],
+    "author": "Jeroen van Rensen",
+    "license": "ISC",
+    "dependencies": {
+        "typescript": "^5.1.6"
+    }
+}
