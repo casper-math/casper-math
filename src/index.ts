@@ -1,5 +1,4 @@
-function sum(a: number, b: number) {
-    return a + b
-}
+import Node from './Node'
+import Type from './Type'
 
-export { sum }
+new Node(Type.Operator, '+')
