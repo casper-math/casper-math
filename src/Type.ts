@@ -1,5 +1,9 @@
 enum Type {
-    Operator
+    BracketClose,
+    BracketOpen,
+    Number,
+    Operator,
+    Variable
 }
 
 export default Type
