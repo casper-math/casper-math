@@ -1,1 +1,5 @@
-export default () => console.log('Hello, world!')
+function sum(a: number, b: number) {
+    return a + b
+}
+
+export { sum }
