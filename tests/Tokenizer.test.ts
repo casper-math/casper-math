@@ -34,7 +34,6 @@ it('throws an error when the pattern cant be finished', () => {
 it('can tokenize functions', () => {
     let input = '3+sin(2*x)'
     let result = new Tokenizer().tokenize(input)
-    console.log(result)
 
     expect(result).toEqual([
         { type: Type.Number, value: '3' },
