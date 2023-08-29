@@ -29,7 +29,7 @@ export default class Node {
         return string
     }
 
-    root() {
+    root(): Node {
         return this.parent === null ? this : this.parent.root()
     }
 }
