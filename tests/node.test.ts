@@ -12,10 +12,35 @@ it('has zero children', () => {
     expect(node.children).toEqual([])
 })
 
+it('has no parent', () => {
+    let node = new Node(Type.Operator, '+')
+    expect(node.parent).toBeNull()
+})
+
+it('can set a parent', () => {
+    let parent = new Node(Type.Operator, '+')
+    let child = new Node(Type.Number, 3)
+    expect(child.parent).toBeNull()
+    child.setParent(parent)
+    expect(child.parent).toBe(parent)
+    child.setParent(null)
+    expect(child.parent).toBeNull()
+})
+
 it('can add a child', () => {
     let parent = new Node(Type.Operator, '+')
     let child = new Node(Type.Operator, 3)
     expect(parent.addChild(child)).toBe(child)
     expect(parent.children).toEqual([child])
     expect(parent.children[0]).toBe(child)
+    expect(child.parent).toBe(parent)
+})
+
+it('can convert a node to a string', () => {
+    let parent = new Node(Type.Operator, '+')
+    parent.addChild(new Node(Type.Variable, 'x'))
+    parent.addChild(new Node(Type.Number, 3))
+
+    let result = parent.toString()
+    expect(result).toBe('+\n  x\n  3\n')
 })
