@@ -1,7 +1,18 @@
 import Tokenizer from './../src/Tokenizer'
 import Type from './../src/Type'
 
-it('can tokenize a string', () => {
+it('can tokenize a simple expression', () => {
+    let input = '2 + 3'
+    let result = new Tokenizer().tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '3' }
+    ])
+})
+
+it('can tokenize an expression with brackets', () => {
     let input = '(x + 3)'
     let result = new Tokenizer().tokenize(input)
 
@@ -44,5 +55,22 @@ it('can tokenize functions', () => {
         { type: Type.Operator, value: '*' },
         { type: Type.Variable, value: 'x' },
         { type: Type.BracketClose, value: ')' }
+    ])
+})
+
+it('can tokenize different number formats', () => {
+    let input = '0.5 + .54 + -4 + -0.45 + -.2'
+    let result = new Tokenizer().tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '0.5' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '.54' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-4' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-0.45' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-.2' }
     ])
 })
