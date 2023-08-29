@@ -25,9 +25,11 @@ export default class Node {
 
     toString(indent: number = 0) {
         let string = ' '.repeat(indent) + this.value.toString() + '\n'
-
         this.children.forEach(child => (string = string + child.toString(indent + 2)))
-
         return string
+    }
+
+    root() {
+        return this.parent === null ? this : this.parent.root()
     }
 }

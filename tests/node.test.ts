@@ -44,3 +44,13 @@ it('can convert a node to a string', () => {
     let result = parent.toString()
     expect(result).toBe('+\n  x\n  3\n')
 })
+
+it('can find its root', () => {
+    let root = new Node(Type.Operator, '+')
+    let parent = root.addChild(new Node(Type.Operator, '*'))
+    let child = parent.addChild(new Node(Type.Number, 3))
+
+    expect(root.root()).toBe(root)
+    expect(parent.root()).toBe(root)
+    expect(child.root()).toBe(root)
+})
