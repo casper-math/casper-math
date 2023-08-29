@@ -7,6 +7,12 @@ it('can instantiate a new node', () => {
     expect(node.value).toBe('+')
 })
 
+test('numbers will be casted', () => {
+    let node = new Node(Type.Number, '3')
+    expect(node.value).not.toBe('3')
+    expect(node.value).toBe(3)
+})
+
 it('has zero children', () => {
     let node = new Node(Type.Operator, '+')
     expect(node.children).toEqual([])

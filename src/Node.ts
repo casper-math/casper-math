@@ -8,7 +8,7 @@ export default class Node {
 
     constructor(type: Type, value: string | number) {
         this.type = type
-        this.value = value
+        this.value = type === Type.Number ? Number(value) : value
         this.children = []
         this.parent = null
     }
