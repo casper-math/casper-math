@@ -60,3 +60,22 @@ it('can find its root', () => {
     expect(parent.root()).toBe(root)
     expect(child.root()).toBe(root)
 })
+
+it('can replace a child', () => {
+    let parent = new Node(Type.Operator, '+')
+    let child1 = parent.addChild(new Node(Type.Number, 1))
+    let child2 = parent.addChild(new Node(Type.Number, 2))
+    let child3 = new Node(Type.Number, 3)
+
+    expect(parent.children).toEqual([child1, child2])
+    expect(child1.parent).toBe(parent)
+    expect(child2.parent).toBe(parent)
+    expect(child3.parent).toBeNull()
+
+    parent.replaceChild(child2, child3)
+
+    expect(parent.children).toEqual([child1, child3])
+    expect(child1.parent).toBe(parent)
+    expect(child2.parent).toBeNull()
+    expect(child3.parent).toBe(parent)
+})

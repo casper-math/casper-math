@@ -23,6 +23,14 @@ export default class Node {
         return child
     }
 
+    replaceChild(search: Node, replace: Node) {
+        let index = this.children.indexOf(search)
+        this.children[index] = replace
+
+        search.setParent(null)
+        replace.setParent(this)
+    }
+
     toString(indent: number = 0) {
         let string = ' '.repeat(indent) + this.value.toString() + '\n'
         this.children.forEach(child => (string = string + child.toString(indent + 2)))
