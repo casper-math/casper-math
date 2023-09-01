@@ -14,7 +14,12 @@ export default class Parser {
             } else if (token.type === Type.BracketClose) {
                 throw new Error('Not yet implemented.')
             } else if (token.type === Type.Number || token.type === Type.Variable || token.type === Type.Function) {
-                node = node.addChild(new Node(token.type, token.value))
+                if (node.type === Type.Number || node.type === Type.Variable || token.type === Type.Function) {
+                    if (!node.parent) throw new Error('Error.')
+                    node = node.parent.addChild(new Node(token.type, token.value))
+                } else {
+                    node = node.addChild(new Node(token.type, token.value))
+                }
             } else if (this.precedence(token) > this.precedence(node)) {
                 throw new Error('Not yet implemented.')
             } else if (node.parent === null) {
@@ -24,7 +29,22 @@ export default class Parser {
             } else if (node.parent.type === Type.BracketOpen) {
                 throw new Error('Not yet implemented.')
             } else {
-                throw new Error('Not yet implemented.')
+                let done = false
+                while (!done) {
+                    if (node.parent === null) {
+                        done = true
+                        let parent = new Node(token.type, token.value)
+                        parent.addChild(node)
+                        node = parent
+                    } else if (this.precedence(token) < this.precedence(node.parent)) {
+                        node = node.parent
+                    } else {
+                        done = true
+                        let parent = new Node(token.type, token.value)
+                        parent.insertBetween(node.parent, node)
+                        node = parent
+                    }
+                }
             }
         })
 
