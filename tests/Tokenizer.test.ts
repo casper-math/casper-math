@@ -85,3 +85,14 @@ it('can tokenize powers', () => {
         { type: Type.Number, value: '3' }
     ])
 })
+
+it('can tokenize divisions', () => {
+    let input = '2 / 3'
+    let result = new Tokenizer().tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '/' },
+        { type: Type.Number, value: '3' }
+    ])
+})
