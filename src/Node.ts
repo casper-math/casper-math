@@ -40,4 +40,9 @@ export default class Node {
     root(): Node {
         return this.parent === null ? this : this.parent.root()
     }
+
+    insertBetween(parent: Node, child: Node) {
+        parent.replaceChild(child, this)
+        this.addChild(child)
+    }
 }

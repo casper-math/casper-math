@@ -79,3 +79,28 @@ it('can replace a child', () => {
     expect(child2.parent).toBeNull()
     expect(child3.parent).toBe(parent)
 })
+
+it('can insert a node between two nodes', () => {
+    let node = new Node(Type.Operator, '*')
+    let parent = new Node(Type.Operator, '+')
+    let child = parent.addChild(new Node(Type.Number, 3))
+
+    expect(node.parent).toBeNull()
+    expect(node.children).toEqual([])
+    expect(parent.parent).toBeNull()
+    expect(parent.children).toEqual([child])
+    expect(parent.children[0]).toBe(child)
+    expect(child.parent).toBe(parent)
+    expect(child.children).toEqual([])
+
+    node.insertBetween(parent, child)
+
+    expect(node.parent).toBe(parent)
+    expect(node.children).toEqual([child])
+    expect(node.children[0]).toBe(child)
+    expect(parent.parent).toBeNull()
+    expect(parent.children).toEqual([node])
+    expect(parent.children[0]).toBe(node)
+    expect(child.parent).toBe(node)
+    expect(child.children).toEqual([])
+})
