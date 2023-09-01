@@ -36,7 +36,7 @@ export default class Tokenizer {
             '\\(': Type.BracketOpen,
             '[a-zA-Z_][a-zA-Z0-9_]*(?![a-zA-Z0-9_(])': Type.Variable,
             '[a-zA-Z_][a-zA-Z0-9_]*(?=\\()': Type.Function,
-            '(\\+|\\*)': Type.Operator,
+            '(\\+|\\*|\\^)': Type.Operator,
             '-?([0-9]+(\\.[0-9]+)?|\\.[0-9]+)': Type.Number,
             '\\)': Type.BracketClose
         }
