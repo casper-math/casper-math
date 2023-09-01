@@ -129,3 +129,41 @@ it('can parse an expression with three operators #6', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse an associative operator', () => {
+    let input = new Tokenizer().tokenize('2 * 3 * 4')
+    let result = new Parser().parse(input)
+
+    let root = new Node(Type.Operator, '*')
+    root.addChild(new Node(Type.Number, 2))
+    root.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})
+
+it.skip('can parse a non-associative operator left-to-right', () => {
+    let input = new Tokenizer().tokenize('2 / 3 / 4')
+    let result = new Parser().parse(input)
+
+    let root = new Node(Type.Operator, '/')
+    let division = root.addChild(new Node(Type.Operator, '/'))
+    division.addChild(new Node(Type.Number, 2))
+    division.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 3))
+
+    expect(result).toEqual(root)
+})
+
+it('can parse a non-associative operator right-to-left', () => {
+    let input = new Tokenizer().tokenize('2 ^ 3 ^ 4')
+    let result = new Parser().parse(input)
+
+    let root = new Node(Type.Operator, '^')
+    root.addChild(new Node(Type.Number, 2))
+    let power = root.addChild(new Node(Type.Operator, '^'))
+    power.addChild(new Node(Type.Number, 3))
+    power.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})

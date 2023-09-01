@@ -38,6 +38,9 @@ export default class Parser {
                         node = parent
                     } else if (this.precedence(token) < this.precedence(node.parent)) {
                         node = node.parent
+                    } else if (token.value === node.parent.value && this.operator(token).associative) {
+                        done = true
+                        node = node.parent
                     } else {
                         done = true
                         let parent = new Node(token.type, token.value)
@@ -53,7 +56,7 @@ export default class Parser {
 
     private precedence(symbol: Token | Node) {
         if (symbol.type === Type.Operator) {
-            return this.operators().filter(operator => operator.symbol === symbol.value)[0].precedence
+            return this.operator(symbol).precedence
         }
 
         if (symbol.type === Type.BracketOpen || symbol.type === Type.BracketClose) {
@@ -61,6 +64,10 @@ export default class Parser {
         }
 
         return Math.max(...this.operators().map(operator => operator.precedence)) + 1
+    }
+
+    private operator(symbol: Token | Node) {
+        return this.operators().filter(operator => operator.symbol === symbol.value)[0]
     }
 
     private operators(): Operator[] {
