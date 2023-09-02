@@ -12,7 +12,15 @@ export default class Parser {
             if (token.type === Type.BracketOpen) {
                 throw new Error('Not yet implemented.')
             } else if (token.type === Type.BracketClose) {
-                throw new Error('Not yet implemented.')
+                let done = false
+                while (!done) {
+                    if (node.type === Type.BracketOpen) {
+                        done = true
+                    } else {
+                        if (!node.parent) throw Error('Error.')
+                        node = node.parent
+                    }
+                }
             } else if (token.type === Type.Number || token.type === Type.Variable || token.type === Type.Function) {
                 if (node.type === Type.Number || node.type === Type.Variable || token.type === Type.Function) {
                     if (!node.parent) throw new Error('Error.')
@@ -21,13 +29,15 @@ export default class Parser {
                     node = node.addChild(new Node(token.type, token.value))
                 }
             } else if (this.precedence(token) > this.precedence(node)) {
-                throw new Error('Not yet implemented.')
+                node = node.addChild(new Node(token.type, token.value))
             } else if (node.parent === null) {
                 let parent = new Node(token.type, token.value)
                 parent.addChild(node)
                 node = parent
             } else if (node.parent.type === Type.BracketOpen) {
-                throw new Error('Not yet implemented.')
+                let parent = new Node(token.type, token.value)
+                parent.insertBetween(node.parent, node)
+                node = parent
             } else {
                 let done = false
                 while (!done) {
@@ -53,7 +63,7 @@ export default class Parser {
             }
         })
 
-        return node.root()
+        return this.removeBrackets(node.root())
     }
 
     private precedence(symbol: Token | Node) {
@@ -62,7 +72,7 @@ export default class Parser {
         }
 
         if (symbol.type === Type.BracketOpen || symbol.type === Type.BracketClose) {
-            return 0
+            return Math.max(...this.operators().map(operator => operator.precedence)) + 2
         }
 
         return Math.max(...this.operators().map(operator => operator.precedence)) + 1
@@ -70,6 +80,23 @@ export default class Parser {
 
     private operator(symbol: Token | Node) {
         return this.operators().filter(operator => operator.symbol === symbol.value)[0]
+    }
+
+    private removeBrackets(node: Node): Node {
+        node.setChildren(node.children.map(child => this.removeBrackets(child)))
+
+        if (node.type !== Type.BracketOpen) {
+            return node
+        }
+
+        if (!node.parent) {
+            let child = node.children[0]
+            child.setParent(null)
+            return child
+        }
+
+        node.children[0].setParent(node.parent)
+        return node.children[0]
     }
 
     private operators(): Operator[] {

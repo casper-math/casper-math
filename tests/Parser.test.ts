@@ -167,3 +167,18 @@ it('can parse a non-associative operator right-to-left', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse a simple expression with brackets #1', () => {
+    let input = new Tokenizer().tokenize('(2 + 3) * 4')
+    let result = new Parser().parse(input)
+
+    let root = new Node(Type.Operator, '*')
+    let plus = root.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 2))
+    plus.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
+
+    console.log(result.toString())
+
+    expect(result).toEqual(root)
+})
