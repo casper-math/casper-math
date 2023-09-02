@@ -44,11 +44,17 @@ it('can add a child', () => {
 
 it('can convert a node to a string', () => {
     let parent = new Node(Type.Operator, '+')
+    let times = parent.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Variable, 'y'))
+    times.addChild(new Node(Type.Number, 2))
     parent.addChild(new Node(Type.Variable, 'x'))
     parent.addChild(new Node(Type.Number, 3))
+    let division = parent.addChild(new Node(Type.Operator, '/'))
+    division.addChild(new Node(Type.Number, 4))
+    division.addChild(new Node(Type.Variable, 'z'))
 
     let result = parent.toString()
-    expect(result).toBe('+\n  x\n  3\n')
+    expect(result).toBe('+\r\n├─ *\r\n│  ├─ y\r\n│  └─ 2\r\n├─ x\r\n├─ 3\r\n└─ /\r\n   ├─ 4\r\n   └─ z')
 })
 
 it('can find its root', () => {

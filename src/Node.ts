@@ -1,4 +1,5 @@
 import Type from './Type'
+const asciitree = require('ascii-tree')
 
 export default class Node {
     type: Type
@@ -31,10 +32,10 @@ export default class Node {
         replace.setParent(this)
     }
 
-    toString(indent: number = 0) {
-        let string = ' '.repeat(indent) + this.value.toString() + '\n'
-        this.children.forEach(child => (string = string + child.toString(indent + 2)))
-        return string
+    toString(indent: number = 1) {
+        let string = '#'.repeat(indent) + this.value.toString() + '\r\n'
+        this.children.forEach(child => (string += child.toString(indent + 1)))
+        return indent === 1 ? asciitree.generate(string) : string
     }
 
     root(): Node {
