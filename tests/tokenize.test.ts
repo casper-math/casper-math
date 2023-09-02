@@ -1,9 +1,9 @@
-import Tokenizer from './../src/Tokenizer'
-import Type from './../src/Type'
+import Type from '../src/type'
+import tokenize from './../src/tokenize'
 
 it('can tokenize a simple expression', () => {
     let input = '2 + 3'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -14,7 +14,7 @@ it('can tokenize a simple expression', () => {
 
 it('can tokenize an expression with brackets', () => {
     let input = '(x + 3)'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.BracketOpen, value: '(' },
@@ -27,7 +27,7 @@ it('can tokenize an expression with brackets', () => {
 
 it('can tokenize a string with complex variable names', () => {
     let input = 'something_3 + IAMAVARIABLE'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Variable, value: 'something_3' },
@@ -38,13 +38,13 @@ it('can tokenize a string with complex variable names', () => {
 
 it('throws an error when the pattern cant be finished', () => {
     let input = '(x + @)'
-    let result = () => new Tokenizer().tokenize(input)
+    let result = () => tokenize(input)
     expect(result).toThrow('Syntax error: cannot parse "(x+@)".')
 })
 
 it('can tokenize functions', () => {
     let input = '3+sin(2*x)'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '3' },
@@ -60,7 +60,7 @@ it('can tokenize functions', () => {
 
 it('can tokenize different number formats', () => {
     let input = '0.5 + .54 + -4 + -0.45 + -.2'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '0.5' },
@@ -77,7 +77,7 @@ it('can tokenize different number formats', () => {
 
 it('can tokenize powers', () => {
     let input = '2 ^ 3'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -88,7 +88,7 @@ it('can tokenize powers', () => {
 
 it('can tokenize divisions', () => {
     let input = '2 / 3'
-    let result = new Tokenizer().tokenize(input)
+    let result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },

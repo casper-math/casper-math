@@ -1,4 +1,4 @@
-import Node from './Node'
-import Type from './Type'
+import Node from './node'
+import Type from './type'
 
 new Node(Type.Operator, '+')
