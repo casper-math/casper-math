@@ -104,3 +104,13 @@ it('can insert a node between two nodes', () => {
     expect(child.parent).toBe(node)
     expect(child.children).toEqual([])
 })
+
+it('can set its children', () => {
+    let parent = new Node(Type.Operator, '+')
+    let child1 = parent.addChild(new Node(Type.Number, 2))
+    let child2 = new Node(Type.Number, 3)
+
+    expect(parent.children).toEqual([child1])
+    parent.setChildren([child2])
+    expect(parent.children).toEqual([child2])
+})

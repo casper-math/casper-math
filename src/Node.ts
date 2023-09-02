@@ -45,4 +45,8 @@ export default class Node {
         parent.replaceChild(child, this)
         this.addChild(child)
     }
+
+    setChildren(children: Node[]) {
+        this.children = children
+    }
 }
