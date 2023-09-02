@@ -1,11 +1,9 @@
 import Node from '../src/node'
 import Type from '../src/type'
 import parse from './../src/parse'
-import tokenize from './../src/tokenize'
 
 test('it can parse an expressin with one operator', () => {
-    let input = tokenize('2 + 3')
-    let result = parse(input)
+    let result = parse('2 + 3')
 
     let root = new Node(Type.Operator, '+')
     root.addChild(new Node(Type.Number, 2))
@@ -15,8 +13,7 @@ test('it can parse an expressin with one operator', () => {
 })
 
 it('can parse an expression with two operators #1', () => {
-    let input = tokenize('2 + 3 * 4')
-    let result = parse(input)
+    let result = parse('2 + 3 * 4')
 
     let root = new Node(Type.Operator, '+')
     root.addChild(new Node(Type.Number, 2))
@@ -28,8 +25,7 @@ it('can parse an expression with two operators #1', () => {
 })
 
 it('can parse an expression with two operators #2', () => {
-    let input = tokenize('2 * 3 + 4')
-    let result = parse(input)
+    let result = parse('2 * 3 + 4')
 
     let root = new Node(Type.Operator, '+')
     let times = root.addChild(new Node(Type.Operator, '*'))
@@ -41,8 +37,7 @@ it('can parse an expression with two operators #2', () => {
 })
 
 it('can parse an expression with three operators #1', () => {
-    let input = tokenize('2 + 3 * 4 ^ 5')
-    let result = parse(input)
+    let result = parse('2 + 3 * 4 ^ 5')
 
     let root = new Node(Type.Operator, '+')
     root.addChild(new Node(Type.Number, 2))
@@ -56,8 +51,7 @@ it('can parse an expression with three operators #1', () => {
 })
 
 it('can parse an expression with three operators #2', () => {
-    let input = tokenize('2 + 3 ^ 4 * 5')
-    let result = parse(input)
+    let result = parse('2 + 3 ^ 4 * 5')
 
     let root = new Node(Type.Operator, '+')
     root.addChild(new Node(Type.Number, 2))
@@ -71,8 +65,7 @@ it('can parse an expression with three operators #2', () => {
 })
 
 it('can parse an expression with three operators #3', () => {
-    let input = tokenize('2 * 3 + 4 ^ 5')
-    let result = parse(input)
+    let result = parse('2 * 3 + 4 ^ 5')
 
     let root = new Node(Type.Operator, '+')
     let times = root.addChild(new Node(Type.Operator, '*'))
@@ -86,8 +79,7 @@ it('can parse an expression with three operators #3', () => {
 })
 
 it('can parse an expression with three operators #4', () => {
-    let input = tokenize('2 * 3 ^ 4 + 5')
-    let result = parse(input)
+    let result = parse('2 * 3 ^ 4 + 5')
 
     let root = new Node(Type.Operator, '+')
     let times = root.addChild(new Node(Type.Operator, '*'))
@@ -101,8 +93,7 @@ it('can parse an expression with three operators #4', () => {
 })
 
 it('can parse an expression with three operators #5', () => {
-    let input = tokenize('2 ^ 3 + 4 * 5')
-    let result = parse(input)
+    let result = parse('2 ^ 3 + 4 * 5')
 
     let root = new Node(Type.Operator, '+')
     let power = root.addChild(new Node(Type.Operator, '^'))
@@ -116,8 +107,7 @@ it('can parse an expression with three operators #5', () => {
 })
 
 it('can parse an expression with three operators #6', () => {
-    let input = tokenize('2 ^ 3 * 4 + 5')
-    let result = parse(input)
+    let result = parse('2 ^ 3 * 4 + 5')
 
     let root = new Node(Type.Operator, '+')
     let times = root.addChild(new Node(Type.Operator, '*'))
@@ -131,8 +121,7 @@ it('can parse an expression with three operators #6', () => {
 })
 
 it('can parse an associative operator', () => {
-    let input = tokenize('2 * 3 * 4')
-    let result = parse(input)
+    let result = parse('2 * 3 * 4')
 
     let root = new Node(Type.Operator, '*')
     root.addChild(new Node(Type.Number, 2))
@@ -143,8 +132,7 @@ it('can parse an associative operator', () => {
 })
 
 it('can parse a non-associative operator left-to-right', () => {
-    let input = tokenize('2 / 3 / 4')
-    let result = parse(input)
+    let result = parse('2 / 3 / 4')
 
     let root = new Node(Type.Operator, '/')
     let division = root.addChild(new Node(Type.Operator, '/'))
@@ -156,8 +144,7 @@ it('can parse a non-associative operator left-to-right', () => {
 })
 
 it('can parse a non-associative operator right-to-left', () => {
-    let input = tokenize('2 ^ 3 ^ 4')
-    let result = parse(input)
+    let result = parse('2 ^ 3 ^ 4')
 
     let root = new Node(Type.Operator, '^')
     root.addChild(new Node(Type.Number, 2))
@@ -169,8 +156,7 @@ it('can parse a non-associative operator right-to-left', () => {
 })
 
 it('can parse a simple expression with brackets #1', () => {
-    let input = tokenize('(2 + 3) * 4')
-    let result = parse(input)
+    let result = parse('(2 + 3) * 4')
 
     let root = new Node(Type.Operator, '*')
     let plus = root.addChild(new Node(Type.Operator, '+'))
@@ -182,8 +168,7 @@ it('can parse a simple expression with brackets #1', () => {
 })
 
 it('can parse a simple expression with brackets #2', () => {
-    let input = tokenize('2 * (3 + 4)')
-    let result = parse(input)
+    let result = parse('2 * (3 + 4)')
 
     let root = new Node(Type.Operator, '*')
     root.addChild(new Node(Type.Number, 2))
@@ -195,8 +180,7 @@ it('can parse a simple expression with brackets #2', () => {
 })
 
 it('can parse an expression with nested brackets', () => {
-    let input = tokenize('(((2) * (3 + 4)))')
-    let result = parse(input)
+    let result = parse('(((2) * (3 + 4)))')
 
     let root = new Node(Type.Operator, '*')
     root.addChild(new Node(Type.Number, 2))

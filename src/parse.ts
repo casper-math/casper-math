@@ -1,9 +1,11 @@
 import Node from './node'
 import Operator from './operator'
 import Token from './token'
+import tokenize from './tokenize'
 import Type from './type'
 
-export default function parse(tokens: Token[]): Node {
+export default function parse(expression: string): Node {
+    let tokens = tokenize(expression)
     let node = new Node(tokens[0].type, tokens[0].value)
     tokens.shift()
 
