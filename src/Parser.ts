@@ -10,7 +10,7 @@ export default class Parser {
 
         tokens.forEach(token => {
             if (token.type === Type.BracketOpen) {
-                throw new Error('Not yet implemented.')
+                node = node.addChild(new Node(token.type, token.value))
             } else if (token.type === Type.BracketClose) {
                 let done = false
                 while (!done) {
