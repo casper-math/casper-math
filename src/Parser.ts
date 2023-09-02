@@ -41,6 +41,8 @@ export default class Parser {
                     } else if (token.value === node.parent.value && this.operator(token).associative) {
                         done = true
                         node = node.parent
+                    } else if (token.value === node.parent.value && this.operator(token).evaluate === 'ltr') {
+                        node = node.parent
                     } else {
                         done = true
                         let parent = new Node(token.type, token.value)

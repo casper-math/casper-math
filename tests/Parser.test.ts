@@ -142,7 +142,7 @@ it('can parse an associative operator', () => {
     expect(result).toEqual(root)
 })
 
-it.skip('can parse a non-associative operator left-to-right', () => {
+it('can parse a non-associative operator left-to-right', () => {
     let input = new Tokenizer().tokenize('2 / 3 / 4')
     let result = new Parser().parse(input)
 
@@ -150,7 +150,7 @@ it.skip('can parse a non-associative operator left-to-right', () => {
     let division = root.addChild(new Node(Type.Operator, '/'))
     division.addChild(new Node(Type.Number, 2))
     division.addChild(new Node(Type.Number, 3))
-    root.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
 
     expect(result).toEqual(root)
 })
