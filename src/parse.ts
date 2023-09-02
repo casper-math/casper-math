@@ -16,18 +16,11 @@ export default function parse(tokens: Token[]): Node {
                 if (node.type === Type.BracketOpen) {
                     done = true
                 } else {
-                    if (!node.parent) throw Error('Error.')
+                    // @ts-ignore
                     node = node.parent
                 }
             }
         } else if (token.type === Type.Number || token.type === Type.Variable || token.type === Type.Function) {
-            if (node.type === Type.Number || node.type === Type.Variable || token.type === Type.Function) {
-                if (!node.parent) throw new Error('Error.')
-                node = node.parent.addChild(new Node(token.type, token.value))
-            } else {
-                node = node.addChild(new Node(token.type, token.value))
-            }
-        } else if (precedence(token) > precedence(node)) {
             node = node.addChild(new Node(token.type, token.value))
         } else if (node.parent === null) {
             let parent = new Node(token.type, token.value)
@@ -45,7 +38,7 @@ export default function parse(tokens: Token[]): Node {
                     let parent = new Node(token.type, token.value)
                     parent.addChild(node)
                     node = parent
-                } else if (precedence(token) < precedence(node.parent)) {
+                } else if (operator(token).precedence < operator(node.parent).precedence) {
                     node = node.parent
                 } else if (token.value === node.parent.value && operator(token).associative) {
                     done = true
@@ -63,18 +56,6 @@ export default function parse(tokens: Token[]): Node {
     })
 
     return removeBrackets(node.root())
-}
-
-function precedence(symbol: Token | Node): number {
-    if (symbol.type === Type.Operator) {
-        return operator(symbol).precedence
-    }
-
-    if (symbol.type === Type.BracketOpen || symbol.type === Type.BracketClose) {
-        return Math.max(...operators().map(operator => operator.precedence)) + 2
-    }
-
-    return Math.max(...operators().map(operator => operator.precedence)) + 1
 }
 
 function operator(symbol: Token | Node): Operator {
