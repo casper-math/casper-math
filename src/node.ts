@@ -33,7 +33,11 @@ export default class Node {
     }
 
     toString(indent: number = 1) {
-        let string = '#'.repeat(indent) + this.value.toString() + '\r\n'
+        let string =
+            '#'.repeat(indent) +
+            this.value.toString() +
+            (this.parent ? ` [${this.parent.value.toString()}]` : ' [null]') +
+            '\r\n'
         this.children.forEach(child => (string += child.toString(indent + 1)))
         return indent === 1 ? asciitree.generate(string) : string
     }

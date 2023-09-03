@@ -54,7 +54,9 @@ it('can convert a node to a string', () => {
     division.addChild(new Node(Type.Variable, 'z'))
 
     let result = parent.toString()
-    expect(result).toBe('+\r\n├─ *\r\n│  ├─ y\r\n│  └─ 2\r\n├─ x\r\n├─ 3\r\n└─ /\r\n   ├─ 4\r\n   └─ z')
+    expect(result).toBe(
+        '+ [null]\r\n├─ * [+]\r\n│  ├─ y [*]\r\n│  └─ 2 [*]\r\n├─ x [+]\r\n├─ 3 [+]\r\n└─ / [+]\r\n   ├─ 4 [/]\r\n   └─ z [/]'
+    )
 })
 
 it('can find its root', () => {
