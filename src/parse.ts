@@ -1,3 +1,4 @@
+import config from './config'
 import Node from './node'
 import Operator from './operator'
 import Token from './token'
@@ -61,7 +62,9 @@ export default function parse(expression: string): Node {
 }
 
 function operator(symbol: Token | Node): Operator {
-    return operators().filter(operator => operator.symbol === symbol.value)[0]
+    return config()
+        .operators()
+        .filter(operator => operator.symbol === symbol.value)[0]
 }
 
 function removeBrackets(node: Node): Node {
@@ -79,44 +82,4 @@ function removeBrackets(node: Node): Node {
 
     node.children[0].setParent(node.parent)
     return node.children[0]
-}
-
-function operators(): Operator[] {
-    return [
-        {
-            symbol: '+',
-            associative: true,
-            commutative: true,
-            evaluate: 'ltr',
-            precedence: 1
-        },
-        {
-            symbol: '-',
-            associative: false,
-            commutative: false,
-            evaluate: 'ltr',
-            precedence: 1
-        },
-        {
-            symbol: '*',
-            associative: true,
-            commutative: true,
-            evaluate: 'ltr',
-            precedence: 2
-        },
-        {
-            symbol: '/',
-            associative: false,
-            commutative: false,
-            evaluate: 'ltr',
-            precedence: 2
-        },
-        {
-            symbol: '^',
-            associative: false,
-            commutative: false,
-            evaluate: 'rtl',
-            precedence: 3
-        }
-    ]
 }
