@@ -7,7 +7,7 @@ export default function config(): Config {
 class Config {
     private static instance: Config
 
-    private options: { operators: Operator[] } = {
+    private options: { operators: Operator[]; constants: string[] } = {
         operators: [
             {
                 symbol: '+',
@@ -44,7 +44,8 @@ class Config {
                 evaluate: 'rtl',
                 precedence: 3
             }
-        ]
+        ],
+        constants: ['e', 'i', 'pi']
     }
 
     public static getInstance(): Config {
@@ -61,5 +62,13 @@ class Config {
 
     setOperators(operators: Operator[]): void {
         this.options.operators = operators
+    }
+
+    constants(): string[] {
+        return this.options.constants
+    }
+
+    setConstants(constants: string[]): void {
+        this.options.constants = constants
     }
 }

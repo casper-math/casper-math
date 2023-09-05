@@ -96,3 +96,18 @@ it('can tokenize divisions', () => {
         { type: Type.Number, value: '3' }
     ])
 })
+
+it('can tokenize constants', () => {
+    let input = 'e^(i*pi)'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Constant, value: 'e' },
+        { type: Type.Operator, value: '^' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Constant, value: 'i' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Constant, value: 'pi' },
+        { type: Type.BracketClose, value: ')' }
+    ])
+})

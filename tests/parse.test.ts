@@ -190,3 +190,15 @@ it('can parse an expression with nested brackets', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse constants', () => {
+    let result = parse('e^(i*pi)')
+
+    let root = new Node(Type.Operator, '^')
+    root.addChild(new Node(Type.Constant, 'e'))
+    let times = root.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Constant, 'i'))
+    times.addChild(new Node(Type.Constant, 'pi'))
+
+    expect(result).toEqual(root)
+})

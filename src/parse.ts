@@ -23,7 +23,12 @@ export default function parse(expression: string): Node {
                     node = node.parent
                 }
             }
-        } else if (token.type === Type.Number || token.type === Type.Variable || token.type === Type.Function) {
+        } else if (
+            token.type === Type.Number ||
+            token.type === Type.Constant ||
+            token.type === Type.Variable ||
+            token.type === Type.Function
+        ) {
             node = node.addChild(new Node(token.type, token.value))
         } else if (node.parent === null) {
             let parent = new Node(token.type, token.value)

@@ -1,3 +1,4 @@
+import config from './config'
 import Token from './token'
 import Type from './type'
 
@@ -10,6 +11,18 @@ export default function tokenize(expression: string): Token[] {
     while (newRun) {
         newRun = false
 
+        for (const constant of config().constants()) {
+            let regex = new RegExp('^' + constant)
+            let match = expression.match(regex)
+
+            if (match) {
+                newRun = true
+                tokens.push({ type: Type.Constant, value: match[0] })
+                expression = expression.replace(regex, '')
+                break
+            }
+        }
+
         for (const [pattern, type] of Object.entries(patterns())) {
             let regex = new RegExp('^' + pattern)
             let match = expression.match(regex)
@@ -18,6 +31,7 @@ export default function tokenize(expression: string): Token[] {
                 newRun = true
                 tokens.push({ type: type, value: match[0] })
                 expression = expression.replace(regex, '')
+                break
             }
         }
     }
