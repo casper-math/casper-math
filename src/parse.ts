@@ -67,9 +67,7 @@ export default function parse(expression: string): Node {
 }
 
 function operator(symbol: Token | Node): Operator {
-    return config()
-        .operators()
-        .filter(operator => operator.symbol === symbol.value)[0]
+    return config().operators.filter(operator => operator.symbol === symbol.value)[0]
 }
 
 function removeBrackets(node: Node): Node {

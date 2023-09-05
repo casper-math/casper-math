@@ -17,13 +17,9 @@ function shouldInsertBrackets(parent: Node, child: Node): boolean {
         return false
     }
 
-    let parentPrecedence = config()
-        .operators()
-        .filter(operator => operator.symbol === parent.value)[0].precedence
+    let parentPrecedence = config().operators.filter(operator => operator.symbol === parent.value)[0].precedence
 
-    let childPrecedence = config()
-        .operators()
-        .filter(operator => operator.symbol === child.value)[0].precedence
+    let childPrecedence = config().operators.filter(operator => operator.symbol === child.value)[0].precedence
 
     return parentPrecedence >= childPrecedence
 }

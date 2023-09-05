@@ -11,7 +11,7 @@ export default function tokenize(expression: string): Token[] {
     while (newRun) {
         newRun = false
 
-        for (const constant of config().constants()) {
+        for (const constant of config().constants) {
             let regex = new RegExp('^' + constant)
             let match = expression.match(regex)
 
