@@ -20,7 +20,9 @@ export default class Node {
 
     addChild(child: Node) {
         this.children.push(child)
+
         child.setParent(this)
+
         return child
     }
 
@@ -38,7 +40,9 @@ export default class Node {
             this.value.toString() +
             (this.parent ? ` [${this.parent.value.toString()}]` : ' [null]') +
             '\r\n'
+
         this.children.forEach(child => (string += child.toString(indent + 1)))
+
         return indent === 1 ? asciitree.generate(string) : string
     }
 
@@ -48,6 +52,7 @@ export default class Node {
 
     insertBetween(parent: Node, child: Node) {
         parent.replaceChild(child, this)
+
         this.addChild(child)
     }
 
@@ -57,7 +62,9 @@ export default class Node {
 
     clone(): Node {
         let node = new Node(this.type, this.value)
+
         this.children.forEach(child => node.addChild(child.clone()))
+
         return node
     }
 
