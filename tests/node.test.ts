@@ -122,3 +122,37 @@ it('can set its children', () => {
     parent.setChildren([child2])
     expect(parent.children).toEqual([child2])
 })
+
+it('can clone a node and its children', () => {
+    let parent = new Node(Type.Operator, '+')
+    let times = parent.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 2))
+    times.addChild(new Node(Type.Number, 3))
+    parent.addChild(new Node(Type.Number, 4))
+
+    let clone = parent.clone()
+
+    expect(parent).not.toBe(clone)
+    expect(parent).toEqual(clone)
+})
+
+it('knows if it equals another node', () => {
+    let parent = new Node(Type.Operator, '+')
+    let times = parent.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 2))
+    times.addChild(new Node(Type.Number, 3))
+    parent.addChild(new Node(Type.Number, 4))
+
+    let clone = parent.clone()
+    let notClone = new Node(Type.Operator, '+')
+
+    expect(parent.equals(parent)).toBeTruthy()
+    expect(parent.equals(clone)).toBeTruthy()
+    expect(parent.equals(notClone)).toBeFalsy()
+    expect(clone.equals(parent)).toBeTruthy()
+    expect(clone.equals(clone)).toBeTruthy()
+    expect(clone.equals(notClone)).toBeFalsy()
+    expect(notClone.equals(parent)).toBeFalsy()
+    expect(notClone.equals(clone)).toBeFalsy()
+    expect(notClone.equals(notClone)).toBeTruthy()
+})

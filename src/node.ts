@@ -54,4 +54,21 @@ export default class Node {
     setChildren(children: Node[]) {
         this.children = children
     }
+
+    clone(): Node {
+        let node = new Node(this.type, this.value)
+        this.children.forEach(child => node.addChild(child.clone()))
+        return node
+    }
+
+    equals(node: Node): boolean {
+        if (!node) return false
+
+        if (this.type !== node.type || this.value !== node.value) return false
+
+        return (
+            !this.children.map((child, index) => child.equals(node.children[index])).includes(false) &&
+            !node.children.map((child, index) => child.equals(this.children[index])).includes(false)
+        )
+    }
 }
