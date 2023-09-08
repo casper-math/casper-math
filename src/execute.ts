@@ -19,7 +19,7 @@ export default function execute(action: Action, node: Node): Node {
 
 function isMatch(action: Action, node: Node, pattern: Node): boolean {
     action
-    return node.value === '+' && pattern.value === '+'
+    return (node.value === '+' && pattern.value === '+') || (node.value === '*' && pattern.value === '*')
 }
 
 function findVariables(action: Action, node: Node, pattern: Node): { [key: string]: string | number } {

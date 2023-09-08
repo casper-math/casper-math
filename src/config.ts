@@ -1,5 +1,6 @@
 import Action from './action'
 import addNumbers from './actions/add-numbers'
+import multiplyNumbers from './actions/multiply-numbers'
 import Operator from './operator'
 
 export default function config(): Config {
@@ -57,5 +58,5 @@ class Config {
 
     constants: string[] = ['e', 'i', 'pi']
 
-    actions: Action[] = [addNumbers]
+    actions: Action[] = [addNumbers, multiplyNumbers]
 }
