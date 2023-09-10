@@ -252,3 +252,31 @@ it('can parse nested functions', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse a simple function with multiple arguments', () => {
+    let result = parse('func(2, 3)')
+
+    let root = new Node(Type.Function, 'func')
+    root.addChild(new Node(Type.Number, 2))
+    root.addChild(new Node(Type.Number, 3))
+
+    expect(result).toEqual(root)
+})
+
+it('can parse a complex function with multiple arguments', () => {
+    let result = parse('line(2, 3 + 4, sin(5), cos(func(6, 7)))')
+
+    let root = new Node(Type.Function, 'line')
+    root.addChild(new Node(Type.Number, 2))
+    let plus = root.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 3))
+    plus.addChild(new Node(Type.Number, 4))
+    let sin = root.addChild(new Node(Type.Function, 'sin'))
+    sin.addChild(new Node(Type.Number, 5))
+    let cos = root.addChild(new Node(Type.Function, 'cos'))
+    let func = cos.addChild(new Node(Type.Function, 'func'))
+    func.addChild(new Node(Type.Number, 6))
+    func.addChild(new Node(Type.Number, 7))
+
+    expect(result).toEqual(root)
+})

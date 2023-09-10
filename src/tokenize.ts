@@ -46,11 +46,12 @@ export default function tokenize(expression: string): Token[] {
 
 function patterns() {
     return {
+        '\\)': Type.BracketClose,
         '\\(': Type.BracketOpen,
-        '[a-zA-Z_][a-zA-Z0-9_]*(?![a-zA-Z0-9_(])': Type.Variable,
+        ',': Type.Comma,
         '[a-zA-Z_][a-zA-Z0-9_]*(?=\\()': Type.Function,
-        '(\\+|\\*|\\^|\\/)': Type.Operator,
         '-?([0-9]+(\\.[0-9]+)?|\\.[0-9]+)': Type.Number,
-        '\\)': Type.BracketClose
+        '(\\+|\\*|\\^|\\/)': Type.Operator,
+        '[a-zA-Z_][a-zA-Z0-9_]*(?![a-zA-Z0-9_(])': Type.Variable
     }
 }

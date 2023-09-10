@@ -1,6 +1,7 @@
 enum Type {
     BracketClose,
     BracketOpen,
+    Comma,
     Constant,
     Function,
     Number,

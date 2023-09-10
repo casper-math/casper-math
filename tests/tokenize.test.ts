@@ -111,3 +111,17 @@ it('can tokenize constants', () => {
         { type: Type.BracketClose, value: ')' }
     ])
 })
+
+it('can tokenize commas', () => {
+    let input = 'func(2, 3)'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Function, value: 'func' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Number, value: '2' },
+        { type: Type.Comma, value: ',' },
+        { type: Type.Number, value: '3' },
+        { type: Type.BracketClose, value: ')' }
+    ])
+})

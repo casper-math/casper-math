@@ -30,6 +30,17 @@ export default function parse(expression: string): Node {
             token.type === Type.Function
         ) {
             node = node.addChild(new Node(token.type, token.value))
+        } else if (token.type === Type.Comma) {
+            let done = false
+            while (!done) {
+                // @ts-ignore
+                node = node.parent
+
+                // @ts-ignore
+                if (node.parent.type === Type.Function) {
+                    done = true
+                }
+            }
         } else if (node.parent === null) {
             let parent = new Node(token.type, token.value)
             parent.addChild(node)
@@ -63,6 +74,7 @@ export default function parse(expression: string): Node {
         }
     })
 
+    // @ts-ignore
     return removeBrackets(node.root())
 }
 
@@ -70,8 +82,8 @@ function operator(symbol: Token | Node): Operator {
     return config().operators.filter(operator => operator.symbol === symbol.value)[0]
 }
 
-function removeBrackets(node: Node): Node {
-    node.setChildren(node.children.map(child => removeBrackets(child)))
+function removeBrackets(node: Node): Node | Node[] {
+    node.setChildren(node.children.map(child => removeBrackets(child)).flat())
 
     if (node.type !== Type.BracketOpen) {
         return node
@@ -81,6 +93,11 @@ function removeBrackets(node: Node): Node {
         let child = node.children[0]
         child.setParent(null)
         return child
+    }
+
+    if (node.parent.type === Type.Function) {
+        node.children.forEach(child => child.setParent(node.parent))
+        return node.children
     }
 
     node.children[0].setParent(node.parent)
