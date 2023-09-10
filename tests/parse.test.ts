@@ -202,3 +202,38 @@ it('can parse constants', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse a simple function', () => {
+    let result = parse('sin(3)')
+
+    let root = new Node(Type.Function, 'sin')
+    root.addChild(new Node(Type.Number, 3))
+
+    expect(result).toEqual(root)
+})
+
+it('can parse nested functions', () => {
+    let result = parse('2 * (3 + cos(7))')
+
+    let root = new Node(Type.Operator, '*')
+    root.addChild(new Node(Type.Number, 2))
+    let plus = root.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 3))
+    let sin = plus.addChild(new Node(Type.Function, 'cos'))
+    sin.addChild(new Node(Type.Number, 7))
+
+    expect(result).toEqual(root)
+})
+
+it('can parse functions with complex arguments', () => {
+    let result = parse('tan(4 * x + 6)')
+
+    let root = new Node(Type.Function, 'tan')
+    let plus = root.addChild(new Node(Type.Operator, '+'))
+    let times = plus.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 4))
+    times.addChild(new Node(Type.Variable, 'x'))
+    plus.addChild(new Node(Type.Number, 6))
+
+    expect(result).toEqual(root)
+})
