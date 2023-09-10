@@ -46,7 +46,7 @@ export default function parse(expression: string): Node {
                     let parent = new Node(token.type, token.value)
                     parent.addChild(node)
                     node = parent
-                } else if (operator(token).precedence < operator(node.parent).precedence) {
+                } else if (operator(token).precedence < operator(node.parent)?.precedence) {
                     node = node.parent
                 } else if (token.value === node.parent.value && operator(token).associative) {
                     done = true

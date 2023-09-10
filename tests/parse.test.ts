@@ -237,3 +237,18 @@ it('can parse functions with complex arguments', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse nested functions', () => {
+    let result = parse('(sin(2 * cos(3 + tan(4))))')
+
+    let root = new Node(Type.Function, 'sin')
+    let times = root.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 2))
+    let cos = times.addChild(new Node(Type.Function, 'cos'))
+    let plus = cos.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 3))
+    let tan = plus.addChild(new Node(Type.Function, 'tan'))
+    tan.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})
