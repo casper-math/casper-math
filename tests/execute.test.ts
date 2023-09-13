@@ -21,7 +21,7 @@ it('can run the add action when nested', () => {
 })
 
 it('does not match any expression', () => {
-    let tree = parse('x + 2*y')
+    let tree = parse('x + 2 * y')
     let result = execute(add, tree)
     expect(result).toEqual(parse('x + 2*y'))
 })
