@@ -7,31 +7,33 @@ export default function execute(action: Action, node: Node): Node {
     node.setChildren(node.children.map(child => execute(action, child)))
     node.children.forEach(child => child.setParent(node))
 
+    let variables = findVariables(action, node)
+
+    return variables ? parse(action.handle(variables).toString()) : node
+}
+
+function findVariables(action: Action, node: Node): { [key: string]: string | number } | null {
     let pattern = parse(action.pattern)
 
-    if (!isMatch(action, node, pattern)) {
-        return node
+    if (node.type !== Type.Variable || !Object.keys(action.variables).includes(node.value.toString())) {
+        if (node.type !== pattern.type || node.value !== pattern.value) {
+            return null
+        }
     }
 
-    let variables = findVariables(action, node, pattern)
-    return parse(action.handle(variables).toString())
-}
+    let variables: { [key: string]: string | number } = {}
 
-function isMatch(action: Action, node: Node, pattern: Node): boolean {
-    action
-    return (node.value === '+' && pattern.value === '+') || (node.value === '*' && pattern.value === '*')
-}
+    let numbers = node.children.filter(child => child.type === Type.Number)
 
-function findVariables(action: Action, node: Node, pattern: Node): { [key: string]: string | number } {
-    if (pattern.type === Type.Variable) {
-        return { [pattern.value]: node.value }
+    let numbericVariables = Object.entries(action.variables)
+        .filter(variable => variable[1] === 'number')
+        .map(variable => variable[0])
+
+    for (let index = 0; index < numbericVariables.length; index++) {
+        let number = numbers[index]
+        if (!number) return null
+        variables[numbericVariables[index]] = Number(number.value)
     }
-
-    let variables = {}
-
-    pattern.children
-        .map((child, index) => findVariables(action, node.children[index], child))
-        .forEach(variable => Object.assign(variables, variable))
 
     return variables
 }
