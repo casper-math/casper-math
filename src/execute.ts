@@ -22,6 +22,13 @@ function findVariables(action: Action, node: Node): Variables | null {
         }
     }
 
+    let numbericVariables = findNumericVariables(action, node)
+    if (!numbericVariables) return null
+
+    return { ...numbericVariables }
+}
+
+function findNumericVariables(action: Action, node: Node): Variables | null {
     let variables: Variables = {}
 
     let numbers = node.children.filter(child => child.type === Type.Number)
