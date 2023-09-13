@@ -2,6 +2,7 @@ import Action from './action'
 import Node from './node'
 import parse from './parse'
 import Type from './type'
+import Variables from './variables'
 
 export default function execute(action: Action, node: Node): Node {
     node.setChildren(node.children.map(child => execute(action, child)))
@@ -12,7 +13,7 @@ export default function execute(action: Action, node: Node): Node {
     return variables ? parse(action.handle(variables).toString()) : node
 }
 
-function findVariables(action: Action, node: Node): { [key: string]: string | number } | null {
+function findVariables(action: Action, node: Node): Variables | null {
     let pattern = parse(action.pattern)
 
     if (node.type !== Type.Variable || !Object.keys(action.variables).includes(node.value.toString())) {
@@ -21,7 +22,7 @@ function findVariables(action: Action, node: Node): { [key: string]: string | nu
         }
     }
 
-    let variables: { [key: string]: string | number } = {}
+    let variables: Variables = {}
 
     let numbers = node.children.filter(child => child.type === Type.Number)
 
