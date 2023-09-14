@@ -1,5 +1,5 @@
+import { Type } from '../src/interfaces'
 import Node from '../src/node'
-import Type from '../src/type'
 
 it('can instantiate a new node', () => {
     let node = new Node(Type.Operator, '+')

@@ -1,5 +1,5 @@
-import Action from './../src/action'
 import execute from './../src/execute'
+import { Action } from './../src/interfaces'
 import parse from './../src/parse'
 
 const add: Action = {

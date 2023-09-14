@@ -1,7 +1,6 @@
-import Action from './action'
 import addNumbers from './actions/add-numbers'
 import multiplyNumbers from './actions/multiply-numbers'
-import Operator from './operator'
+import { Action, Operator } from './interfaces'
 
 export default function config(): Config {
     return Config.getInstance()

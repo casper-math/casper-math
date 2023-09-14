@@ -1,9 +1,7 @@
-import Action from './action'
+import { Action, Type, Variables } from './interfaces'
 import Node from './node'
 import string from './output/string'
 import parse from './parse'
-import Type from './type'
-import Variables from './variables'
 
 export default function execute(action: Action, node: Node): Node {
     node.setChildren(node.children.map(child => execute(action, child)))

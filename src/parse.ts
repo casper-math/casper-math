@@ -1,9 +1,7 @@
 import config from './config'
+import { Operator, Token, Type } from './interfaces'
 import Node from './node'
-import Operator from './operator'
-import Token from './token'
 import tokenize from './tokenize'
-import Type from './type'
 
 export default function parse(expression: string): Node {
     let tokens = tokenize(expression)

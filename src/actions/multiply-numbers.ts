@@ -1,4 +1,4 @@
-import Action from './../action'
+import { Action } from './../interfaces'
 
 const multiplyNumbers: Action = {
     pattern: 'x * y',

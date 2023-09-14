@@ -1,6 +1,5 @@
 import config from './config'
-import Token from './token'
-import Type from './type'
+import { Token, Type } from './interfaces'
 
 export default function tokenize(expression: string): Token[] {
     expression = expression.replace(/ /g, '')

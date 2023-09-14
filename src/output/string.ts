@@ -1,6 +1,6 @@
 import config from './../config'
+import { Type } from './../interfaces'
 import Node from './../node'
-import Type from './../type'
 
 export default function string(node: Node): string {
     if (node.type === Type.Operator) {

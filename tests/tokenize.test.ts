@@ -1,4 +1,4 @@
-import Type from '../src/type'
+import { Type } from '../src/interfaces'
 import tokenize from './../src/tokenize'
 
 it('can tokenize a simple expression', () => {

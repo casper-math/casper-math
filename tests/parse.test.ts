@@ -1,5 +1,5 @@
+import { Type } from '../src/interfaces'
 import Node from '../src/node'
-import Type from '../src/type'
 import parse from './../src/parse'
 
 test('it can parse an expressin with one operator', () => {

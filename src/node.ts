@@ -1,4 +1,4 @@
-import Type from './type'
+import { Type } from './interfaces'
 const asciitree = require('ascii-tree')
 
 export default class Node {
