@@ -280,3 +280,14 @@ it('can parse a complex function with multiple arguments', () => {
 
     expect(result).toEqual(root)
 })
+
+it('removes brackets for associative operators', () => {
+    let result = parse('2 * (3 * 4)')
+
+    let root = new Node(Type.Operator, '*')
+    root.addChild(new Node(Type.Number, 2))
+    root.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})

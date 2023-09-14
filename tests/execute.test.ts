@@ -54,7 +54,6 @@ it('does not add nested associative operators', () => {
     let tree = parse('4 * x + 4 * x')
     let result = execute(double, tree)
     expect(result).toEqual(parse('2 * 4 * x'))
-    expect(result).not.toEqual(parse('2 * (4 * x)'))
 })
 
 const stupid: Action = {

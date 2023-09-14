@@ -75,7 +75,7 @@ export default function parse(expression: string): Node {
     })
 
     // @ts-ignore
-    return removeBrackets(node.root())
+    return removeNestedAssociativeOperators(removeBrackets(node.root()))
 }
 
 function operator(symbol: Token | Node): Operator {
@@ -102,4 +102,20 @@ function removeBrackets(node: Node): Node | Node[] {
 
     node.children[0].setParent(node.parent)
     return node.children[0]
+}
+
+function removeNestedAssociativeOperators(node: Node): Node | Node[] {
+    node.setChildren(node.children.map(child => removeNestedAssociativeOperators(child)).flat())
+    node.children.map(child => child.setParent(node))
+
+    if (
+        node.type === Type.Operator &&
+        node.parent?.type === Type.Operator &&
+        node.value === node.parent.value &&
+        config().operators.filter(operator => operator.symbol === node.value)[0].associative
+    ) {
+        return node.children
+    }
+
+    return node
 }
