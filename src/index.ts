@@ -1,5 +1,7 @@
 import config from './config'
 import execute from './execute'
+import { Action, Options } from './interfaces'
+import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
 
@@ -8,6 +10,16 @@ export default function casper() {
 }
 
 class Casper {
+    options(options: Options) {
+        config().options = { ...config().options, ...options }
+        return this
+    }
+
+    actions(actions: Action[]) {
+        config().actions = actions
+        return this
+    }
+
     go(expression: string) {
         let tree = parse(expression)
         let old
@@ -20,6 +32,6 @@ class Casper {
             })
         }
 
-        return string(tree)
+        return config().options.output === 'string' ? string(tree) : latex(tree)
     }
 }

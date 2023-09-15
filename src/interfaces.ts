@@ -12,6 +12,10 @@ export interface Operator {
     precedence: number
 }
 
+export interface Options {
+    output?: 'string' | 'latex'
+}
+
 export interface Token {
     type: Type
     value: string

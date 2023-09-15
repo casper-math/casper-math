@@ -1,6 +1,6 @@
 import addNumbers from './actions/add-numbers'
 import multiplyNumbers from './actions/multiply-numbers'
-import { Action, Operator } from './interfaces'
+import { Action, Operator, Options } from './interfaces'
 
 export default function config(): Config {
     return Config.getInstance()
@@ -58,4 +58,8 @@ class Config {
     constants: string[] = ['e', 'i', 'pi']
 
     actions: Action[] = [addNumbers, multiplyNumbers]
+
+    options: Options = {
+        output: 'string'
+    }
 }
