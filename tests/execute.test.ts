@@ -83,7 +83,7 @@ it('handles associative operators', () => {
 const nonCommutative: Action = {
     pattern: 'x / y',
     variables: { x: 'expression', y: 'number' },
-    handle: ({ x, y }) => x
+    handle: ({ x }) => x
 }
 
 it('can run a non-commutative action', () => {
@@ -101,7 +101,7 @@ it('does not run the non-commutative action when not possible', () => {
 const nested: Action = {
     pattern: 'x * (y + x)',
     variables: { x: 'expression', y: 'number' },
-    handle: ({ x, y }) => `(x * y) + (x * x)`
+    handle: ({ x, y }) => `(${x} * ${y}) + (${x} * ${x})`
 }
 
 it('works with nested actions', () => {
