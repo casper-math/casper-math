@@ -26,6 +26,12 @@ it('does not match any expression', () => {
     expect(result).toEqual(parse('x + 2*y'))
 })
 
+it('only matches the number of operands needed', () => {
+    let tree = parse('3 + y + 2')
+    let result = execute(add, tree)
+    expect(result).toEqual(parse('5 + y'))
+})
+
 const double: Action = {
     pattern: 'x + x',
     variables: { x: 'expression' },
@@ -72,4 +78,22 @@ it('handles associative operators', () => {
     let tree = parse('x * y * 7')
     let result = execute(stupid, tree)
     expect(result).toEqual(parse('7'))
+})
+
+const nonCommutative: Action = {
+    pattern: 'x / y',
+    variables: { x: 'expression', y: 'number' },
+    handle: ({ x, y }) => x
+}
+
+it('can run a non-commutative action', () => {
+    let tree = parse('(x + 3) / 8')
+    let result = execute(nonCommutative, tree)
+    expect(result).toEqual(parse('x + 3'))
+})
+
+it('does not run the non-commutative action when not possible', () => {
+    let tree = parse('8 / (x + 3)')
+    let result = execute(nonCommutative, tree)
+    expect(result).toEqual(parse('8 / (x + 3)'))
 })
