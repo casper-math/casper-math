@@ -27,7 +27,7 @@ it('does not match any expression', () => {
 })
 
 it('only matches the number of operands needed', () => {
-    let tree = parse('3 + y + 2')
+    let tree = parse('3 + 2 + y')
     let result = execute(add, tree)
     expect(result).toEqual(parse('5 + y'))
 })
@@ -105,9 +105,9 @@ const nested: Action = {
 }
 
 it('works with nested actions', () => {
-    let tree = parse('7 * (3 + 7)')
+    let tree = parse('7 * (3 + 7) + 5')
     let result = execute(nested, tree)
-    expect(result).toEqual(parse('(7 * 3) + (7 * 7)'))
+    expect(result).toEqual(parse('(7 * 3) + (7 * 7) + 5'))
 })
 
 it('applies commutativity when needed when nested', () => {
@@ -125,7 +125,7 @@ it('does not apply associativity when nested', () => {
 const root: Action = {
     pattern: 'x',
     variables: { x: 'expression' },
-    handle: ({ x }) => '3'
+    handle: () => '3'
 }
 
 it('works from a root node', () => {

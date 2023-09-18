@@ -1,6 +1,6 @@
 export interface Action {
     pattern: string
-    variables: { [key: string]: 'number' | 'expression' | 'variable' }
+    variables: { [key: string]: 'number' | 'single' | 'expression' }
     handle: (variables: { [key: string]: string | number }) => string | number
 }
 

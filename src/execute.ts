@@ -1,4 +1,4 @@
-import { Action, Type, Variables } from './interfaces'
+import { Action, Type } from './interfaces'
 import Node from './node'
 import string from './output/string'
 import parse from './parse'
@@ -7,60 +7,66 @@ export default function execute(action: Action, node: Node): Node {
     node.setChildren(node.children.map(child => execute(action, child)))
     node.children.forEach(child => child.setParent(node))
 
-    let variables = findVariables(action, node)
+    let variables: { [key: string]: Node } | null = findVariables(action, node)
 
-    return variables ? parse(action.handle(variables).toString()) : node
-}
+    if (variables === null) return node
 
-function findVariables(action: Action, node: Node): Variables | null {
-    let pattern = parse(action.pattern)
+    let converted: { [key: string]: string | number } = {}
 
-    if (node.type !== Type.Variable || !Object.keys(action.variables).includes(node.value.toString())) {
-        if (node.type !== pattern.type || node.value !== pattern.value) {
-            return null
+    for (let i = 0; i < Object.keys(variables).length; i++) {
+        let key = Object.keys(variables)[i]
+        if (variables[key].type === Type.Number) {
+            converted[key] = variables[key].value
+        } else {
+            converted[key] = string(variables[key])
         }
     }
 
-    let variables: Variables = {}
+    return parse(action.handle(converted).toString())
+}
 
-    if (!findNumericVariables(action, node, variables)) return null
-    if (!findExpressions(action, node, variables)) return null
+function findVariables(action: Action, node: Node, pattern?: Node) {
+    pattern ??= parse(action.pattern)
 
-    Object.keys(variables).forEach(
-        key => (variables[key] = variables[key].constructor?.name === 'Node' ? string(variables[key]) : variables[key])
-    )
+    if (node.type !== pattern.type || node.value !== pattern.value) {
+        return null
+    }
+
+    const matchers: { [key: string]: (node: Node) => boolean } = {
+        number: (node: Node) => node.type === Type.Number,
+        single: (node: Node) => node.type === Type.Variable,
+        expression: () => true
+    }
+
+    let variables: { [key: string]: Node } = {}
+
+    for (let index = 0; index < pattern.children.length; index++) {
+        let child = pattern.children[index]
+
+        if (child.type === Type.Variable) {
+            let type = action.variables[child.value]
+            let matcher = matchers[type]
+
+            if (!matcher(node.children[index])) {
+                return null
+            } else {
+                variables[child.value] = node.children[index]
+            }
+        } else if (child.containsType(Type.Variable)) {
+            let output = findVariables(action, node.children[index], pattern.children[index])
+            if (!output) return null
+
+            for (let i = 0; i < Object.keys(output).length; i++) {
+                let key = Object.keys(output)[i]
+
+                if (Object.keys(variables).includes(key) && !variables[key].equals(output[key])) return null
+            }
+
+            variables = { ...variables, ...output }
+        } else {
+            if (!node.children[index].equals(pattern.children[index])) return null
+        }
+    }
 
     return variables
-}
-
-function findNumericVariables(action: Action, node: Node, variables: Variables): boolean {
-    let numbers = node.children.filter(child => child.type === Type.Number)
-
-    let numbericVariables = Object.entries(action.variables)
-        .filter(variable => variable[1] === 'number')
-        .map(variable => variable[0])
-
-    for (let index = 0; index < numbericVariables.length; index++) {
-        let number = numbers[index]
-        if (!number) return false
-        variables[numbericVariables[index]] = Number(number.value)
-    }
-
-    return true
-}
-
-function findExpressions(action: Action, node: Node, variables: Variables): boolean {
-    let expressions = node.children.filter(expression => !Object.values(variables).includes(expression))
-
-    let expressionVariables = Object.entries(action.variables)
-        .filter(variable => variable[1] === 'expression')
-        .map(variable => variable[0])
-
-    for (let index = 0; index < expressionVariables.length; index++) {
-        let expression = expressions[index]
-        if (!expression) return false
-        variables[expressionVariables[index]] = expression
-    }
-
-    return true
 }
