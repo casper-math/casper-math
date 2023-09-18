@@ -121,3 +121,15 @@ it('does not apply associativity when nested', () => {
     let result = execute(nested, tree)
     expect(result).toEqual(parse('7 * (3 + 7 + 5)'))
 })
+
+const root: Action = {
+    pattern: 'x',
+    variables: { x: 'expression' },
+    handle: ({ x }) => '3'
+}
+
+it('works from a root node', () => {
+    let tree = parse('2 * x + 3')
+    let result = execute(root, tree)
+    expect(result).toEqual(parse('3'))
+})
