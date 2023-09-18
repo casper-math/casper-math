@@ -25,7 +25,7 @@ export default function execute(action: Action, node: Node): Node {
     return parse(action.handle(converted).toString())
 }
 
-function findVariables(action: Action, node: Node, pattern?: Node) {
+function findVariables(action: Action, node: Node, pattern?: Node): { [key: string]: Node } | null {
     pattern ??= parse(action.pattern)
 
     if (node.type !== pattern.type || node.value !== pattern.value) {
@@ -50,7 +50,10 @@ function findVariables(action: Action, node: Node, pattern?: Node) {
             if (!matcher(node.children[index])) {
                 return null
             } else {
-                variables[child.value] = node.children[index]
+                if (!Object.keys(variables).includes(child.value.toString())) {
+                    variables[child.value] = node.children[index]
+                }
+                if (!variables[child.value].equals(node.children[index])) return null
             }
         } else if (child.containsType(Type.Variable)) {
             let output = findVariables(action, node.children[index], pattern.children[index])
