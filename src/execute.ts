@@ -15,11 +15,7 @@ export default function execute(action: Action, node: Node): Node {
 
     for (let i = 0; i < Object.keys(variables).length; i++) {
         let key = Object.keys(variables)[i]
-        if (variables[key].type === Type.Number) {
-            converted[key] = variables[key].value
-        } else {
-            converted[key] = string(variables[key])
-        }
+        converted[key] = variables[key].type === Type.Number ? variables[key].value : string(variables[key])
     }
 
     return parse(action.handle(converted).toString())
