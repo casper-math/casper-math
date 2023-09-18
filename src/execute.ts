@@ -1,3 +1,4 @@
+import config from './config'
 import { Action, Type } from './interfaces'
 import Node from './node'
 import string from './output/string'
@@ -7,7 +8,9 @@ export default function execute(action: Action, node: Node): Node {
     node.setChildren(node.children.map(child => execute(action, child)))
     node.children.forEach(child => child.setParent(node))
 
-    let variables: { [key: string]: Node } | null = findVariables(action, node)
+    let matchedNodes: Node[] = []
+
+    let variables: { [key: string]: Node } | null = findVariables(action, node, parse(action.pattern), matchedNodes)
 
     if (variables === null) return node
 
@@ -18,12 +21,28 @@ export default function execute(action: Action, node: Node): Node {
         converted[key] = variables[key].type === Type.Number ? variables[key].value : string(variables[key])
     }
 
+    // In the case that only some operands of an associative operator are matched, the result should be added to the
+    // operator.For example, the program matches`x + y` in `2 + 3 + 4`.Instead of returning`5`(2 + 3) as the result,
+    // with this code it returns`5 + 4`.
+    if (
+        node.type === Type.Operator &&
+        config().operators.filter(operator => operator.symbol === node.value)[0].associative &&
+        node.children.filter(child => !matchedNodes.includes(child)).length > 0
+    ) {
+        matchedNodes.forEach(value => node.removeChild(value))
+        node.addChild(parse(action.handle(converted).toString()))
+        return node
+    }
+
     return parse(action.handle(converted).toString())
 }
 
-function findVariables(action: Action, node: Node, pattern?: Node): { [key: string]: Node } | null {
-    pattern ??= parse(action.pattern)
-
+function findVariables(
+    action: Action,
+    node: Node,
+    pattern: Node,
+    matchedNodes: Node[]
+): { [key: string]: Node } | null {
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
         single: (node: Node) => node.type === Type.Variable,
@@ -34,6 +53,7 @@ function findVariables(action: Action, node: Node, pattern?: Node): { [key: stri
     if (pattern.type === Type.Variable) {
         let type = action.variables[pattern.value]
         let matcher = matchers[type]
+        matchedNodes.push(node)
 
         return matcher(node) ? { [pattern.value]: node } : null
     }
@@ -58,9 +78,10 @@ function findVariables(action: Action, node: Node, pattern?: Node): { [key: stri
                     variables[child.value] = node.children[index]
                 }
                 if (!variables[child.value].equals(node.children[index])) return null
+                matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            let output = findVariables(action, node.children[index], pattern.children[index])
+            let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes)
             if (!output) return null
 
             for (let i = 0; i < Object.keys(output).length; i++) {
@@ -70,6 +91,7 @@ function findVariables(action: Action, node: Node, pattern?: Node): { [key: stri
             }
 
             variables = { ...variables, ...output }
+            Object.values(output).forEach(value => matchedNodes.push(value))
         } else {
             if (!node.children[index].equals(pattern.children[index])) return null
         }
