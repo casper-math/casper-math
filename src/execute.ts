@@ -97,5 +97,13 @@ function findVariables(
         }
     }
 
+    // If an operator still has children that are not matched (and the operator is not a root in the pattern), then the
+    // action shouldn't be performed.
+    if (pattern.parent !== null) {
+        for (let i = 0; i < node.children.length; i++) {
+            if (!matchedNodes.includes(node.children[i])) return null
+        }
+    }
+
     return variables
 }
