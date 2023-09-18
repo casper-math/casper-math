@@ -173,3 +173,23 @@ it('knows if it contains a type', () => {
     expect(root.containsType(Type.Operator)).toBeTruthy()
     expect(root.containsType(Type.Variable)).toBeTruthy()
 })
+
+it('can remove a child', () => {
+    let parent = new Node(Type.Operator, '+')
+    let child1 = parent.addChild(new Node(Type.Number, 3))
+    let child2 = parent.addChild(new Node(Type.Number, 4))
+
+    expect(parent.children[0]).toBe(child1)
+    expect(parent.children[1]).toBe(child2)
+
+    // Does nothing, even if node is equal (but not the same)
+    parent.removeChild(new Node(Type.Number, 3))
+
+    expect(parent.children[0]).toBe(child1)
+    expect(parent.children[1]).toBe(child2)
+
+    parent.removeChild(child1)
+
+    expect(parent.children[0]).toBe(child2)
+    expect(parent.children.includes(child1)).toBeFalsy()
+})

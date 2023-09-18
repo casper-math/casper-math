@@ -83,4 +83,8 @@ export default class Node {
         if (this.type === type) return true
         return this.children.map(child => child.containsType(type)).includes(true)
     }
+
+    removeChild(node: Node): void {
+        this.children = this.children.filter(child => child !== node)
+    }
 }
