@@ -78,4 +78,9 @@ export default class Node {
             !node.children.map((child, index) => child.equals(this.children[index])).includes(false)
         )
     }
+
+    containsType(type: Type): boolean {
+        if (this.type === type) return true
+        return this.children.map(child => child.containsType(type)).includes(true)
+    }
 }

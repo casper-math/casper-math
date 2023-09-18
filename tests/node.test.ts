@@ -156,3 +156,20 @@ it('knows if it equals another node', () => {
     expect(notClone.equals(clone)).toBeFalsy()
     expect(notClone.equals(notClone)).toBeTruthy()
 })
+
+it('knows if it contains a type', () => {
+    let root = new Node(Type.Operator, '+')
+    root.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Variable, 'x'))
+    let times = root.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 6))
+
+    expect(root.containsType(Type.BracketClose)).toBeFalsy()
+    expect(root.containsType(Type.BracketOpen)).toBeFalsy()
+    expect(root.containsType(Type.Comma)).toBeFalsy()
+    expect(root.containsType(Type.Constant)).toBeFalsy()
+    expect(root.containsType(Type.Function)).toBeFalsy()
+    expect(root.containsType(Type.Number)).toBeTruthy()
+    expect(root.containsType(Type.Operator)).toBeTruthy()
+    expect(root.containsType(Type.Variable)).toBeTruthy()
+})
