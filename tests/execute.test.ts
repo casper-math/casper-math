@@ -133,3 +133,27 @@ it('works from a root node', () => {
     let result = execute(root, tree)
     expect(result).toEqual(parse('3'))
 })
+
+const typedRoot: Action = {
+    pattern: 'y',
+    variables: { y: 'number' },
+    handle: () => 2
+}
+
+it('matches typed roots', () => {
+    let tree = parse('7')
+    let result = execute(typedRoot, tree)
+    expect(result).toEqual(parse('2'))
+})
+
+it('does not match if the type is incorrect', () => {
+    let tree = parse('x')
+    let result = execute(typedRoot, tree)
+    expect(result).toEqual(parse('x'))
+})
+
+it('can match parts of a root', () => {
+    let tree = parse('x + 3')
+    let result = execute(typedRoot, tree)
+    expect(result).toEqual(parse('x + 2'))
+})

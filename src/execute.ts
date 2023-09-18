@@ -28,14 +28,22 @@ export default function execute(action: Action, node: Node): Node {
 function findVariables(action: Action, node: Node, pattern?: Node): { [key: string]: Node } | null {
     pattern ??= parse(action.pattern)
 
-    if (node.type !== pattern.type || node.value !== pattern.value) {
-        return null
-    }
-
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
         single: (node: Node) => node.type === Type.Variable,
         expression: () => true
+    }
+
+    // Check if the root of the pattern is a variable itself
+    if (pattern.type === Type.Variable) {
+        let type = action.variables[pattern.value]
+        let matcher = matchers[type]
+
+        return matcher(node) ? { [pattern.value]: node } : null
+    }
+
+    if (node.type !== pattern.type || node.value !== pattern.value) {
+        return null
     }
 
     let variables: { [key: string]: Node } = {}
