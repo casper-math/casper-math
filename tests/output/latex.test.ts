@@ -45,3 +45,8 @@ it('can convert complex trees with fractions', () => {
     let tree = parse('3 + 4 / (x / y)')
     expect(latex(tree)).toBe('3 + \\frac{4}{\\frac{x}{y}}')
 })
+
+it('can convert functions and constants', () => {
+    let tree = parse('func(2 * e, 5)')
+    expect(latex(tree)).toBe('\\text{func}(2 \\cdot e, 5)')
+})

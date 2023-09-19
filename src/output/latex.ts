@@ -3,6 +3,10 @@ import { Type } from './../interfaces'
 import Node from './../node'
 
 export default function latex(node: Node): string {
+    if (node.type === Type.Function) {
+        return `\\text{${node.value.toString()}}(${node.children.map(child => latex(child)).join(', ')})`
+    }
+
     if (node.type !== Type.Operator) {
         return node.value.toString()
     }
