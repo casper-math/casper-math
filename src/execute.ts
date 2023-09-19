@@ -4,13 +4,32 @@ import Node from './node'
 import string from './output/string'
 import parse from './parse'
 
-export default function execute(action: Action, node: Node): Node {
-    node.setChildren(node.children.map(child => execute(action, child)))
-    node.children.forEach(child => child.setParent(node))
+export default function execute(action: Action, node: Node, pattern?: Node): Node {
+    pattern ??= parse(action.pattern)
+
+    let children = node.children
+    node.setChildren([])
+
+    children.forEach(child => {
+        let result = execute(action, child, pattern)
+
+        // If an action returns for example addition and the parent is also addition, then they should be merged instead
+        // of placed underneath eachother.
+        if (
+            node.type === Type.Operator &&
+            result.type === Type.Operator &&
+            result.value === node.value &&
+            config().operators.filter(operator => operator.symbol === node.value)[0].associative
+        ) {
+            result.children.forEach(subchild => node.addChild(subchild))
+        } else {
+            node.addChild(result)
+        }
+    })
 
     let matchedNodes: Node[] = []
 
-    let variables: { [key: string]: Node } | null = findVariables(action, node, parse(action.pattern), matchedNodes)
+    let variables: { [key: string]: Node } | null = findVariables(action, node, pattern, matchedNodes)
 
     if (variables === null) return node
 
