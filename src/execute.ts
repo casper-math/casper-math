@@ -81,6 +81,7 @@ function findVariables(
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
+            matchedNodes.push(node.children[index])
             let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes)
             if (!output) return null
 
