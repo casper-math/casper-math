@@ -122,7 +122,7 @@ it('does not apply associativity when nested', () => {
     expect(result).toEqual(parse('7 * (3 + 7 + 5)'))
 })
 
-const typedRoot: Action = {
+const root: Action = {
     pattern: 'y',
     variables: { y: 'number' },
     handle: () => 2
@@ -130,18 +130,18 @@ const typedRoot: Action = {
 
 it('matches typed roots', () => {
     let tree = parse('7')
-    let result = execute(typedRoot, tree)
+    let result = execute(root, tree)
     expect(result).toEqual(parse('2'))
 })
 
 it('does not match if the type is incorrect', () => {
     let tree = parse('x')
-    let result = execute(typedRoot, tree)
+    let result = execute(root, tree)
     expect(result).toEqual(parse('x'))
 })
 
 it('can match parts of a root', () => {
     let tree = parse('x + 3')
-    let result = execute(typedRoot, tree)
+    let result = execute(root, tree)
     expect(result).toEqual(parse('x + 2'))
 })
