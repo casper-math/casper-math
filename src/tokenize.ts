@@ -11,7 +11,7 @@ export default function tokenize(expression: string): Token[] {
         newRun = false
 
         for (const constant of config().constants) {
-            let regex = new RegExp('^' + constant)
+            let regex = new RegExp('^' + constant + '(?![a-zA-Z])')
             let match = expression.match(regex)
 
             if (match) {

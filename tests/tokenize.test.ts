@@ -112,6 +112,17 @@ it('can tokenize constants', () => {
     ])
 })
 
+it('can tokenize variables with longer names', () => {
+    let input = '2 * epsilon'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Variable, value: 'epsilon' }
+    ])
+})
+
 it('can tokenize commas', () => {
     let input = 'func(2, 3)'
     let result = tokenize(input)
