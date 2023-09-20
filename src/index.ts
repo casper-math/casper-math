@@ -1,6 +1,6 @@
-import config from './config'
+import config, { getConfig } from './config'
 import execute from './execute'
-import { Action, Options } from './interfaces'
+import { OptionalOptions } from './interfaces'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
@@ -10,13 +10,12 @@ export default function casper() {
 }
 
 class Casper {
-    options(options: Options) {
-        config().options = { ...config().options, ...options }
-        return this
+    constructor() {
+        getConfig().reset()
     }
 
-    actions(actions: Action[]) {
-        config().actions = actions
+    options(options: OptionalOptions) {
+        getConfig().options = { ...config(), ...options }
         return this
     }
 
@@ -32,6 +31,6 @@ class Casper {
             })
         }
 
-        return config().options.output === 'string' ? string(tree) : latex(tree)
+        return config().output === 'string' ? string(tree) : latex(tree)
     }
 }

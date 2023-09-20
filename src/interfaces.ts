@@ -13,6 +13,16 @@ export interface Operator {
 }
 
 export interface Options {
+    operators: Operator[]
+    constants: string[]
+    actions: Action[]
+    output: 'string' | 'latex'
+}
+
+export interface OptionalOptions {
+    operators?: Operator[]
+    constants?: string[]
+    actions?: Action[]
     output?: 'string' | 'latex'
 }
 

@@ -1,8 +1,12 @@
 import addNumbers from './actions/add-numbers'
 import multiplyNumbers from './actions/multiply-numbers'
-import { Action, Operator, Options } from './interfaces'
+import { Options } from './interfaces'
 
-export default function config(): Config {
+export default function config(): Options {
+    return Config.getInstance().options
+}
+
+export function getConfig(): Config {
     return Config.getInstance()
 }
 
@@ -17,49 +21,50 @@ class Config {
         return Config.instance
     }
 
-    operators: Operator[] = [
-        {
-            symbol: '+',
-            associative: true,
-            commutative: true,
-            evaluate: 'ltr',
-            precedence: 1
-        },
-        {
-            symbol: '-',
-            associative: false,
-            commutative: false,
-            evaluate: 'ltr',
-            precedence: 1
-        },
-        {
-            symbol: '*',
-            associative: true,
-            commutative: true,
-            evaluate: 'ltr',
-            precedence: 2
-        },
-        {
-            symbol: '/',
-            associative: false,
-            commutative: false,
-            evaluate: 'ltr',
-            precedence: 2
-        },
-        {
-            symbol: '^',
-            associative: false,
-            commutative: false,
-            evaluate: 'rtl',
-            precedence: 3
-        }
-    ]
-
-    constants: string[] = ['e', 'i', 'pi']
-
-    actions: Action[] = [addNumbers, multiplyNumbers]
+    reset() {
+        this.options = new Config().options
+    }
 
     options: Options = {
-        output: 'string'
+        operators: [
+            {
+                symbol: '+',
+                associative: true,
+                commutative: true,
+                evaluate: 'ltr',
+                precedence: 1
+            },
+            {
+                symbol: '-',
+                associative: false,
+                commutative: false,
+                evaluate: 'ltr',
+                precedence: 1
+            },
+            {
+                symbol: '*',
+                associative: true,
+                commutative: true,
+                evaluate: 'ltr',
+                precedence: 2
+            },
+            {
+                symbol: '/',
+                associative: false,
+                commutative: false,
+                evaluate: 'ltr',
+                precedence: 2
+            },
+            {
+                symbol: '^',
+                associative: false,
+                commutative: false,
+                evaluate: 'rtl',
+                precedence: 3
+            }
+        ],
+        constants: ['e', 'i', 'pi'],
+        output: 'string',
+        actions: [addNumbers, multiplyNumbers]
     }
 }
