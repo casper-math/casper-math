@@ -281,6 +281,22 @@ it('can parse a complex function with multiple arguments', () => {
     expect(result).toEqual(root)
 })
 
+it('can parse multiple functions', () => {
+    let result = parse('sin(2 * pi) + cos(3 + pi)')
+
+    let root = new Node(Type.Operator, '+')
+    let sin = root.addChild(new Node(Type.Function, 'sin'))
+    let times = sin.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 2))
+    times.addChild(new Node(Type.Constant, 'pi'))
+    let cos = root.addChild(new Node(Type.Function, 'cos'))
+    let plus = cos.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 3))
+    plus.addChild(new Node(Type.Constant, 'pi'))
+
+    expect(result).toEqual(root)
+})
+
 it('removes brackets for associative operators', () => {
     let result = parse('2 * (3 * 4)')
 

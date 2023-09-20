@@ -21,6 +21,9 @@ export default function parse(expression: string): Node {
                     node = node.parent
                 }
             }
+            if (node.parent?.type === Type.Function) {
+                node = node.parent
+            }
         } else if (
             token.type === Type.Number ||
             token.type === Type.Constant ||
