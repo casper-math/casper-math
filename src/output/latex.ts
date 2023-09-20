@@ -4,11 +4,11 @@ import Node from './../node'
 
 export default function latex(node: Node): string {
     if (node.type === Type.Function) {
-        return `\\text{${node.value.toString()}}(${node.children.map(child => latex(child)).join(', ')})`
+        return `\\text{${value(node)}}(${node.children.map(child => latex(child)).join(', ')})`
     }
 
     if (node.type !== Type.Operator) {
-        return node.value.toString()
+        return value(node)
     }
 
     if (node.value === '*') {
@@ -23,7 +23,7 @@ export default function latex(node: Node): string {
         return `{${latex(node.children[0])}} ^ {${latex(node.children[1])}}`
     }
 
-    return brackets(node.children.map(child => latex(child)).join(` ${node.value.toString()} `), node)
+    return brackets(node.children.map(child => latex(child)).join(` ${value(node)} `), node)
 }
 
 function brackets(string: string, node: Node): string {
@@ -35,4 +35,35 @@ function brackets(string: string, node: Node): string {
     }
 
     return parentPrecedence >= childPrecedence ? `(${string})` : string
+}
+
+function value(node: Node): string {
+    const greekLetters = [
+        'alpha',
+        'beta',
+        'gamma',
+        'delta',
+        'epsilon',
+        'zeta',
+        'eta',
+        'theta',
+        'iota',
+        'kappa',
+        'lambda',
+        'mu',
+        'nu',
+        'xi',
+        'omicron',
+        'pi',
+        'rho',
+        'sigma',
+        'tau',
+        'upsilon',
+        'phi',
+        'chi',
+        'psi',
+        'omega'
+    ]
+
+    return greekLetters.includes(node.value.toString()) ? '\\' + node.value.toString() : node.value.toString()
 }

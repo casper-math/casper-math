@@ -50,3 +50,8 @@ it('can convert functions and constants', () => {
     let tree = parse('func(2 * e, 5)')
     expect(latex(tree)).toBe('\\text{func}(2 \\cdot e, 5)')
 })
+
+it('converts greek letters', () => {
+    let tree = parse('sin(pi + 2 * alpha)')
+    expect(latex(tree)).toBe('\\text{sin}(\\pi + 2 \\cdot \\alpha)')
+})
