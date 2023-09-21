@@ -1,15 +1,24 @@
 import { Action } from '../interfaces'
 
-const addNumbers: Action = {
+const add: Action = {
     pattern: 'x + y',
     variables: { x: 'number', y: 'number' },
     handle: ({ x, y }) => Number(x) + Number(y)
 }
 
-const multiplyNumbers: Action = {
+const multiply: Action = {
     pattern: 'x * y',
     variables: { x: 'number', y: 'number' },
     handle: ({ x, y }) => Number(x) * Number(y)
 }
 
-export default [addNumbers, multiplyNumbers]
+const divide: Action = {
+    pattern: 'x / y',
+    variables: { x: 'number', y: 'number' },
+    handle: ({ x, y }) => {
+        let quotient = Number(x) / Number(y)
+        return Number.isInteger(quotient) ? quotient : `(${x}) / (${y})`
+    }
+}
+
+export default [add, multiply, divide]
