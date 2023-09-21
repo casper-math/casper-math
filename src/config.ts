@@ -26,41 +26,11 @@ class Config {
 
     options: Options = {
         operators: [
-            {
-                symbol: '+',
-                associative: true,
-                commutative: true,
-                evaluate: 'ltr',
-                precedence: 1
-            },
-            {
-                symbol: '-',
-                associative: false,
-                commutative: false,
-                evaluate: 'ltr',
-                precedence: 1
-            },
-            {
-                symbol: '*',
-                associative: true,
-                commutative: true,
-                evaluate: 'ltr',
-                precedence: 2
-            },
-            {
-                symbol: '/',
-                associative: false,
-                commutative: false,
-                evaluate: 'ltr',
-                precedence: 2
-            },
-            {
-                symbol: '^',
-                associative: false,
-                commutative: false,
-                evaluate: 'rtl',
-                precedence: 3
-            }
+            { symbol: '+', associative: true, commutative: true, evaluate: 'ltr', precedence: 1 },
+            { symbol: '-', associative: false, commutative: false, evaluate: 'ltr', precedence: 1 },
+            { symbol: '*', associative: true, commutative: true, evaluate: 'ltr', precedence: 2 },
+            { symbol: '/', associative: false, commutative: false, evaluate: 'ltr', precedence: 2 },
+            { symbol: '^', associative: false, commutative: false, evaluate: 'rtl', precedence: 3 }
         ],
         constants: ['e', 'i', 'pi'],
         output: 'string',
