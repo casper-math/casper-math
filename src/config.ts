@@ -1,5 +1,4 @@
-import addNumbers from './actions/add-numbers'
-import multiplyNumbers from './actions/multiply-numbers'
+import actions from './actions'
 import { Options } from './interfaces'
 
 export default function config(): Options {
@@ -65,6 +64,6 @@ class Config {
         ],
         constants: ['e', 'i', 'pi'],
         output: 'string',
-        actions: [addNumbers, multiplyNumbers]
+        actions
     }
 }
