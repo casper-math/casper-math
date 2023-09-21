@@ -307,3 +307,27 @@ it('removes brackets for associative operators', () => {
 
     expect(result).toEqual(root)
 })
+
+it('parses multiplication before division correctly', () => {
+    let result = parse('2 * 3 / 4')
+
+    let root = new Node(Type.Operator, '/')
+    let times = root.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, 2))
+    times.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})
+
+it('parses division before multiplication correctly', () => {
+    let result = parse('2 / 3 * 4')
+
+    let root = new Node(Type.Operator, '*')
+    let division = root.addChild(new Node(Type.Operator, '/'))
+    division.addChild(new Node(Type.Number, 2))
+    division.addChild(new Node(Type.Number, 3))
+    root.addChild(new Node(Type.Number, 4))
+
+    expect(result).toEqual(root)
+})
