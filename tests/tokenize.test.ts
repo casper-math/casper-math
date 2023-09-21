@@ -136,3 +136,14 @@ it('can tokenize commas', () => {
         { type: Type.BracketClose, value: ')' }
     ])
 })
+
+it('can parse subtraction as an operator', () => {
+    let input = '12 - 9'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '12' },
+        { type: Type.Operator, value: '-' },
+        { type: Type.Number, value: '9' }
+    ])
+})
