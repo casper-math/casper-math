@@ -1,4 +1,4 @@
-import actions from './actions'
+import actions from './actions/index'
 import { Options } from './interfaces'
 
 export default function config(): Options {
