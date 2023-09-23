@@ -6,6 +6,7 @@ export default function tokenize(expression: string): Token[] {
         .replace(/ /g, '')
         .replace(/(?<=[a-zA-Z0-9])-/g, '+-')
         .replace(/-(?![0-9.])/g, '-1*')
+        .replace(/(?<![a-zA-Z_])([0-9])([a-zA-Z_])/g, '$1*$2')
 
     let tokens: Token[] = []
 
@@ -14,10 +15,10 @@ export default function tokenize(expression: string): Token[] {
         { type: Type.BracketOpen, matcher: /^\(/ },
         { type: Type.Comma, matcher: /^,/ },
         { type: Type.Constant, matcher: config().constants.map(c => RegExp('^' + c + '(?![a-zA-Z0-9_])')) },
-        { type: Type.Function, matcher: /^[a-zA-Z][a-zA-Z0-9_]*(?=\()/ },
+        { type: Type.Function, matcher: /^[a-zA-Z_][a-zA-Z0-9_]*(?=\()/ },
         { type: Type.Number, matcher: /^-?([0-9]+(\.[0-9]+)?|\.[0-9]+)/ },
         { type: Type.Operator, matcher: config().operators.map(operator => RegExp('^\\' + operator.symbol)) },
-        { type: Type.Variable, matcher: /^[a-zA-Z][a-zA-Z0-9_]*(?![a-zA-Z0-9\(])/ }
+        { type: Type.Variable, matcher: /^[a-zA-Z_][a-zA-Z0-9_]*(?![a-zA-Z0-9\(])/ }
     ]
 
     let newRun = true

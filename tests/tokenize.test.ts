@@ -178,3 +178,21 @@ it('can tokenize nested brackets', () => {
         { type: Type.Number, value: '5' }
     ])
 })
+
+it('can tokenize implicit multiplication', () => {
+    let input = '2xy + 3sin(x)'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Variable, value: 'xy' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '3' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Function, value: 'sin' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Variable, value: 'x' },
+        { type: Type.BracketClose, value: ')' }
+    ])
+})
