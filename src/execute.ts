@@ -1,5 +1,6 @@
 import config from './config'
 import { Action, Type } from './interfaces'
+import log from './logger'
 import Node from './node'
 import string from './output/string'
 import parse from './parse'
@@ -53,7 +54,19 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         return node
     }
 
-    return parse(action.handle(converted).toString())
+    let result = parse(action.handle(converted).toString())
+
+    log({
+        name: action.name,
+        search: searchStep(action.pattern, converted),
+        replace: string(result),
+        result: (function () {
+            node.parent?.replaceChild(node, result)
+            return string(result.root()) ?? result
+        })()
+    })
+
+    return result
 }
 
 function findVariables(
@@ -126,4 +139,12 @@ function findVariables(
     }
 
     return variables
+}
+
+function searchStep(pattern: string, variables: { [key: string]: string | number }): string {
+    Object.keys(variables).forEach(variable => {
+        pattern = pattern.replace(variable, `(${variables[variable]})`)
+    })
+
+    return string(parse(pattern))
 }

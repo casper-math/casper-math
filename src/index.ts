@@ -1,6 +1,7 @@
 import config, { getConfig } from './config'
 import execute from './execute'
-import { OptionalOptions } from './interfaces'
+import { OptionalOptions, Result } from './interfaces'
+import { deleteLogs, getLogs } from './logger'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
@@ -19,7 +20,9 @@ class Casper {
         return this
     }
 
-    go(expression: string) {
+    go(expression: string): Result {
+        deleteLogs()
+
         let tree = parse(expression)
         let old
 
@@ -31,6 +34,8 @@ class Casper {
             })
         }
 
-        return config().output === 'string' ? string(tree) : latex(tree)
+        let result = config().output === 'string' ? string(tree) : latex(tree)
+
+        return { result: result, steps: getLogs() }
     }
 }

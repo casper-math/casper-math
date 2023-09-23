@@ -39,7 +39,7 @@ it.each([
     ['6900 / 3', '2300']
 ])('can do arithmetic', (input: string, output: string) => {
     let result = casper().go(input)
-    expect(result).toBe(output)
+    expect(result.result).toBe(output)
 })
 
 it.each([
@@ -57,5 +57,5 @@ it.each([
     ['(38 - (3 + 2)) * 5', '165']
 ])('respects the order of operations', (input: string, output: string) => {
     let result = casper().go(input)
-    expect(result).toBe(output)
+    expect(result.result).toBe(output)
 })
