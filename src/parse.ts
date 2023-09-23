@@ -13,14 +13,13 @@ export default function parse(expression: string): Node {
             node = node.addChild(new Node(token.type, token.value))
         } else if (token.type === Type.BracketClose) {
             let done = false
+
             while (!done) {
-                if (node.type === Type.BracketOpen) {
-                    done = true
-                } else {
-                    // @ts-ignore
-                    node = node.parent
-                }
+                // @ts-ignore
+                node = node.parent
+                if (node.type === Type.BracketOpen) done = true
             }
+
             if (node.parent?.type === Type.Function) {
                 node = node.parent
             }
