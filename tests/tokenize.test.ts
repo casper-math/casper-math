@@ -1,6 +1,12 @@
 import { Type } from '../src/interfaces'
 import tokenize from './../src/tokenize'
 
+it('can tokenize a single expression', () => {
+    let input = '5'
+    let result = tokenize(input)
+    expect(result).toEqual([{ type: Type.Number, value: '5' }])
+})
+
 it('can tokenize a simple expression', () => {
     let input = '2 + 3'
     let result = tokenize(input)
@@ -59,7 +65,7 @@ it('can tokenize functions', () => {
 })
 
 it('can tokenize different number formats', () => {
-    let input = '0.5 + .54 + -4 + -0.45 + -.2'
+    let input = '0.5 + .54 - 4 - 0.45 - .2'
     let result = tokenize(input)
 
     expect(result).toEqual([
@@ -137,13 +143,17 @@ it('can tokenize commas', () => {
     ])
 })
 
-it('can parse subtraction as an operator', () => {
-    let input = '12 - 9'
+it('can tokenize subtraction', () => {
+    let input = '-12 - 9 - x'
     let result = tokenize(input)
 
     expect(result).toEqual([
-        { type: Type.Number, value: '12' },
-        { type: Type.Operator, value: '-' },
-        { type: Type.Number, value: '9' }
+        { type: Type.Number, value: '-12' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-9' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-1' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Variable, value: 'x' }
     ])
 })

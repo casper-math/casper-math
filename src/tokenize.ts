@@ -2,55 +2,50 @@ import config from './config'
 import { Token, Type } from './interfaces'
 
 export default function tokenize(expression: string): Token[] {
-    expression = expression.replace(/ /g, '')
+    expression = expression
+        .replace(/ /g, '')
+        .replace(/(?<=[a-zA-Z0-9])-/g, '+-')
+        .replace(/-(?![0-9.])/g, '-1*')
+
     let tokens: Token[] = []
+
+    const matchers: { type: Type; matcher: RegExp | RegExp[] }[] = [
+        { type: Type.BracketClose, matcher: /^\)/ },
+        { type: Type.BracketOpen, matcher: /^\(/ },
+        { type: Type.Comma, matcher: /^,/ },
+        { type: Type.Constant, matcher: config().constants.map(c => RegExp('^' + c + '(?![a-zA-Z0-9_])')) },
+        { type: Type.Function, matcher: /^[a-zA-Z][a-zA-Z0-9_]*(?=\()/ },
+        { type: Type.Number, matcher: /^-?([0-9]+(\.[0-9]+)?|\.[0-9]+)/ },
+        { type: Type.Operator, matcher: config().operators.map(operator => RegExp('^\\' + operator.symbol)) },
+        { type: Type.Variable, matcher: /^[a-zA-Z][a-zA-Z0-9_]*(?![a-zA-Z0-9\(])/ }
+    ]
 
     let newRun = true
 
-    while (newRun) {
+    while (expression !== '' && newRun) {
         newRun = false
 
-        for (const constant of config().constants) {
-            let regex = new RegExp('^' + constant + '(?![a-zA-Z])')
-            let match = expression.match(regex)
+        matchers.forEach(({ type, matcher }) => {
+            if (newRun) return
 
-            if (match) {
-                newRun = true
-                tokens.push({ type: Type.Constant, value: match[0] })
-                expression = expression.replace(regex, '')
-                break
+            let symbol = Array.isArray(matcher)
+                ? matcher.map(regex => expression.match(regex)).filter(x => x)[0]?.[0]
+                : expression.match(matcher)?.[0]
+
+            if (!symbol) {
+                return
             }
-        }
 
-        for (const [pattern, type] of Object.entries(patterns())) {
-            let regex = new RegExp('^' + pattern)
-            let match = expression.match(regex)
-
-            if (match) {
-                newRun = true
-                tokens.push({ type: type, value: match[0] })
-                expression = expression.replace(regex, '')
-                break
-            }
-        }
+            newRun = true
+            expression = expression.slice(symbol.length)
+            tokens.push({ type: type, value: symbol })
+        })
     }
 
-    if (expression !== '') {
+    if (expression.length > 0) {
         let error = tokens.map(token => token.value).join('') + expression
         throw new Error(`Syntax error: cannot parse "${error}".`)
     }
 
     return tokens
-}
-
-function patterns() {
-    return {
-        '\\)': Type.BracketClose,
-        '\\(': Type.BracketOpen,
-        ',': Type.Comma,
-        '[a-zA-Z_][a-zA-Z0-9_]*(?=\\()': Type.Function,
-        '-?([0-9]+(\\.[0-9]+)?|\\.[0-9]+)': Type.Number,
-        '(\\+|\\*|\\^|\\/)': Type.Operator,
-        '[a-zA-Z_][a-zA-Z0-9_]*(?![a-zA-Z0-9_(])': Type.Variable
-    }
 }
