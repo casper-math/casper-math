@@ -37,7 +37,25 @@ it.each([
     ['1800 / 90', '20'],
     ['54000 / 60', '900'],
     ['6900 / 3', '2300']
-])('can do arithmetic', (input, output) => {
+])('can do arithmetic', (input: string, output: string) => {
+    let result = casper().go(input)
+    expect(result).toBe(output)
+})
+
+it.each([
+    ['(9 + 6) * 5', '75'],
+    ['9 * 6 + 5', '59'],
+    ['9 * (6 + 5)', '99'],
+    ['8 + 3 * 7 + 2', '31'],
+    ['8 + 3 * (7 + 2)', '35'],
+    ['(8 + 3) * (7 + 2)', '99'],
+    ['20 - 2 * (8 - 4)', '12'],
+    ['20 - 2 * 8 + 4', '8'],
+    ['(20 - 2) * 8 + 4', '148'],
+    ['38 - (3 + 2) * 5', '13'],
+    ['(38 - 3) + 2 * 5', '45'],
+    ['(38 - (3 + 2)) * 5', '165']
+])('respects the order of operations', (input: string, output: string) => {
     let result = casper().go(input)
     expect(result).toBe(output)
 })

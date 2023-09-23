@@ -331,3 +331,19 @@ it('parses division before multiplication correctly', () => {
 
     expect(result).toEqual(root)
 })
+
+it('can parse nested brackets', () => {
+    let result = parse('(38 - (3 + 2)) * 5')
+
+    let root = new Node(Type.Operator, '*')
+    let plus = root.addChild(new Node(Type.Operator, '+'))
+    plus.addChild(new Node(Type.Number, 38))
+    let times = plus.addChild(new Node(Type.Operator, '*'))
+    times.addChild(new Node(Type.Number, -1))
+    let nestedPlus = times.addChild(new Node(Type.Operator, '+'))
+    nestedPlus.addChild(new Node(Type.Number, 3))
+    nestedPlus.addChild(new Node(Type.Number, 2))
+    root.addChild(new Node(Type.Number, 5))
+
+    expect(result).toEqual(root)
+})

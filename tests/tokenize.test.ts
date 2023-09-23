@@ -157,3 +157,24 @@ it('can tokenize subtraction', () => {
         { type: Type.Variable, value: 'x' }
     ])
 })
+
+it('can tokenize nested brackets', () => {
+    let input = '(38 - (3 + 2)) * 5'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Number, value: '38' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-1' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Number, value: '3' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '2' },
+        { type: Type.BracketClose, value: ')' },
+        { type: Type.BracketClose, value: ')' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Number, value: '5' }
+    ])
+})
