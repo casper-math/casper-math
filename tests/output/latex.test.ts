@@ -55,3 +55,8 @@ it('converts greek letters', () => {
     let tree = parse('sin(pi + 2 * alpha)')
     expect(latex(tree)).toBe('\\text{sin}(\\pi + 2 \\cdot \\alpha)')
 })
+
+it('converts subtraction correctly', () => {
+    let tree = parse('-4 - 3 - x')
+    expect(latex(tree)).toBe('-4 - 3 - x')
+})

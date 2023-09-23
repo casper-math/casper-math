@@ -35,3 +35,8 @@ it('can convert an exponentiation with brackets to a string', () => {
     let tree = parse('(2 ^ 3) ^ 4')
     expect(string(tree)).toBe('(2 ^ 3) ^ 4')
 })
+
+it('converts subtraction correctly', () => {
+    let tree = parse('-4 - 3 - x')
+    expect(string(tree)).toBe('-4 - 3 - x')
+})

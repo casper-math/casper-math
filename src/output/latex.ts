@@ -11,6 +11,17 @@ export default function latex(node: Node): string {
         return value(node)
     }
 
+    if (node.value === '+') {
+        return brackets(
+            node.children
+                .map(child => latex(child))
+                .join(' + ')
+                .replace('+ -1 \\cdot', '-')
+                .replace('+ -', '- '),
+            node
+        )
+    }
+
     if (node.value === '*') {
         return brackets(node.children.map(child => latex(child)).join(' \\cdot '), node)
     }
