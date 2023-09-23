@@ -3,6 +3,7 @@ import { Action } from './../src/interfaces'
 import parse from './../src/parse'
 
 const add: Action = {
+    name: 'add',
     pattern: 'x + y',
     variables: { x: 'number', y: 'number' },
     handle: ({ x, y }) => Number(x) + Number(y)
@@ -33,6 +34,7 @@ it('only matches the number of operands needed', () => {
 })
 
 const double: Action = {
+    name: 'double',
     pattern: 'x + x',
     variables: { x: 'expression' },
     handle: ({ x }) => `2 * (${x})`
@@ -63,6 +65,7 @@ it('does not add nested associative operators', () => {
 })
 
 const stupid: Action = {
+    name: 'stupid',
     pattern: 'x * y',
     variables: { x: 'expression', y: 'number' },
     handle: ({ y }) => y
@@ -81,6 +84,7 @@ it('handles associative operators', () => {
 })
 
 const nonCommutative: Action = {
+    name: 'non-commutative',
     pattern: 'x / y',
     variables: { x: 'expression', y: 'number' },
     handle: ({ x }) => x
@@ -99,6 +103,7 @@ it('does not run the non-commutative action when not possible', () => {
 })
 
 const nested: Action = {
+    name: 'nested',
     pattern: 'x * (y + x)',
     variables: { x: 'expression', y: 'number' },
     handle: ({ x, y }) => `(${x} * ${y}) + (${x} * ${x})`
@@ -123,6 +128,7 @@ it('does not apply associativity when nested', () => {
 })
 
 const root: Action = {
+    name: 'root',
     pattern: 'y',
     variables: { y: 'number' },
     handle: () => 2
