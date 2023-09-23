@@ -54,7 +54,9 @@ it.each([
     ['(20 - 2) * 8 + 4', '148'],
     ['38 - (3 + 2) * 5', '13'],
     ['(38 - 3) + 2 * 5', '45'],
-    ['(38 - (3 + 2)) * 5', '165']
+    ['(38 - (3 + 2)) * 5', '165'],
+    ['420 / 4 - (125 - 117) * 4 + 48 / 12 - 4', '73'],
+    ['48 / (8 - 4) * 4 + 48 / (12 - 4)', '54']
 ])('respects the order of operations', (input: string, output: string) => {
     let result = casper().go(input)
     expect(result.result).toBe(output)
