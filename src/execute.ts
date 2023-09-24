@@ -103,8 +103,31 @@ function findVariables(
             let type = action.variables[child.value]
             let matcher = matchers[type]
 
-            if (!matcher(node.children[index])) {
-                return null
+            if (!matcher(node.children[index]) || matchedNodes.includes(node.children[index])) {
+                if (
+                    pattern.type !== Type.Operator ||
+                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
+                ) {
+                    return null
+                }
+
+                let found: Node | undefined = undefined
+
+                node.children.forEach(nodeChild => {
+                    if (
+                        !found &&
+                        matcher(nodeChild) &&
+                        !matchedNodes.includes(nodeChild) &&
+                        (!Object.keys(variables).includes(child.value.toString()) ||
+                            variables[child.value].equals(nodeChild))
+                    ) {
+                        found = nodeChild
+                        variables[child.value] = nodeChild
+                        matchedNodes.push(nodeChild)
+                    }
+                })
+
+                if (!found) return null
             } else {
                 if (!Object.keys(variables).includes(child.value.toString())) {
                     variables[child.value] = node.children[index]

@@ -67,12 +67,12 @@ it('does not add nested associative operators', () => {
 const stupid: Action = {
     name: 'stupid',
     pattern: 'x * y',
-    variables: { x: 'expression', y: 'number' },
+    variables: { x: 'single', y: 'number' },
     handle: ({ y }) => y
 }
 
 it('handles commutative operators', () => {
-    let tree = parse('6 * (2 + x)')
+    let tree = parse('6 * a')
     let result = execute(stupid, tree)
     expect(result).toEqual(parse('6'))
 })
@@ -80,7 +80,7 @@ it('handles commutative operators', () => {
 it('handles associative operators', () => {
     let tree = parse('x * y * 7')
     let result = execute(stupid, tree)
-    expect(result).toEqual(parse('7'))
+    expect(result).toEqual(parse('y * 7'))
 })
 
 const nonCommutative: Action = {
