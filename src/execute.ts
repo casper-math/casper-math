@@ -149,7 +149,11 @@ function findVariables(
             variables = { ...variables, ...output }
             Object.values(output).forEach(value => matchedNodes.push(value))
         } else {
-            if (!node.children[index].equals(pattern.children[index])) return null
+            if (node.children[index].equals(pattern.children[index])) {
+                matchedNodes.push(node.children[index])
+            } else {
+                return null
+            }
         }
     }
 
