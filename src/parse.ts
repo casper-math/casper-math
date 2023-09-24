@@ -62,7 +62,10 @@ export default function parse(expression: string): Node {
                 } else if (token.value === node.parent.value && operator(token).associative) {
                     done = true
                     node = node.parent
-                } else if (token.value === node.parent.value && operator(token).evaluate === 'ltr') {
+                } else if (
+                    operator(token).precedence === operator(node.parent)?.precedence &&
+                    operator(token).evaluate === 'ltr'
+                ) {
                     node = node.parent
                 } else {
                     done = true
