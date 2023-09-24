@@ -151,3 +151,34 @@ it('can match parts of a root', () => {
     let result = execute(root, tree)
     expect(result).toEqual(parse('x + 2'))
 })
+
+const timesOne: Action = {
+    name: 'times one',
+    pattern: '1 * x',
+    variables: { x: 'expression' },
+    handle: ({ x }) => x
+}
+
+it('can match the times-one pattern', () => {
+    let tree = parse('1 * 7')
+    let result = execute(timesOne, tree)
+    expect(result).toEqual(parse('7'))
+})
+
+it('can match an entire expression', () => {
+    let tree = parse('1 * (3 + 4 * x)')
+    let result = execute(timesOne, tree)
+    expect(result).toEqual(parse('3 + 4 * x'))
+})
+
+it('applies commutativity', () => {
+    let tree = parse('y * 1')
+    let result = execute(timesOne, tree)
+    expect(result).toEqual(parse('y'))
+})
+
+it('applies associativity', () => {
+    let tree = parse('5 * 1 * z')
+    let result = execute(timesOne, tree)
+    expect(result).toEqual(parse('5 * z'))
+})
