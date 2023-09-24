@@ -152,7 +152,29 @@ function findVariables(
             if (node.children[index].equals(pattern.children[index])) {
                 matchedNodes.push(node.children[index])
             } else {
-                return null
+                if (
+                    pattern.type !== Type.Operator ||
+                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
+                ) {
+                    return null
+                }
+
+                let found: Node | undefined = undefined
+
+                node.children.forEach(nodeChild => {
+                    if (
+                        !found &&
+                        child.equals(nodeChild) &&
+                        !matchedNodes.includes(nodeChild) &&
+                        (!Object.keys(variables).includes(child.value.toString()) ||
+                            variables[child.value].equals(nodeChild))
+                    ) {
+                        found = nodeChild
+                        matchedNodes.push(nodeChild)
+                    }
+                })
+
+                if (!found) return null
             }
         }
     }
