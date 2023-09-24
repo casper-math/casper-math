@@ -66,3 +66,21 @@ it.each([
     let result = casper().go(input)
     expect(result.result).toBe(output)
 })
+
+it.each([
+    ['15 / 25', '3 / 5'],
+    ['15 / 27', '5 / 9'],
+    ['18 / 36', '1 / 2'],
+    ['28 / 35', '4 / 5'],
+    ['20 / 100', '1 / 5'],
+    ['56 / 40', '7 / 5'],
+    ['35 / 90', '7 / 18'],
+    ['60 / 12', '5'],
+    ['32 / 32', '1'],
+    ['24 / 42', '4 / 7'],
+    ['27 / 15', '9 / 5'],
+    ['32 / 12', '8 / 3']
+])('can do arithmetic with fractions', (input: string, output: string) => {
+    let result = casper().go(input)
+    expect(result.result).toBe(output)
+})
