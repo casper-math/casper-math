@@ -21,6 +21,12 @@ export default class Fraction {
         this.denominator = this.denominator / divisor
     }
 
+    toString(): string {
+        if (this.denominator === 1) return this.numerator.toString()
+
+        return `${this.numerator} / ${this.denominator}`
+    }
+
     static add(...inputs: (Fraction | number)[]): Fraction {
         let fractions: Fraction[] = inputs.map(fraction =>
             typeof fraction === 'number' ? new Fraction(fraction, 1) : fraction

@@ -128,3 +128,13 @@ it('can divide fractions and numbers', () => {
 
     expect(result).toEqual(new Fraction(4, 21))
 })
+
+it('can convert the fraction to a string', () => {
+    let fraction = new Fraction(4, 7)
+    expect(fraction.toString()).toBe('4 / 7')
+})
+
+it('returns the numerator if the denominator is 1', () => {
+    let fraction = new Fraction(8, 1)
+    expect(fraction.toString()).toBe('8')
+})
