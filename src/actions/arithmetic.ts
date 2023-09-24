@@ -33,4 +33,13 @@ const addFractions: Action = {
     }
 }
 
-export default [add, multiply, simplify, addFractions]
+const addFractionsAndNumbers: Action = {
+    name: 'add fractions and numbers',
+    pattern: 'a / b + c',
+    variables: { a: 'number', b: 'number', c: 'number' },
+    handle: ({ a, b, c }) => {
+        return Fraction.add(new Fraction(Number(a), Number(b)), Number(c)).toString()
+    }
+}
+
+export default [add, multiply, simplify, addFractions, addFractionsAndNumbers]
