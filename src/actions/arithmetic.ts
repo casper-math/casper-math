@@ -25,4 +25,14 @@ const simplify: Action = {
     }
 }
 
-export default [add, multiply, simplify]
+const addFractions: Action = {
+    name: 'add fractions',
+    pattern: 'a / b + c / d',
+    variables: { a: 'number', b: 'number', c: 'number', d: 'number' },
+    handle: ({ a, b, c, d }) => {
+        let fraction = Fraction.add(new Fraction(Number(a), Number(b)), new Fraction(Number(c), Number(d)))
+        return fraction.denominator === 1 ? fraction.numerator : `(${fraction.numerator}) / (${fraction.denominator})`
+    }
+}
+
+export default [add, multiply, simplify, addFractions]
