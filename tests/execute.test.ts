@@ -180,5 +180,5 @@ it('applies commutativity', () => {
 it('applies associativity', () => {
     let tree = parse('5 * 1 * z')
     let result = execute(timesOne, tree)
-    expect(result).toEqual(parse('5 * z'))
+    expect(result).toEqual(parse('z * 5'))
 })
