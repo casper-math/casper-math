@@ -140,18 +140,46 @@ function findVariables(
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            matchedNodes.push(node.children[index])
             let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
-            if (!output) return null
+            if (!output) {
+                if (
+                    pattern.type !== Type.Operator ||
+                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
+                ) {
+                    return null
+                }
 
-            for (let i = 0; i < Object.keys(output).length; i++) {
-                let key = Object.keys(output)[i]
+                let found: Node | undefined = undefined
 
-                if (Object.keys(variables).includes(key) && !variables[key].equals(output[key])) return null
+                node.children.forEach(nodeChild => {
+                    if (
+                        !found &&
+                        nodeChild.type === child.type &&
+                        nodeChild.value === child.value &&
+                        !matchedNodes.includes(nodeChild)
+                    ) {
+                        let result = findVariables(action, nodeChild, child, matchedNodes, variables)
+                        if (result) {
+                            found = nodeChild
+                            variables = { ...result, ...variables }
+                            matchedNodes.push(nodeChild)
+                        }
+                    }
+                })
+
+                if (!found) return null
+            } else {
+                matchedNodes.push(node.children[index])
+
+                for (let i = 0; i < Object.keys(output).length; i++) {
+                    let key = Object.keys(output)[i]
+
+                    if (Object.keys(variables).includes(key) && !variables[key].equals(output[key])) return null
+                }
+
+                variables = { ...variables, ...output }
+                Object.values(output).forEach(value => matchedNodes.push(value))
             }
-
-            variables = { ...variables, ...output }
-            Object.values(output).forEach(value => matchedNodes.push(value))
         } else {
             if (node.children[index].equals(pattern.children[index])) {
                 matchedNodes.push(node.children[index])

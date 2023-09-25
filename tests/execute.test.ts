@@ -182,3 +182,28 @@ it('applies associativity', () => {
     let result = execute(timesOne, tree)
     expect(result).toEqual(parse('z * 5'))
 })
+
+const anotherNested: Action = {
+    name: 'another nested',
+    pattern: 'a / b + c',
+    variables: { a: 'number', b: 'number', c: 'number' },
+    handle: ({ a, b, c }) => `${Number(a) + Number(b) * Number(c)} / ${b}`
+}
+
+it('can run the action', () => {
+    let tree = parse('3 / 7 + 4')
+    let result = execute(anotherNested, tree)
+    expect(result).toEqual(parse('31 / 7'))
+})
+
+it('applies commutativity with fractions', () => {
+    let tree = parse('4 + 3 / 7')
+    let result = execute(anotherNested, tree)
+    expect(result).toEqual(parse('31 / 7'))
+})
+
+it('applies associativity with fractions', () => {
+    let tree = parse('x + 13 / 3 + 8')
+    let result = execute(anotherNested, tree)
+    expect(result).toEqual(parse('x + 37 / 3'))
+})
