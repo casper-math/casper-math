@@ -73,7 +73,8 @@ function findVariables(
     action: Action,
     node: Node,
     pattern: Node,
-    matchedNodes: Node[]
+    matchedNodes: Node[],
+    variables: { [key: string]: Node } = {}
 ): { [key: string]: Node } | null {
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
@@ -94,8 +95,6 @@ function findVariables(
         return null
     }
 
-    let variables: { [key: string]: Node } = {}
-
     for (let index = 0; index < pattern.children.length; index++) {
         let child = pattern.children[index]
 
@@ -103,7 +102,12 @@ function findVariables(
             let type = action.variables[child.value]
             let matcher = matchers[type]
 
-            if (!matcher(node.children[index]) || matchedNodes.includes(node.children[index])) {
+            if (
+                !matcher(node.children[index]) ||
+                matchedNodes.includes(node.children[index]) ||
+                (Object.keys(variables).includes(child.value.toString()) &&
+                    !variables[child.value].equals(node.children[index]))
+            ) {
                 if (
                     pattern.type !== Type.Operator ||
                     !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
@@ -137,7 +141,7 @@ function findVariables(
             }
         } else if (child.containsType(Type.Variable)) {
             matchedNodes.push(node.children[index])
-            let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes)
+            let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
             if (!output) return null
 
             for (let i = 0; i < Object.keys(output).length; i++) {

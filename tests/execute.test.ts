@@ -104,19 +104,19 @@ it('does not run the non-commutative action when not possible', () => {
 
 const nested: Action = {
     name: 'nested',
-    pattern: 'x * (y + x)',
+    pattern: 'x * (x + y)',
     variables: { x: 'expression', y: 'number' },
     handle: ({ x, y }) => `(${x} * ${y}) + (${x} * ${x})`
 }
 
 it('works with nested actions', () => {
-    let tree = parse('7 * (3 + 7) + 5')
+    let tree = parse('7 * (7 + 3) + 5')
     let result = execute(nested, tree)
     expect(result).toEqual(parse('(7 * 3) + (7 * 7) + 5'))
 })
 
 it('applies commutativity when needed when nested', () => {
-    let tree = parse('7 * (7 + 3)')
+    let tree = parse('7 * (3 + 7)')
     let result = execute(nested, tree)
     expect(result).toEqual(parse('(7 * 3) + (7 * 7)'))
 })
