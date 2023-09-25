@@ -8,7 +8,7 @@ export function getLogs(): Step[] {
     return Logger.getInstance().steps
 }
 
-export function deleteLogs(): void {
+export function clearLogs(): void {
     Logger.getInstance().steps = []
 }
 

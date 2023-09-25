@@ -1,7 +1,7 @@
 import config, { getConfig } from './config'
 import execute from './execute'
 import { Options, Result } from './interfaces'
-import { deleteLogs, getLogs } from './logger'
+import { clearLogs, getLogs } from './logger'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
@@ -21,7 +21,7 @@ class Casper {
     }
 
     go(expression: string): Result {
-        deleteLogs()
+        clearLogs()
 
         let tree = parse(expression)
         let old
