@@ -1,7 +1,7 @@
 import actions from './actions/index'
-import { Options } from './interfaces'
+import { RequiredOptions } from './interfaces'
 
-export default function config(): Options {
+export default function config(): RequiredOptions {
     return Config.getInstance().options
 }
 
@@ -24,7 +24,7 @@ class Config {
         this.options = new Config().options
     }
 
-    options: Options = {
+    options: RequiredOptions = {
         operators: [
             { symbol: '+', associative: true, commutative: true, evaluate: 'ltr', precedence: 1 },
             { symbol: '*', associative: true, commutative: true, evaluate: 'ltr', precedence: 2 },

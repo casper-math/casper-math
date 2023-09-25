@@ -13,14 +13,14 @@ export interface Operator {
     precedence: number
 }
 
-export interface Options {
+export interface RequiredOptions {
     operators: Operator[]
     constants: string[]
     actions: Action[]
     output: 'string' | 'latex'
 }
 
-export interface OptionalOptions {
+export interface Options {
     operators?: Operator[]
     constants?: string[]
     actions?: Action[]

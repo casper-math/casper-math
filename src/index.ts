@@ -1,6 +1,6 @@
 import config, { getConfig } from './config'
 import execute from './execute'
-import { OptionalOptions, Result } from './interfaces'
+import { Options, Result } from './interfaces'
 import { deleteLogs, getLogs } from './logger'
 import latex from './output/latex'
 import string from './output/string'
@@ -15,7 +15,7 @@ class Casper {
         getConfig().reset()
     }
 
-    options(options: OptionalOptions) {
+    options(options: Options) {
         getConfig().options = { ...config(), ...options }
         return this
     }
