@@ -6,6 +6,12 @@ it('can instantiate a new fraction', () => {
     expect(fraction.denominator).toBe(5)
 })
 
+it('can instantiate a new fraction from strings', () => {
+    let fraction = new Fraction('4', '6')
+    expect(fraction.numerator).toBe(2)
+    expect(fraction.denominator).toBe(3)
+})
+
 test('the denominator cannot be zero', () => {
     expect(() => new Fraction(3, 0)).toThrow('Denominator cannot be zero.')
 })
@@ -59,6 +65,14 @@ it('can add fractions and numbers', () => {
     expect(result).toEqual(new Fraction(25, 7))
 })
 
+it('can add fractions and strings', () => {
+    let fraction = new Fraction(4, 7)
+    let number = '4'
+    let result = Fraction.add(fraction, number)
+
+    expect(result).toEqual(new Fraction(32, 7))
+})
+
 it('can add multiple fractions at once', () => {
     let fraction1 = new Fraction(-15, -4)
     let fraction2 = new Fraction(9, -20)
@@ -94,6 +108,14 @@ it('can multiply fractions and numbers', () => {
     expect(result).toEqual(new Fraction(12, 7))
 })
 
+it('can multiply fractions and strings', () => {
+    let fraction = new Fraction(4, 7)
+    let number = '4'
+    let result = Fraction.multiply(fraction, number)
+
+    expect(result).toEqual(new Fraction(16, 7))
+})
+
 it('can add multiple fractions at once', () => {
     let fraction1 = new Fraction(-15, -4)
     let fraction2 = new Fraction(9, -20)
@@ -127,6 +149,14 @@ it('can divide fractions and numbers', () => {
     let result = Fraction.divide(fraction, number)
 
     expect(result).toEqual(new Fraction(4, 21))
+})
+
+it('can divide fractions and strings', () => {
+    let fraction = new Fraction(4, 7)
+    let number = '4'
+    let result = Fraction.divide(fraction, number)
+
+    expect(result).toEqual(new Fraction(1, 7))
 })
 
 it('can convert the fraction to a string', () => {

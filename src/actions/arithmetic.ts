@@ -20,7 +20,7 @@ const simplify: Action = {
     pattern: 'a / b',
     variables: { a: 'number', b: 'number' },
     handle: ({ a, b }) => {
-        return new Fraction(Number(a), Number(b)).toString()
+        return new Fraction(a, b).toString()
     }
 }
 
@@ -28,15 +28,14 @@ const addFractions: Action = {
     name: 'add fractions',
     pattern: 'a / b + c / d',
     variables: { a: 'number', b: 'number', c: 'number', d: 'number' },
-    handle: ({ a, b, c, d }) =>
-        Fraction.add(new Fraction(Number(a), Number(b)), new Fraction(Number(c), Number(d))).toString()
+    handle: ({ a, b, c, d }) => Fraction.add(new Fraction(a, b), new Fraction(c, d)).toString()
 }
 
 const addFractionsAndNumbers: Action = {
     name: 'add fractions and numbers',
     pattern: 'a / b + c',
     variables: { a: 'number', b: 'number', c: 'number' },
-    handle: ({ a, b, c }) => Fraction.add(new Fraction(Number(a), Number(b)), Number(c)).toString()
+    handle: ({ a, b, c }) => Fraction.add(new Fraction(a, b), c).toString()
 }
 
 export default [add, multiply, simplify, addFractions, addFractionsAndNumbers]

@@ -2,11 +2,11 @@ export default class Fraction {
     numerator: number
     denominator: number
 
-    constructor(numerator: number, denominator: number) {
-        if (denominator === 0) throw new Error('Denominator cannot be zero.')
+    constructor(numerator: number | string, denominator: number | string) {
+        if (Number(denominator) === 0) throw new Error('Denominator cannot be zero.')
 
-        this.numerator = numerator
-        this.denominator = denominator
+        this.numerator = Number(numerator)
+        this.denominator = Number(denominator)
 
         this.simplify()
     }
@@ -27,9 +27,9 @@ export default class Fraction {
         return `${this.numerator} / ${this.denominator}`
     }
 
-    static add(...inputs: (Fraction | number)[]): Fraction {
+    static add(...inputs: (Fraction | number | string)[]): Fraction {
         let fractions: Fraction[] = inputs.map(fraction =>
-            typeof fraction === 'number' ? new Fraction(fraction, 1) : fraction
+            typeof fraction === 'number' || typeof fraction === 'string' ? new Fraction(fraction, 1) : fraction
         )
 
         let result = new Fraction(0, 1)
@@ -43,9 +43,9 @@ export default class Fraction {
         return result
     }
 
-    static multiply(...inputs: (Fraction | number)[]): Fraction {
+    static multiply(...inputs: (Fraction | number | string)[]): Fraction {
         let fractions: Fraction[] = inputs.map(fraction =>
-            typeof fraction === 'number' ? new Fraction(fraction, 1) : fraction
+            typeof fraction === 'number' || typeof fraction === 'string' ? new Fraction(fraction, 1) : fraction
         )
 
         let result = new Fraction(1, 1)
@@ -59,9 +59,9 @@ export default class Fraction {
         return result
     }
 
-    static divide(fraction1: Fraction | number, fraction2: Fraction | number): Fraction {
+    static divide(fraction1: Fraction | number | string, fraction2: Fraction | number | string): Fraction {
         let reciprocal =
-            typeof fraction2 === 'number'
+            typeof fraction2 === 'number' || typeof fraction2 === 'string'
                 ? new Fraction(1, fraction2)
                 : new Fraction(fraction2.denominator, fraction2.numerator)
 
