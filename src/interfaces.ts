@@ -32,6 +32,12 @@ export interface Result {
     steps: Step[]
 }
 
+export interface TemporaryStep {
+    name: string
+    search: string
+    replace: string
+}
+
 export interface Step {
     name: string
     search: string

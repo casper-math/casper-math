@@ -59,11 +59,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
     log({
         name: action.name,
         search: searchStep(action.pattern, converted),
-        replace: string(result),
-        result: (function () {
-            node.parent?.replaceChild(node, result)
-            return string(result.root()) ?? result
-        })()
+        replace: string(result)
     })
 
     return result

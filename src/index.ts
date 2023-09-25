@@ -1,7 +1,7 @@
 import config, { getConfig } from './config'
 import execute from './execute'
 import { Options, Result } from './interfaces'
-import { clearLogs, getLogs } from './logger'
+import { clearLogs, clearTemporarySteps, getLogs } from './logger'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
@@ -31,6 +31,7 @@ class Casper {
 
             config().actions.forEach(action => {
                 tree = execute(action, tree)
+                clearTemporarySteps(string(tree))
             })
         }
 
