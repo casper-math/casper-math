@@ -2,30 +2,30 @@ import { Type } from '../src/interfaces'
 import Node from '../src/node'
 
 it('can instantiate a new node', () => {
-    let node = new Node(Type.Operator, '+')
+    const node = new Node(Type.Operator, '+')
     expect(node.type).toBe(Type.Operator)
     expect(node.value).toBe('+')
 })
 
 test('numbers will be casted', () => {
-    let node = new Node(Type.Number, '3')
+    const node = new Node(Type.Number, '3')
     expect(node.value).not.toBe('3')
     expect(node.value).toBe(3)
 })
 
 it('has zero children', () => {
-    let node = new Node(Type.Operator, '+')
+    const node = new Node(Type.Operator, '+')
     expect(node.children).toEqual([])
 })
 
 it('has no parent', () => {
-    let node = new Node(Type.Operator, '+')
+    const node = new Node(Type.Operator, '+')
     expect(node.parent).toBeNull()
 })
 
 it('can set a parent', () => {
-    let parent = new Node(Type.Operator, '+')
-    let child = new Node(Type.Number, 3)
+    const parent = new Node(Type.Operator, '+')
+    const child = new Node(Type.Number, 3)
     expect(child.parent).toBeNull()
     child.setParent(parent)
     expect(child.parent).toBe(parent)
@@ -34,8 +34,8 @@ it('can set a parent', () => {
 })
 
 it('can add a child', () => {
-    let parent = new Node(Type.Operator, '+')
-    let child = new Node(Type.Operator, 3)
+    const parent = new Node(Type.Operator, '+')
+    const child = new Node(Type.Operator, 3)
     expect(parent.addChild(child)).toBe(child)
     expect(parent.children).toEqual([child])
     expect(parent.children[0]).toBe(child)
@@ -43,26 +43,26 @@ it('can add a child', () => {
 })
 
 it('can convert a node to a string', () => {
-    let parent = new Node(Type.Operator, '+')
-    let times = parent.addChild(new Node(Type.Operator, '*'))
+    const parent = new Node(Type.Operator, '+')
+    const times = parent.addChild(new Node(Type.Operator, '*'))
     times.addChild(new Node(Type.Variable, 'y'))
     times.addChild(new Node(Type.Number, 2))
     parent.addChild(new Node(Type.Variable, 'x'))
     parent.addChild(new Node(Type.Number, 3))
-    let division = parent.addChild(new Node(Type.Operator, '/'))
+    const division = parent.addChild(new Node(Type.Operator, '/'))
     division.addChild(new Node(Type.Number, 4))
     division.addChild(new Node(Type.Variable, 'z'))
 
-    let result = parent.toString()
+    const result = parent.toString()
     expect(result).toBe(
         '+ [null]\r\n├─ * [+]\r\n│  ├─ y [*]\r\n│  └─ 2 [*]\r\n├─ x [+]\r\n├─ 3 [+]\r\n└─ / [+]\r\n   ├─ 4 [/]\r\n   └─ z [/]'
     )
 })
 
 it('can find its root', () => {
-    let root = new Node(Type.Operator, '+')
-    let parent = root.addChild(new Node(Type.Operator, '*'))
-    let child = parent.addChild(new Node(Type.Number, 3))
+    const root = new Node(Type.Operator, '+')
+    const parent = root.addChild(new Node(Type.Operator, '*'))
+    const child = parent.addChild(new Node(Type.Number, 3))
 
     expect(root.root()).toBe(root)
     expect(parent.root()).toBe(root)
@@ -70,10 +70,10 @@ it('can find its root', () => {
 })
 
 it('can replace a child', () => {
-    let parent = new Node(Type.Operator, '+')
-    let child1 = parent.addChild(new Node(Type.Number, 1))
-    let child2 = parent.addChild(new Node(Type.Number, 2))
-    let child3 = new Node(Type.Number, 3)
+    const parent = new Node(Type.Operator, '+')
+    const child1 = parent.addChild(new Node(Type.Number, 1))
+    const child2 = parent.addChild(new Node(Type.Number, 2))
+    const child3 = new Node(Type.Number, 3)
 
     expect(parent.children).toEqual([child1, child2])
     expect(child1.parent).toBe(parent)
@@ -89,9 +89,9 @@ it('can replace a child', () => {
 })
 
 it('can insert a node between two nodes', () => {
-    let node = new Node(Type.Operator, '*')
-    let parent = new Node(Type.Operator, '+')
-    let child = parent.addChild(new Node(Type.Number, 3))
+    const node = new Node(Type.Operator, '*')
+    const parent = new Node(Type.Operator, '+')
+    const child = parent.addChild(new Node(Type.Number, 3))
 
     expect(node.parent).toBeNull()
     expect(node.children).toEqual([])
@@ -114,9 +114,9 @@ it('can insert a node between two nodes', () => {
 })
 
 it('can set its children', () => {
-    let parent = new Node(Type.Operator, '+')
-    let child1 = parent.addChild(new Node(Type.Number, 2))
-    let child2 = new Node(Type.Number, 3)
+    const parent = new Node(Type.Operator, '+')
+    const child1 = parent.addChild(new Node(Type.Number, 2))
+    const child2 = new Node(Type.Number, 3)
 
     expect(parent.children).toEqual([child1])
     parent.setChildren([child2])
@@ -124,27 +124,27 @@ it('can set its children', () => {
 })
 
 it('can clone a node and its children', () => {
-    let parent = new Node(Type.Operator, '+')
-    let times = parent.addChild(new Node(Type.Operator, '*'))
+    const parent = new Node(Type.Operator, '+')
+    const times = parent.addChild(new Node(Type.Operator, '*'))
     times.addChild(new Node(Type.Number, 2))
     times.addChild(new Node(Type.Number, 3))
     parent.addChild(new Node(Type.Number, 4))
 
-    let clone = parent.clone()
+    const clone = parent.clone()
 
     expect(parent).not.toBe(clone)
     expect(parent).toEqual(clone)
 })
 
 it('knows if it equals another node', () => {
-    let parent = new Node(Type.Operator, '+')
-    let times = parent.addChild(new Node(Type.Operator, '*'))
+    const parent = new Node(Type.Operator, '+')
+    const times = parent.addChild(new Node(Type.Operator, '*'))
     times.addChild(new Node(Type.Number, 2))
     times.addChild(new Node(Type.Number, 3))
     parent.addChild(new Node(Type.Number, 4))
 
-    let clone = parent.clone()
-    let notClone = new Node(Type.Operator, '+')
+    const clone = parent.clone()
+    const notClone = new Node(Type.Operator, '+')
 
     expect(parent.equals(parent)).toBeTruthy()
     expect(parent.equals(clone)).toBeTruthy()
@@ -158,10 +158,10 @@ it('knows if it equals another node', () => {
 })
 
 it('knows if it contains a type', () => {
-    let root = new Node(Type.Operator, '+')
+    const root = new Node(Type.Operator, '+')
     root.addChild(new Node(Type.Number, 3))
     root.addChild(new Node(Type.Variable, 'x'))
-    let times = root.addChild(new Node(Type.Operator, '*'))
+    const times = root.addChild(new Node(Type.Operator, '*'))
     times.addChild(new Node(Type.Number, 6))
 
     expect(root.containsType(Type.BracketClose)).toBeFalsy()
@@ -175,9 +175,9 @@ it('knows if it contains a type', () => {
 })
 
 it('can remove a child', () => {
-    let parent = new Node(Type.Operator, '+')
-    let child1 = parent.addChild(new Node(Type.Number, 3))
-    let child2 = parent.addChild(new Node(Type.Number, 4))
+    const parent = new Node(Type.Operator, '+')
+    const child1 = parent.addChild(new Node(Type.Number, 3))
+    const child2 = parent.addChild(new Node(Type.Number, 4))
 
     expect(parent.children[0]).toBe(child1)
     expect(parent.children[1]).toBe(child2)

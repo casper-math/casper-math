@@ -8,11 +8,11 @@ import parse from './parse'
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
     pattern ??= parse(action.pattern)
 
-    let children = node.children
+    const children = node.children
     node.setChildren([])
 
     children.forEach(child => {
-        let result = execute(action, child, pattern)
+        const result = execute(action, child, pattern)
 
         // If an action returns for example addition and the parent is also addition, then they should be merged instead
         // of placed underneath eachother.
@@ -28,16 +28,16 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         }
     })
 
-    let matchedNodes: Node[] = []
+    const matchedNodes: Node[] = []
 
-    let variables: { [key: string]: Node } | null = findVariables(action, node, pattern, matchedNodes)
+    const variables: { [key: string]: Node } | null = findVariables(action, node, pattern, matchedNodes)
 
     if (variables === null) return node
 
-    let converted: { [key: string]: string | number } = {}
+    const converted: { [key: string]: string | number } = {}
 
     for (let i = 0; i < Object.keys(variables).length; i++) {
-        let key = Object.keys(variables)[i]
+        const key = Object.keys(variables)[i]
         converted[key] = variables[key].type === Type.Number ? variables[key].value : string(variables[key])
     }
 
@@ -54,7 +54,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         return node
     }
 
-    let result = parse(action.handle(converted).toString())
+    const result = parse(action.handle(converted).toString())
 
     log({
         name: action.name,
@@ -80,8 +80,8 @@ function findVariables(
 
     // Check if the root of the pattern is a variable itself
     if (pattern.type === Type.Variable) {
-        let type = action.variables[pattern.value]
-        let matcher = matchers[type]
+        const type = action.variables[pattern.value]
+        const matcher = matchers[type]
         matchedNodes.push(node)
 
         return matcher(node) ? { [pattern.value]: node } : null
@@ -92,11 +92,11 @@ function findVariables(
     }
 
     for (let index = 0; index < pattern.children.length; index++) {
-        let child = pattern.children[index]
+        const child = pattern.children[index]
 
         if (child.type === Type.Variable) {
-            let type = action.variables[child.value]
-            let matcher = matchers[type]
+            const type = action.variables[child.value]
+            const matcher = matchers[type]
 
             if (
                 !matcher(node.children[index]) ||
@@ -136,7 +136,7 @@ function findVariables(
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            let output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
+            const output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
             if (!output) {
                 if (
                     pattern.type !== Type.Operator ||
@@ -154,7 +154,7 @@ function findVariables(
                         nodeChild.value === child.value &&
                         !matchedNodes.includes(nodeChild)
                     ) {
-                        let result = findVariables(action, nodeChild, child, matchedNodes, variables)
+                        const result = findVariables(action, nodeChild, child, matchedNodes, variables)
                         if (result) {
                             found = nodeChild
                             variables = { ...result, ...variables }
@@ -168,7 +168,7 @@ function findVariables(
                 matchedNodes.push(node.children[index])
 
                 for (let i = 0; i < Object.keys(output).length; i++) {
-                    let key = Object.keys(output)[i]
+                    const key = Object.keys(output)[i]
 
                     if (Object.keys(variables).includes(key) && !variables[key].equals(output[key])) return null
                 }

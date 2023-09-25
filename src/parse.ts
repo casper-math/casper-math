@@ -4,7 +4,7 @@ import Node from './node'
 import tokenize from './tokenize'
 
 export default function parse(expression: string): Node {
-    let tokens = tokenize(expression)
+    const tokens = tokenize(expression)
     let node = new Node(tokens[0].type, tokens[0].value)
     tokens.shift()
 
@@ -42,11 +42,11 @@ export default function parse(expression: string): Node {
                 }
             }
         } else if (node.parent === null) {
-            let parent = new Node(token.type, token.value)
+            const parent = new Node(token.type, token.value)
             parent.addChild(node)
             node = parent
         } else if (node.parent.type === Type.BracketOpen) {
-            let parent = new Node(token.type, token.value)
+            const parent = new Node(token.type, token.value)
             parent.insertBetween(node.parent, node)
             node = parent
         } else {
@@ -54,7 +54,7 @@ export default function parse(expression: string): Node {
             while (!done) {
                 if (node.parent === null) {
                     done = true
-                    let parent = new Node(token.type, token.value)
+                    const parent = new Node(token.type, token.value)
                     parent.addChild(node)
                     node = parent
                 } else if (operator(token).precedence < operator(node.parent)?.precedence) {
@@ -69,7 +69,7 @@ export default function parse(expression: string): Node {
                     node = node.parent
                 } else {
                     done = true
-                    let parent = new Node(token.type, token.value)
+                    const parent = new Node(token.type, token.value)
                     parent.insertBetween(node.parent, node)
                     node = parent
                 }
@@ -93,7 +93,7 @@ function removeBrackets(node: Node): Node | Node[] {
     }
 
     if (!node.parent) {
-        let child = node.children[0]
+        const child = node.children[0]
         child.setParent(null)
         return child
     }

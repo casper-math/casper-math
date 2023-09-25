@@ -28,11 +28,11 @@ export default class Fraction {
     }
 
     static add(...inputs: (Fraction | number | string)[]): Fraction {
-        let fractions: Fraction[] = inputs.map(fraction =>
+        const fractions: Fraction[] = inputs.map(fraction =>
             typeof fraction === 'number' || typeof fraction === 'string' ? new Fraction(fraction, 1) : fraction
         )
 
-        let result = new Fraction(0, 1)
+        const result = new Fraction(0, 1)
 
         fractions.forEach(fraction => {
             result.numerator = result.numerator * fraction.denominator + result.denominator * fraction.numerator
@@ -44,11 +44,11 @@ export default class Fraction {
     }
 
     static multiply(...inputs: (Fraction | number | string)[]): Fraction {
-        let fractions: Fraction[] = inputs.map(fraction =>
+        const fractions: Fraction[] = inputs.map(fraction =>
             typeof fraction === 'number' || typeof fraction === 'string' ? new Fraction(fraction, 1) : fraction
         )
 
-        let result = new Fraction(1, 1)
+        const result = new Fraction(1, 1)
 
         fractions.forEach(fraction => {
             result.numerator *= fraction.numerator
@@ -60,7 +60,7 @@ export default class Fraction {
     }
 
     static divide(fraction1: Fraction | number | string, fraction2: Fraction | number | string): Fraction {
-        let reciprocal =
+        const reciprocal =
             typeof fraction2 === 'number' || typeof fraction2 === 'string'
                 ? new Fraction(1, fraction2)
                 : new Fraction(fraction2.denominator, fraction2.numerator)

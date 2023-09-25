@@ -2,14 +2,14 @@ import { Type } from '../src/interfaces'
 import tokenize from './../src/tokenize'
 
 it('can tokenize a single expression', () => {
-    let input = '5'
-    let result = tokenize(input)
+    const input = '5'
+    const result = tokenize(input)
     expect(result).toEqual([{ type: Type.Number, value: '5' }])
 })
 
 it('can tokenize a simple expression', () => {
-    let input = '2 + 3'
-    let result = tokenize(input)
+    const input = '2 + 3'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -19,8 +19,8 @@ it('can tokenize a simple expression', () => {
 })
 
 it('can tokenize an expression with brackets', () => {
-    let input = '(x + 3)'
-    let result = tokenize(input)
+    const input = '(x + 3)'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.BracketOpen, value: '(' },
@@ -32,8 +32,8 @@ it('can tokenize an expression with brackets', () => {
 })
 
 it('can tokenize a string with complex variable names', () => {
-    let input = 'something_3 + IAMAVARIABLE'
-    let result = tokenize(input)
+    const input = 'something_3 + IAMAVARIABLE'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Variable, value: 'something_3' },
@@ -43,14 +43,14 @@ it('can tokenize a string with complex variable names', () => {
 })
 
 it('throws an error when the pattern cant be finished', () => {
-    let input = '(x + @)'
-    let result = () => tokenize(input)
+    const input = '(x + @)'
+    const result = () => tokenize(input)
     expect(result).toThrow('Syntax error: cannot parse "(x+@)".')
 })
 
 it('can tokenize functions', () => {
-    let input = '3+sin(2*x)'
-    let result = tokenize(input)
+    const input = '3+sin(2*x)'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '3' },
@@ -65,8 +65,8 @@ it('can tokenize functions', () => {
 })
 
 it('can tokenize different number formats', () => {
-    let input = '0.5 + .54 - 4 - 0.45 - .2'
-    let result = tokenize(input)
+    const input = '0.5 + .54 - 4 - 0.45 - .2'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '0.5' },
@@ -82,8 +82,8 @@ it('can tokenize different number formats', () => {
 })
 
 it('can tokenize powers', () => {
-    let input = '2 ^ 3'
-    let result = tokenize(input)
+    const input = '2 ^ 3'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -93,8 +93,8 @@ it('can tokenize powers', () => {
 })
 
 it('can tokenize divisions', () => {
-    let input = '2 / 3'
-    let result = tokenize(input)
+    const input = '2 / 3'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -104,8 +104,8 @@ it('can tokenize divisions', () => {
 })
 
 it('can tokenize constants', () => {
-    let input = 'e^(i*pi)'
-    let result = tokenize(input)
+    const input = 'e^(i*pi)'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Constant, value: 'e' },
@@ -119,8 +119,8 @@ it('can tokenize constants', () => {
 })
 
 it('can tokenize variables with longer names', () => {
-    let input = '2 * epsilon'
-    let result = tokenize(input)
+    const input = '2 * epsilon'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -130,8 +130,8 @@ it('can tokenize variables with longer names', () => {
 })
 
 it('can tokenize commas', () => {
-    let input = 'func(2, 3)'
-    let result = tokenize(input)
+    const input = 'func(2, 3)'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Function, value: 'func' },
@@ -144,8 +144,8 @@ it('can tokenize commas', () => {
 })
 
 it('can tokenize subtraction', () => {
-    let input = '-12 - 9 - x'
-    let result = tokenize(input)
+    const input = '-12 - 9 - x'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '-12' },
@@ -159,8 +159,8 @@ it('can tokenize subtraction', () => {
 })
 
 it('can tokenize nested brackets', () => {
-    let input = '(38 - (3 + 2)) * 5'
-    let result = tokenize(input)
+    const input = '(38 - (3 + 2)) * 5'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.BracketOpen, value: '(' },
@@ -180,8 +180,8 @@ it('can tokenize nested brackets', () => {
 })
 
 it('can tokenize implicit multiplication', () => {
-    let input = '2xy + 3sin(x)'
-    let result = tokenize(input)
+    const input = '2xy + 3sin(x)'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.Number, value: '2' },
@@ -198,8 +198,8 @@ it('can tokenize implicit multiplication', () => {
 })
 
 it('can tokenize subtraction after brackets', () => {
-    let input = '(x + 3) - 5'
-    let result = tokenize(input)
+    const input = '(x + 3) - 5'
+    const result = tokenize(input)
 
     expect(result).toEqual([
         { type: Type.BracketOpen, value: '(' },

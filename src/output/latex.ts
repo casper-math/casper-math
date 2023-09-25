@@ -38,8 +38,9 @@ export default function latex(node: Node): string {
 }
 
 function brackets(string: string, node: Node): string {
-    let parentPrecedence = config().operators.filter(operator => operator.symbol === node.parent?.value)[0]?.precedence
-    let childPrecedence = config().operators.filter(operator => operator.symbol === node.value)[0]?.precedence
+    const parentPrecedence = config().operators.filter(operator => operator.symbol === node.parent?.value)[0]
+        ?.precedence
+    const childPrecedence = config().operators.filter(operator => operator.symbol === node.value)[0].precedence
 
     if (node.parent?.value === '^') {
         return string

@@ -8,7 +8,7 @@ export default function tokenize(expression: string): Token[] {
         .replace(/-(?![0-9.])/g, '-1*')
         .replace(/(?<![a-zA-Z_])([0-9])([a-zA-Z_])/g, '$1*$2')
 
-    let tokens: Token[] = []
+    const tokens: Token[] = []
 
     const matchers: { type: Type; matcher: RegExp | RegExp[] }[] = [
         { type: Type.BracketClose, matcher: /^\)/ },
@@ -29,7 +29,7 @@ export default function tokenize(expression: string): Token[] {
         matchers.forEach(({ type, matcher }) => {
             if (newRun) return
 
-            let symbol = Array.isArray(matcher)
+            const symbol = Array.isArray(matcher)
                 ? matcher.map(regex => expression.match(regex)).filter(x => x)[0]?.[0]
                 : expression.match(matcher)?.[0]
 

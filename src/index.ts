@@ -35,7 +35,7 @@ class Casper {
             })
         }
 
-        let result = config().output === 'string' ? string(tree) : latex(tree)
+        const result = config().output === 'string' ? string(tree) : latex(tree)
 
         return { result: result, steps: getLogs() }
     }

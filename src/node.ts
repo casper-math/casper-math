@@ -27,7 +27,7 @@ export default class Node {
     }
 
     replaceChild(search: Node, replace: Node): void {
-        let index = this.children.indexOf(search)
+        const index = this.children.indexOf(search)
         if (index === -1) return
         this.children[index] = replace
 
@@ -61,7 +61,7 @@ export default class Node {
     }
 
     clone(): Node {
-        let node = new Node(this.type, this.value)
+        const node = new Node(this.type, this.value)
 
         this.children.forEach(child => node.addChild(child.clone()))
 

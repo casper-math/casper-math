@@ -38,7 +38,7 @@ it.each([
     ['54000 / 60', '900'],
     ['6900 / 3', '2300']
 ])('can do arithmetic', (input: string, output: string) => {
-    let result = casper().go(input)
+    const result = casper().go(input)
     expect(result.result).toBe(output)
 })
 
@@ -63,7 +63,7 @@ it.each([
     ['(9 * 6 - 18 - 8 * 3) / 6 + 5 * 3', '17'],
     ['(9 * 6 - (18 - 8) * 3) / 6 + 5 * 3', '19']
 ])('respects the order of operations', (input: string, output: string) => {
-    let result = casper().go(input)
+    const result = casper().go(input)
     expect(result.result).toBe(output)
 })
 
@@ -85,6 +85,6 @@ it.each([
     ['3 / 4 - 1 / 3', '5 / 12'],
     ['(1 + 1 / 2) - 1 / 4', '5 / 4']
 ])('can do arithmetic with fractions', (input: string, output: string) => {
-    let result = casper().go(input)
+    const result = casper().go(input)
     expect(result.result).toBe(output)
 })
