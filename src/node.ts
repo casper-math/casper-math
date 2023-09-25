@@ -28,6 +28,7 @@ export default class Node {
 
     replaceChild(search: Node, replace: Node) {
         let index = this.children.indexOf(search)
+        if (index === -1) return
         this.children[index] = replace
 
         search.setParent(null)

@@ -12,25 +12,25 @@ const add: Action = {
 it('can run the add action', () => {
     let tree = parse('2 + 5')
     let result = execute(add, tree)
-    expect(result.equals(parse('7'))).toBeTruthy()
+    expect(result).toEqual(parse('7'))
 })
 
 it('can run the add action when nested', () => {
     let tree = parse('3 * (2 + 4)')
     let result = execute(add, tree)
-    expect(result.equals(parse('3 * 6'))).toBeTruthy()
+    expect(result).toEqual(parse('3 * 6'))
 })
 
 it('does not match any expression', () => {
     let tree = parse('x + 2 * y')
     let result = execute(add, tree)
-    expect(result.equals(parse('x + 2*y'))).toBeTruthy()
+    expect(result).toEqual(parse('x + 2*y'))
 })
 
 it('only matches the number of operands needed', () => {
     let tree = parse('3 + 2 + y')
     let result = execute(add, tree)
-    expect(result.equals(parse('y + 5'))).toBeTruthy()
+    expect(result).toEqual(parse('y + 5'))
 })
 
 const double: Action = {
@@ -43,25 +43,25 @@ const double: Action = {
 it('can run the double action', () => {
     let tree = parse('4 + 4')
     let result = execute(double, tree)
-    expect(result.equals(parse('2 * 4'))).toBeTruthy()
+    expect(result).toEqual(parse('2 * 4'))
 })
 
 it('does not match different variables', () => {
     let tree = parse('4 + 3')
     let result = execute(double, tree)
-    expect(result.equals(parse('4 + 3'))).toBeTruthy()
+    expect(result).toEqual(parse('4 + 3'))
 })
 
 it('can match any expression', () => {
     let tree = parse('y^3 + y^3')
     let result = execute(double, tree)
-    expect(result.equals(parse('2 * y^3'))).toBeTruthy()
+    expect(result).toEqual(parse('2 * y^3'))
 })
 
 it('does not add nested associative operators', () => {
     let tree = parse('4 * x + 4 * x')
     let result = execute(double, tree)
-    expect(result.equals(parse('2 * 4 * x'))).toBeTruthy()
+    expect(result).toEqual(parse('2 * 4 * x'))
 })
 
 const stupid: Action = {
@@ -74,13 +74,13 @@ const stupid: Action = {
 it('handles commutative operators', () => {
     let tree = parse('6 * a')
     let result = execute(stupid, tree)
-    expect(result.equals(parse('6'))).toBeTruthy()
+    expect(result).toEqual(parse('6'))
 })
 
 it('handles associative operators', () => {
     let tree = parse('x * y * 7')
     let result = execute(stupid, tree)
-    expect(result.equals(parse('y * 7'))).toBeTruthy()
+    expect(result).toEqual(parse('y * 7'))
 })
 
 const nonCommutative: Action = {
@@ -93,13 +93,13 @@ const nonCommutative: Action = {
 it('can run a non-commutative action', () => {
     let tree = parse('(x + 3) / 8')
     let result = execute(nonCommutative, tree)
-    expect(result.equals(parse('x + 3'))).toBeTruthy()
+    expect(result).toEqual(parse('x + 3'))
 })
 
 it('does not run the non-commutative action when not possible', () => {
     let tree = parse('8 / (x + 3)')
     let result = execute(nonCommutative, tree)
-    expect(result.equals(parse('8 / (x + 3)'))).toBeTruthy()
+    expect(result).toEqual(parse('8 / (x + 3)'))
 })
 
 const nested: Action = {
@@ -112,19 +112,19 @@ const nested: Action = {
 it('works with nested actions', () => {
     let tree = parse('7 * (3 + 7) + 5')
     let result = execute(nested, tree)
-    expect(result.equals(parse('(7 * 3) + (7 * 7) + 5'))).toBeTruthy()
+    expect(result).toEqual(parse('(7 * 3) + (7 * 7) + 5'))
 })
 
 it('applies commutativity when needed when nested', () => {
     let tree = parse('7 * (7 + 3)')
     let result = execute(nested, tree)
-    expect(result.equals(parse('(7 * 3) + (7 * 7)'))).toBeTruthy()
+    expect(result).toEqual(parse('(7 * 3) + (7 * 7)'))
 })
 
 it('does not apply associativity when nested', () => {
     let tree = parse('7 * (3 + 7 + 5)')
     let result = execute(nested, tree)
-    expect(result.equals(parse('7 * (3 + 7 + 5)'))).toBeTruthy()
+    expect(result).toEqual(parse('7 * (3 + 7 + 5)'))
 })
 
 const root: Action = {
@@ -137,19 +137,19 @@ const root: Action = {
 it('matches typed roots', () => {
     let tree = parse('7')
     let result = execute(root, tree)
-    expect(result.equals(parse('2'))).toBeTruthy()
+    expect(result).toEqual(parse('2'))
 })
 
 it('does not match if the type is incorrect', () => {
     let tree = parse('x')
     let result = execute(root, tree)
-    expect(result.equals(parse('x'))).toBeTruthy()
+    expect(result).toEqual(parse('x'))
 })
 
 it('can match parts of a root', () => {
     let tree = parse('x + 3')
     let result = execute(root, tree)
-    expect(result.equals(parse('x + 2'))).toBeTruthy()
+    expect(result).toEqual(parse('x + 2'))
 })
 
 const timesOne: Action = {
@@ -162,23 +162,23 @@ const timesOne: Action = {
 it('can match the times-one pattern', () => {
     let tree = parse('1 * 7')
     let result = execute(timesOne, tree)
-    expect(result.equals(parse('7'))).toBeTruthy()
+    expect(result).toEqual(parse('7'))
 })
 
 it('can match an entire expression', () => {
     let tree = parse('1 * (3 + 4 * x)')
     let result = execute(timesOne, tree)
-    expect(result.equals(parse('3 + 4 * x'))).toBeTruthy()
+    expect(result).toEqual(parse('3 + 4 * x'))
 })
 
 it('applies commutativity', () => {
     let tree = parse('y * 1')
     let result = execute(timesOne, tree)
-    expect(result.equals(parse('y'))).toBeTruthy()
+    expect(result).toEqual(parse('y'))
 })
 
 it('applies associativity', () => {
     let tree = parse('5 * 1 * z')
     let result = execute(timesOne, tree)
-    expect(result.equals(parse('5 * z'))).toBeTruthy()
+    expect(result).toEqual(parse('5 * z'))
 })
