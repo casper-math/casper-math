@@ -196,3 +196,18 @@ it('can tokenize implicit multiplication', () => {
         { type: Type.BracketClose, value: ')' }
     ])
 })
+
+it('can tokenize subtraction after brackets', () => {
+    let input = '(x + 3) - 5'
+    let result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Variable, value: 'x' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '3' },
+        { type: Type.BracketClose, value: ')' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-5' }
+    ])
+})
