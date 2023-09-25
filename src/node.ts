@@ -14,11 +14,11 @@ export default class Node {
         this.parent = null
     }
 
-    setParent(parent: Node | null) {
+    setParent(parent: Node | null): void {
         this.parent = parent
     }
 
-    addChild(child: Node) {
+    addChild(child: Node): Node {
         this.children.push(child)
 
         child.setParent(this)
@@ -26,7 +26,7 @@ export default class Node {
         return child
     }
 
-    replaceChild(search: Node, replace: Node) {
+    replaceChild(search: Node, replace: Node): void {
         let index = this.children.indexOf(search)
         if (index === -1) return
         this.children[index] = replace
@@ -35,7 +35,7 @@ export default class Node {
         replace.setParent(this)
     }
 
-    toString(indent: number = 1) {
+    toString(indent: number = 1): string {
         let string =
             '#'.repeat(indent) +
             this.value.toString() +
@@ -51,13 +51,12 @@ export default class Node {
         return this.parent === null ? this : this.parent.root()
     }
 
-    insertBetween(parent: Node, child: Node) {
+    insertBetween(parent: Node, child: Node): void {
         parent.replaceChild(child, this)
-
         this.addChild(child)
     }
 
-    setChildren(children: Node[]) {
+    setChildren(children: Node[]): void {
         this.children = children
     }
 
