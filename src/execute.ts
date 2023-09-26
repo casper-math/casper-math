@@ -75,14 +75,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
 
 function findVariables(action: Action, node: Node, pattern: Node): null | void {
     if (pattern.type === Type.Variable) {
-        const type = action.variables[pattern.value]
-        const matcher = matchers[type]
-        matchedNodes.push(node)
-
-        if (matcher(node)) {
-            variables[pattern.value] = node
-            return
-        }
+        return findVariable(action.variables[pattern.value], node, pattern, null)
     }
 
     if (node.type !== pattern.type || node.value !== pattern.value) {
@@ -153,16 +146,7 @@ function findCommutative(node: Node, name: string | null, matcher: (node: Node) 
     return null
 }
 
-function findConstant(pattern: Node, node: Node, parent: Node): null | void {
-    if (node.equals(pattern)) {
-        matchedNodes.push(node)
-        return
-    }
-
-    return findCommutative(parent, null, child => pattern.equals(child))
-}
-
-function findVariable(type: VariableType, node: Node, pattern: Node, parent: Node): null | void {
+function findVariable(type: VariableType, node: Node, pattern: Node, parent: Node | null): null | void {
     const matcher = matchers[type]
 
     if (matcher(node) && !matchedNodes.includes(node) && notDifferent(pattern.value, node)) {
@@ -172,11 +156,22 @@ function findVariable(type: VariableType, node: Node, pattern: Node, parent: Nod
         return
     }
 
+    if (!parent) return null
+
     const condition = (child: Node) => matcher(child) && notDifferent(pattern.value, child)
 
     if (findCommutative(parent, pattern.value.toString(), condition) === null) {
         return null
     }
+}
+
+function findConstant(pattern: Node, node: Node, parent: Node): null | void {
+    if (node.equals(pattern)) {
+        matchedNodes.push(node)
+        return
+    }
+
+    return findCommutative(parent, null, child => pattern.equals(child))
 }
 
 function notDifferent(key: string | number, value: Node): boolean {
