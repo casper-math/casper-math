@@ -111,15 +111,11 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
                     return null
                 }
             } else {
-                if (!Object.keys(variables).includes(child.value.toString())) {
-                    variables[child.value] = node.children[index]
-                }
+                variables[child.value] = node.children[index]
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            const output = findVariables(action, node.children[index], pattern.children[index])
-
-            if (output === null) {
+            if (findVariables(action, node.children[index], pattern.children[index]) === null) {
                 if (!isCommutative(pattern)) {
                     return null
                 }
