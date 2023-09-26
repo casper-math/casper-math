@@ -1,7 +1,7 @@
 export interface Action {
     name: string
     pattern: string
-    variables: { [key: string]: 'number' | 'single' | 'expression' }
+    variables: { [key: string]: VariableType }
     handle: (variables: { [key: string]: string | number }) => string | number
 }
 
@@ -60,3 +60,5 @@ export enum Type {
     Operator,
     Variable
 }
+
+export type VariableType = 'number' | 'single' | 'expression'

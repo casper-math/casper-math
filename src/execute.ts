@@ -1,5 +1,5 @@
 import config from './config'
-import { Action, Type } from './interfaces'
+import { Action, Type, VariableType } from './interfaces'
 import log from './logger'
 import Node from './node'
 import string from './output/string'
@@ -9,6 +9,12 @@ type Variables = { [key: string]: Node }
 
 let variables: Variables
 let matchedNodes: Node[]
+
+const matchers: { [key: string]: (node: Node) => boolean } = {
+    number: (node: Node) => node.type === Type.Number,
+    single: (node: Node) => node.type === Type.Variable,
+    expression: () => true
+}
 
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
     pattern ??= parse(action.pattern)
@@ -68,12 +74,6 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
 }
 
 function findVariables(action: Action, node: Node, pattern: Node): null | void {
-    const matchers: { [key: string]: (node: Node) => boolean } = {
-        number: (node: Node) => node.type === Type.Number,
-        single: (node: Node) => node.type === Type.Variable,
-        expression: () => true
-    }
-
     if (pattern.type === Type.Variable) {
         const type = action.variables[pattern.value]
         const matcher = matchers[type]
@@ -93,26 +93,8 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
         const child = pattern.children[index]
 
         if (child.type === Type.Variable) {
-            const type = action.variables[child.value]
-            const matcher = matchers[type]
-
-            if (
-                !matcher(node.children[index]) ||
-                matchedNodes.includes(node.children[index]) ||
-                (Object.keys(variables).includes(child.value.toString()) &&
-                    !variables[child.value].equals(node.children[index]))
-            ) {
-                const condition: (child: Node) => boolean = nodeChild =>
-                    matcher(nodeChild) &&
-                    (!Object.keys(variables).includes(child.value.toString()) ||
-                        variables[child.value].equals(nodeChild))
-
-                if (findCommutative(node, child.value.toString(), condition) === null) {
-                    return null
-                }
-            } else {
-                variables[child.value] = node.children[index]
-                matchedNodes.push(node.children[index])
+            if (findVariable(action.variables[child.value], node.children[index], child, node) === null) {
+                return null
             }
         } else if (child.containsType(Type.Variable)) {
             if (findVariables(action, node.children[index], pattern.children[index]) === null) {
@@ -143,10 +125,8 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
             } else {
                 matchedNodes.push(node.children[index])
             }
-        } else {
-            if (findConstant(child, node.children[index], node) === null) {
-                return null
-            }
+        } else if (findConstant(child, node.children[index], node) === null) {
+            return null
         }
     }
 
@@ -180,6 +160,27 @@ function findConstant(pattern: Node, node: Node, parent: Node): null | void {
     }
 
     return findCommutative(parent, null, child => pattern.equals(child))
+}
+
+function findVariable(type: VariableType, node: Node, pattern: Node, parent: Node): null | void {
+    const matcher = matchers[type]
+
+    if (matcher(node) && !matchedNodes.includes(node) && notDifferent(pattern.value, node)) {
+        variables[pattern.value] = node
+        matchedNodes.push(node)
+
+        return
+    }
+
+    const condition = (child: Node) => matcher(child) && notDifferent(pattern.value, child)
+
+    if (findCommutative(parent, pattern.value.toString(), condition) === null) {
+        return null
+    }
+}
+
+function notDifferent(key: string | number, value: Node): boolean {
+    return !Object.keys(variables).includes(key.toString()) || variables[key].equals(value)
 }
 
 function isCommutative(node: Node): boolean {
