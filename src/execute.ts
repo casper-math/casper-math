@@ -7,6 +7,7 @@ import parse from './parse'
 
 type Variables = { [key: string]: Node }
 
+let variables: Variables
 let matchedNodes: Node[]
 
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
@@ -32,11 +33,12 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         }
     })
 
+    variables = {}
     matchedNodes = []
 
-    const variables: Variables | null = findVariables(action, node, pattern)
-
-    if (variables === null) return node
+    if (findVariables(action, node, pattern) === null) {
+        return node
+    }
 
     const converted: { [key: string]: string | number } = {}
 
@@ -48,11 +50,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
     // In the case that only some operands of an associative operator are matched, the result should be added to the
     // operator.For example, the program matches`x + y` in `2 + 3 + 4`.Instead of returning`5`(2 + 3) as the result,
     // with this code it returns`5 + 4`.
-    if (
-        node.type === Type.Operator &&
-        config().operators.filter(operator => operator.symbol === node.value)[0].associative &&
-        node.children.filter(child => !matchedNodes.includes(child)).length > 0
-    ) {
+    if (node.children.filter(child => !matchedNodes.includes(child)).length > 0) {
         matchedNodes.forEach(value => node.removeChild(value))
         node.addChild(parse(action.handle(converted).toString()))
         return node
@@ -69,7 +67,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
     return result
 }
 
-function findVariables(action: Action, node: Node, pattern: Node, variables: Variables = {}): Variables | null {
+function findVariables(action: Action, node: Node, pattern: Node): null | void {
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
         single: (node: Node) => node.type === Type.Variable,
@@ -81,7 +79,10 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
         const matcher = matchers[type]
         matchedNodes.push(node)
 
-        return matcher(node) ? { [pattern.value]: node } : null
+        if (matcher(node)) {
+            variables[pattern.value] = node
+            return
+        }
     }
 
     if (node.type !== pattern.type || node.value !== pattern.value) {
@@ -106,10 +107,7 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                     (!Object.keys(variables).includes(child.value.toString()) ||
                         variables[child.value].equals(nodeChild))
 
-                if (
-                    !isCommutative(pattern) ||
-                    findCommutative(node, variables, child.value.toString(), condition) === null
-                ) {
+                if (!isCommutative(pattern) || findCommutative(node, child.value.toString(), condition) === null) {
                     return null
                 }
             } else {
@@ -119,9 +117,9 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            const output = findVariables(action, node.children[index], pattern.children[index], variables)
+            const output = findVariables(action, node.children[index], pattern.children[index])
 
-            if (!output) {
+            if (output === null) {
                 if (!isCommutative(pattern)) {
                     return null
                 }
@@ -135,10 +133,9 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                         nodeChild.value === child.value &&
                         !matchedNodes.includes(nodeChild)
                     ) {
-                        const result = findVariables(action, nodeChild, child, variables)
-                        if (result) {
+                        const result = findVariables(action, nodeChild, child)
+                        if (result !== null) {
                             found = nodeChild
-                            variables = { ...result, ...variables }
                             matchedNodes.push(nodeChild)
                         }
                     }
@@ -149,16 +146,13 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                 }
             } else {
                 matchedNodes.push(node.children[index])
-                Object.values(output).forEach(value => matchedNodes.push(value))
-
-                variables = { ...variables, ...output }
             }
         } else {
             if (node.children[index].equals(pattern.children[index])) {
                 matchedNodes.push(node.children[index])
             } else if (
                 isCommutative(pattern) &&
-                findCommutative(node, variables, child.value.toString(), nodeChild => child.equals(nodeChild)) !== null
+                findCommutative(node, child.value.toString(), nodeChild => child.equals(nodeChild)) !== null
             ) {
             } else {
                 return null
@@ -168,15 +162,12 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
 
     const unmatchedNodes = node.children.filter(child => !matchedNodes.includes(child))
 
-    return pattern.parent === null || unmatchedNodes.length === 0 ? variables : null
+    if (pattern.parent !== null && unmatchedNodes.length > 0) {
+        return null
+    }
 }
 
-function findCommutative(
-    node: Node,
-    variables: Variables,
-    name: string,
-    matcher: (node: Node) => boolean
-): null | void {
+function findCommutative(node: Node, name: string, matcher: (node: Node) => boolean): null | void {
     for (let i = 0; i < node.children.length; i++) {
         const child = node.children[i]
 
