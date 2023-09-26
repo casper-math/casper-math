@@ -48,8 +48,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
 
     const converted: { [key: string]: string | number } = {}
 
-    for (let i = 0; i < Object.keys(variables).length; i++) {
-        const key = Object.keys(variables)[i]
+    for (const key of Object.keys(variables)) {
         converted[key] = variables[key].type === Type.Number ? variables[key].value : string(variables[key])
     }
 
@@ -90,33 +89,8 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
                 return null
             }
         } else if (child.containsType(Type.Variable)) {
-            if (findVariables(action, node.children[index], pattern.children[index]) === null) {
-                if (!isCommutative(pattern)) {
-                    return null
-                }
-
-                let found: Node | undefined = undefined
-
-                node.children.forEach(nodeChild => {
-                    if (
-                        !found &&
-                        nodeChild.type === child.type &&
-                        nodeChild.value === child.value &&
-                        !matchedNodes.includes(nodeChild)
-                    ) {
-                        const result = findVariables(action, nodeChild, child)
-                        if (result !== null) {
-                            found = nodeChild
-                            matchedNodes.push(nodeChild)
-                        }
-                    }
-                })
-
-                if (!found) {
-                    return null
-                }
-            } else {
-                matchedNodes.push(node.children[index])
+            if (findNestedVariables(action, index, node, pattern, child) === null) {
+                return null
             }
         } else if (findConstant(child, node.children[index], node) === null) {
             return null
@@ -133,9 +107,7 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
 function findCommutative(node: Node, name: string | null, matcher: (node: Node) => boolean): null | void {
     if (!isCommutative(node)) return null
 
-    for (let i = 0; i < node.children.length; i++) {
-        const child = node.children[i]
-
+    for (const child of node.children) {
         if (matcher(child) && !matchedNodes.includes(child)) {
             if (name) variables[name] = child
             matchedNodes.push(child)
@@ -163,6 +135,28 @@ function findVariable(type: VariableType, node: Node, pattern: Node, parent: Nod
     if (findCommutative(parent, pattern.value.toString(), condition) === null) {
         return null
     }
+}
+
+function findNestedVariables(action: Action, index: number, node: Node, pattern: Node, child: Node): null | void {
+    if (findVariables(action, node.children[index], pattern.children[index]) !== null) {
+        matchedNodes.push(node.children[index])
+        return
+    }
+
+    if (!isCommutative(pattern)) {
+        return null
+    }
+
+    for (const nodeChild of node.children) {
+        const isEqual = nodeChild.type === child.type && nodeChild.value === child.value
+
+        if (isEqual && findVariables(action, nodeChild, child) !== null) {
+            matchedNodes.push(nodeChild)
+            return
+        }
+    }
+
+    return null
 }
 
 function findConstant(pattern: Node, node: Node, parent: Node): null | void {
