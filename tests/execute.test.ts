@@ -233,3 +233,16 @@ it('does not apply commutativity with constants if the operator is not commutati
     const result = execute(reversedDivision, tree)
     expect(result).toEqual(parse('3 / 5'))
 })
+
+const func: Action = {
+    name: 'function',
+    pattern: 'func(x, 6)',
+    variables: { x: 'number' },
+    handle: () => 3
+}
+
+it('checks for functions', () => {
+    const tree = parse('func(6, 3)')
+    const result = execute(func, tree)
+    expect(result).toEqual(parse('func(6, 3)'))
+})

@@ -5,6 +5,8 @@ import Node from './node'
 import string from './output/string'
 import parse from './parse'
 
+type Variables = { [key: string]: Node }
+
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
     pattern ??= parse(action.pattern)
 
@@ -30,7 +32,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
 
     const matchedNodes: Node[] = []
 
-    const variables: { [key: string]: Node } | null = findVariables(action, node, pattern, matchedNodes)
+    const variables: Variables | null = findVariables(action, node, pattern, matchedNodes)
 
     if (variables === null) return node
 
@@ -70,15 +72,14 @@ function findVariables(
     node: Node,
     pattern: Node,
     matchedNodes: Node[],
-    variables: { [key: string]: Node } = {}
-): { [key: string]: Node } | null {
+    variables: Variables = {}
+): Variables | null {
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
         single: (node: Node) => node.type === Type.Variable,
         expression: () => true
     }
 
-    // Check if the root of the pattern is a variable itself
     if (pattern.type === Type.Variable) {
         const type = action.variables[pattern.value]
         const matcher = matchers[type]
@@ -104,10 +105,7 @@ function findVariables(
                 (Object.keys(variables).includes(child.value.toString()) &&
                     !variables[child.value].equals(node.children[index]))
             ) {
-                if (
-                    pattern.type !== Type.Operator ||
-                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
-                ) {
+                if (!isCommutative(pattern)) {
                     return null
                 }
 
@@ -138,10 +136,7 @@ function findVariables(
             const output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
 
             if (!output) {
-                if (
-                    pattern.type !== Type.Operator ||
-                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
-                ) {
+                if (!isCommutative(pattern)) {
                     return null
                 }
 
@@ -168,22 +163,15 @@ function findVariables(
                 }
             } else {
                 matchedNodes.push(node.children[index])
-
-                for (let i = 0; i < Object.keys(output).length; i++) {
-                    const key = Object.keys(output)[i]
-                }
+                Object.values(output).forEach(value => matchedNodes.push(value))
 
                 variables = { ...variables, ...output }
-                Object.values(output).forEach(value => matchedNodes.push(value))
             }
         } else {
             if (node.children[index].equals(pattern.children[index])) {
                 matchedNodes.push(node.children[index])
             } else {
-                if (
-                    pattern.type !== Type.Operator ||
-                    !config().operators.filter(operator => operator.symbol === pattern.value)[0].commutative
-                ) {
+                if (!isCommutative(pattern)) {
                     return null
                 }
 
@@ -201,15 +189,17 @@ function findVariables(
         }
     }
 
-    // If an operator still has children that are not matched (and the operator is not a root in the pattern), then the
-    // action shouldn't be performed.
-    if (pattern.parent !== null) {
-        for (let i = 0; i < node.children.length; i++) {
-            if (!matchedNodes.includes(node.children[i])) return null
-        }
+    const unmatchedNodes = node.children.filter(child => !matchedNodes.includes(child))
+
+    return pattern.parent === null || unmatchedNodes.length === 0 ? variables : null
+}
+
+function isCommutative(node: Node): boolean {
+    if (node.type !== Type.Operator) {
+        return false
     }
 
-    return variables
+    return config().operators.filter(operator => operator.symbol === node.value)[0].commutative
 }
 
 function searchStep(pattern: string, variables: { [key: string]: string | number }): string {
