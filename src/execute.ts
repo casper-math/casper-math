@@ -144,7 +144,7 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
                 matchedNodes.push(node.children[index])
             }
         } else {
-            if (findConstants(child, node.children[index], node) === null) {
+            if (findConstant(child, node.children[index], node) === null) {
                 return null
             }
         }
@@ -173,7 +173,7 @@ function findCommutative(node: Node, name: string | null, matcher: (node: Node) 
     return null
 }
 
-function findConstants(pattern: Node, node: Node, parent: Node): null | void {
+function findConstant(pattern: Node, node: Node, parent: Node): null | void {
     if (node.equals(pattern)) {
         matchedNodes.push(node)
         return
