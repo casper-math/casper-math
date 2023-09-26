@@ -38,4 +38,26 @@ const addFractionsAndNumbers: Action = {
     handle: ({ a, b, c }) => Fraction.add(new Fraction(a, b), c).toString()
 }
 
-export default [add, multiply, simplify, addFractions, addFractionsAndNumbers]
+const multiplyFractions: Action = {
+    name: 'multiply fractions',
+    pattern: '(a / b) * (c / d)',
+    variables: { a: 'number', b: 'number', c: 'number', d: 'number' },
+    handle: ({ a, b, c, d }) => Fraction.multiply(new Fraction(a, b), new Fraction(c, d)).toString()
+}
+
+const multiplyFractionsAndNumbers: Action = {
+    name: 'multiply fractions and numbers',
+    pattern: 'a / b * c',
+    variables: { a: 'number', b: 'number', c: 'number' },
+    handle: ({ a, b, c }) => Fraction.multiply(new Fraction(a, b), c).toString()
+}
+
+export default [
+    add,
+    multiply,
+    simplify,
+    addFractions,
+    addFractionsAndNumbers,
+    multiplyFractions,
+    multiplyFractionsAndNumbers
+]
