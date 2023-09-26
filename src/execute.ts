@@ -106,7 +106,10 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                     (!Object.keys(variables).includes(child.value.toString()) ||
                         variables[child.value].equals(nodeChild))
 
-                if (!isCommutative(pattern) || findCommutative(node, variables, child, condition) === null) {
+                if (
+                    !isCommutative(pattern) ||
+                    findCommutative(node, variables, child.value.toString(), condition) === null
+                ) {
                     return null
                 }
             } else {
@@ -155,7 +158,7 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
                 matchedNodes.push(node.children[index])
             } else if (
                 isCommutative(pattern) &&
-                findCommutative(node, variables, child, nodeChild => child.equals(nodeChild)) !== null
+                findCommutative(node, variables, child.value.toString(), nodeChild => child.equals(nodeChild)) !== null
             ) {
             } else {
                 return null
@@ -168,13 +171,18 @@ function findVariables(action: Action, node: Node, pattern: Node, variables: Var
     return pattern.parent === null || unmatchedNodes.length === 0 ? variables : null
 }
 
-function findCommutative(node: Node, variables: Variables, child: Node, matcher: (node: Node) => boolean): null | void {
+function findCommutative(
+    node: Node,
+    variables: Variables,
+    name: string,
+    matcher: (node: Node) => boolean
+): null | void {
     for (let i = 0; i < node.children.length; i++) {
-        const nodeChild = node.children[i]
+        const child = node.children[i]
 
-        if (matcher(nodeChild) && !matchedNodes.includes(nodeChild)) {
-            variables[child.value] = nodeChild
-            matchedNodes.push(nodeChild)
+        if (matcher(child) && !matchedNodes.includes(child)) {
+            variables[name] = child
+            matchedNodes.push(child)
             return
         }
     }
