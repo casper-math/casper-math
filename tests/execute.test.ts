@@ -207,3 +207,29 @@ it('applies associativity with fractions', () => {
     const result = execute(anotherNested, tree)
     expect(result).toEqual(parse('x + 37 / 3'))
 })
+
+const division: Action = {
+    name: 'division',
+    pattern: '(x + y) / 6',
+    variables: { x: 'number', y: 'number' },
+    handle: () => 1
+}
+
+it('does not match the same variable with other inputs', () => {
+    const tree = parse('6 / (3 + 4)')
+    const result = execute(division, tree)
+    expect(result).toEqual(parse('6 / (3 + 4)'))
+})
+
+const reversedDivision: Action = {
+    name: 'reversed division',
+    pattern: 'x / 3',
+    variables: { x: 'number' },
+    handle: () => 2
+}
+
+it('does not apply commutativity with constants if the operator is not commutative', () => {
+    const tree = parse('3 / 5')
+    const result = execute(reversedDivision, tree)
+    expect(result).toEqual(parse('3 / 5'))
+})

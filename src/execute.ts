@@ -132,11 +132,11 @@ function findVariables(
                 if (!Object.keys(variables).includes(child.value.toString())) {
                     variables[child.value] = node.children[index]
                 }
-                if (!variables[child.value].equals(node.children[index])) return null
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
             const output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
+
             if (!output) {
                 if (
                     pattern.type !== Type.Operator ||
@@ -163,14 +163,14 @@ function findVariables(
                     }
                 })
 
-                if (!found) return null
+                if (!found) {
+                    return null
+                }
             } else {
                 matchedNodes.push(node.children[index])
 
                 for (let i = 0; i < Object.keys(output).length; i++) {
                     const key = Object.keys(output)[i]
-
-                    if (Object.keys(variables).includes(key) && !variables[key].equals(output[key])) return null
                 }
 
                 variables = { ...variables, ...output }
@@ -190,13 +190,7 @@ function findVariables(
                 let found: Node | undefined = undefined
 
                 node.children.forEach(nodeChild => {
-                    if (
-                        !found &&
-                        child.equals(nodeChild) &&
-                        !matchedNodes.includes(nodeChild) &&
-                        (!Object.keys(variables).includes(child.value.toString()) ||
-                            variables[child.value].equals(nodeChild))
-                    ) {
+                    if (!found && child.equals(nodeChild) && !matchedNodes.includes(nodeChild)) {
                         found = nodeChild
                         matchedNodes.push(nodeChild)
                     }

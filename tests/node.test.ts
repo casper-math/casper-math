@@ -80,6 +80,14 @@ it('can replace a child', () => {
     expect(child2.parent).toBe(parent)
     expect(child3.parent).toBeNull()
 
+    // Parent does not have this child, so do nothing
+    parent.replaceChild(new Node(Type.Number, 1), child3)
+
+    expect(parent.children).toEqual([child1, child2])
+    expect(child1.parent).toBe(parent)
+    expect(child2.parent).toBe(parent)
+    expect(child3.parent).toBeNull()
+
     parent.replaceChild(child2, child3)
 
     expect(parent.children).toEqual([child1, child3])

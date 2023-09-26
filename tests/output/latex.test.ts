@@ -60,3 +60,8 @@ it('converts subtraction correctly', () => {
     const tree = parse('-4 - 3 - x')
     expect(latex(tree)).toBe('-4 - 3 - x')
 })
+
+it('converts equality correctly', () => {
+    const tree = parse('2 * x = 8')
+    expect(latex(tree)).toBe('2 \\cdot x = 8')
+})
