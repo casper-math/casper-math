@@ -105,27 +105,17 @@ function findVariables(
                 (Object.keys(variables).includes(child.value.toString()) &&
                     !variables[child.value].equals(node.children[index]))
             ) {
-                if (!isCommutative(pattern)) {
+                const condition: (child: Node) => boolean = nodeChild =>
+                    matcher(nodeChild) &&
+                    (!Object.keys(variables).includes(child.value.toString()) ||
+                        variables[child.value].equals(nodeChild))
+
+                if (
+                    !isCommutative(pattern) ||
+                    findCommutative(node, matchedNodes, variables, child, condition) === null
+                ) {
                     return null
                 }
-
-                let found: Node | undefined = undefined
-
-                node.children.forEach(nodeChild => {
-                    if (
-                        !found &&
-                        matcher(nodeChild) &&
-                        !matchedNodes.includes(nodeChild) &&
-                        (!Object.keys(variables).includes(child.value.toString()) ||
-                            variables[child.value].equals(nodeChild))
-                    ) {
-                        found = nodeChild
-                        variables[child.value] = nodeChild
-                        matchedNodes.push(nodeChild)
-                    }
-                })
-
-                if (!found) return null
             } else {
                 if (!Object.keys(variables).includes(child.value.toString())) {
                     variables[child.value] = node.children[index]
@@ -170,21 +160,12 @@ function findVariables(
         } else {
             if (node.children[index].equals(pattern.children[index])) {
                 matchedNodes.push(node.children[index])
+            } else if (
+                isCommutative(pattern) &&
+                findCommutative(node, matchedNodes, variables, child, nodeChild => child.equals(nodeChild)) !== null
+            ) {
             } else {
-                if (!isCommutative(pattern)) {
-                    return null
-                }
-
-                let found: Node | undefined = undefined
-
-                node.children.forEach(nodeChild => {
-                    if (!found && child.equals(nodeChild) && !matchedNodes.includes(nodeChild)) {
-                        found = nodeChild
-                        matchedNodes.push(nodeChild)
-                    }
-                })
-
-                if (!found) return null
+                return null
             }
         }
     }
@@ -192,6 +173,26 @@ function findVariables(
     const unmatchedNodes = node.children.filter(child => !matchedNodes.includes(child))
 
     return pattern.parent === null || unmatchedNodes.length === 0 ? variables : null
+}
+
+function findCommutative(
+    node: Node,
+    matchedNodes: Node[],
+    variables: Variables,
+    child: Node,
+    matcher: (node: Node) => boolean
+): null | void {
+    for (let i = 0; i < node.children.length; i++) {
+        const nodeChild = node.children[i]
+
+        if (matcher(nodeChild) && !matchedNodes.includes(nodeChild)) {
+            variables[child.value] = nodeChild
+            matchedNodes.push(nodeChild)
+            return
+        }
+    }
+
+    return null
 }
 
 function isCommutative(node: Node): boolean {
