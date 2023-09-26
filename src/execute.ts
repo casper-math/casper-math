@@ -7,6 +7,8 @@ import parse from './parse'
 
 type Variables = { [key: string]: Node }
 
+let matchedNodes: Node[]
+
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
     pattern ??= parse(action.pattern)
 
@@ -30,9 +32,9 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         }
     })
 
-    const matchedNodes: Node[] = []
+    matchedNodes = []
 
-    const variables: Variables | null = findVariables(action, node, pattern, matchedNodes)
+    const variables: Variables | null = findVariables(action, node, pattern)
 
     if (variables === null) return node
 
@@ -67,13 +69,7 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
     return result
 }
 
-function findVariables(
-    action: Action,
-    node: Node,
-    pattern: Node,
-    matchedNodes: Node[],
-    variables: Variables = {}
-): Variables | null {
+function findVariables(action: Action, node: Node, pattern: Node, variables: Variables = {}): Variables | null {
     const matchers: { [key: string]: (node: Node) => boolean } = {
         number: (node: Node) => node.type === Type.Number,
         single: (node: Node) => node.type === Type.Variable,
@@ -110,10 +106,7 @@ function findVariables(
                     (!Object.keys(variables).includes(child.value.toString()) ||
                         variables[child.value].equals(nodeChild))
 
-                if (
-                    !isCommutative(pattern) ||
-                    findCommutative(node, matchedNodes, variables, child, condition) === null
-                ) {
+                if (!isCommutative(pattern) || findCommutative(node, variables, child, condition) === null) {
                     return null
                 }
             } else {
@@ -123,7 +116,7 @@ function findVariables(
                 matchedNodes.push(node.children[index])
             }
         } else if (child.containsType(Type.Variable)) {
-            const output = findVariables(action, node.children[index], pattern.children[index], matchedNodes, variables)
+            const output = findVariables(action, node.children[index], pattern.children[index], variables)
 
             if (!output) {
                 if (!isCommutative(pattern)) {
@@ -139,7 +132,7 @@ function findVariables(
                         nodeChild.value === child.value &&
                         !matchedNodes.includes(nodeChild)
                     ) {
-                        const result = findVariables(action, nodeChild, child, matchedNodes, variables)
+                        const result = findVariables(action, nodeChild, child, variables)
                         if (result) {
                             found = nodeChild
                             variables = { ...result, ...variables }
@@ -162,7 +155,7 @@ function findVariables(
                 matchedNodes.push(node.children[index])
             } else if (
                 isCommutative(pattern) &&
-                findCommutative(node, matchedNodes, variables, child, nodeChild => child.equals(nodeChild)) !== null
+                findCommutative(node, variables, child, nodeChild => child.equals(nodeChild)) !== null
             ) {
             } else {
                 return null
@@ -175,13 +168,7 @@ function findVariables(
     return pattern.parent === null || unmatchedNodes.length === 0 ? variables : null
 }
 
-function findCommutative(
-    node: Node,
-    matchedNodes: Node[],
-    variables: Variables,
-    child: Node,
-    matcher: (node: Node) => boolean
-): null | void {
+function findCommutative(node: Node, variables: Variables, child: Node, matcher: (node: Node) => boolean): null | void {
     for (let i = 0; i < node.children.length; i++) {
         const nodeChild = node.children[i]
 
