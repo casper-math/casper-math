@@ -107,7 +107,7 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
                     (!Object.keys(variables).includes(child.value.toString()) ||
                         variables[child.value].equals(nodeChild))
 
-                if (!isCommutative(pattern) || findCommutative(node, child.value.toString(), condition) === null) {
+                if (findCommutative(node, child.value.toString(), condition) === null) {
                     return null
                 }
             } else {
@@ -144,7 +144,7 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
                 matchedNodes.push(node.children[index])
             }
         } else {
-            if (findConstants(node, index, pattern, child) === null) {
+            if (findConstants(child, node.children[index], node) === null) {
                 return null
             }
         }
@@ -158,6 +158,8 @@ function findVariables(action: Action, node: Node, pattern: Node): null | void {
 }
 
 function findCommutative(node: Node, name: string | null, matcher: (node: Node) => boolean): null | void {
+    if (!isCommutative(node)) return null
+
     for (let i = 0; i < node.children.length; i++) {
         const child = node.children[i]
 
@@ -171,15 +173,13 @@ function findCommutative(node: Node, name: string | null, matcher: (node: Node) 
     return null
 }
 
-function findConstants(node: Node, index: number, pattern: Node, child: Node): null | void {
-    if (node.children[index].equals(pattern.children[index])) {
-        matchedNodes.push(node.children[index])
+function findConstants(pattern: Node, node: Node, parent: Node): null | void {
+    if (node.equals(pattern)) {
+        matchedNodes.push(node)
         return
     }
 
-    if (!isCommutative(pattern) || findCommutative(node, null, nodeChild => child.equals(nodeChild)) === null) {
-        return null
-    }
+    return findCommutative(parent, null, child => pattern.equals(child))
 }
 
 function isCommutative(node: Node): boolean {
