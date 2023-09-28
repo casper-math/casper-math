@@ -11,6 +11,10 @@ export default function string(node: Node): string {
             .replace('+ -', '- ')
     }
 
+    if (node.type === Type.Function) {
+        return node.value.toString() + '(' + node.children.map(child => string(child)).join(', ') + ')'
+    }
+
     return node.value.toString()
 }
 

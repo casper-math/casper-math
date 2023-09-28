@@ -40,3 +40,18 @@ it('converts subtraction correctly', () => {
     const tree = parse('-4 - 3 - x')
     expect(string(tree)).toBe('-4 - 3 - x')
 })
+
+it('converts a function', () => {
+    const tree = parse('sin(2 * x)')
+    expect(string(tree)).toBe('sin(2 * x)')
+})
+
+it('converts a function with multiple parameters', () => {
+    const tree = parse('func(7, 3)')
+    expect(string(tree)).toBe('func(7, 3)')
+})
+
+it('converts nested functions', () => {
+    const tree = parse('func(2 * sin(4 + cos(7)), tan(3))')
+    expect(string(tree)).toBe('func(2 * sin(4 + cos(7)), tan(3))')
+})
