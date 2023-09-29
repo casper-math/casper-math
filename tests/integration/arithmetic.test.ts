@@ -341,3 +341,12 @@ it.each([
     const result = casper().go(input)
     expect(result.result).toBe(output)
 })
+
+it.each([
+    ['5 * 4^2', '80'],
+    ['5^2 * 4', '100'],
+    ['5^2 - 4^2', '9']
+])('can compute powers and roots', (input: string, output: string) => {
+    const result = casper().go(input)
+    expect(result.result).toBe(output)
+})

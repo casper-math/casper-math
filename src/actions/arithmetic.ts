@@ -52,6 +52,13 @@ const multiplyFractionsAndNumbers: Action = {
     handle: ({ a, b, c }) => Fraction.multiply(new Fraction(a, b), c).toString()
 }
 
+const computePowers: Action = {
+    name: 'compute powers',
+    pattern: 'a ^ b',
+    variables: { a: 'number', b: 'number' },
+    handle: ({ a, b }) => (Number.isInteger(b) ? Math.pow(Number(a), Number(b)) : `(${a}) ^ (${b})`)
+}
+
 export default [
     add,
     multiply,
@@ -59,5 +66,6 @@ export default [
     addFractions,
     addFractionsAndNumbers,
     multiplyFractions,
-    multiplyFractionsAndNumbers
+    multiplyFractionsAndNumbers,
+    computePowers
 ]
