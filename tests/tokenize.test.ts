@@ -211,3 +211,20 @@ it('can tokenize subtraction after brackets', () => {
         { type: Type.Number, value: '-5' }
     ])
 })
+
+it('can tokenize squares and subtraction', () => {
+    const input = '5^2 - 4^2'
+    const result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '5' },
+        { type: Type.Operator, value: '^' },
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-1' },
+        { type: Type.Operator, value: '*' }
+        { type: Type.Number, value: '4' },
+        { type: Type.Operator, value: '^' },
+        {type:Type.Number, value: '2'}
+    ])
+})
