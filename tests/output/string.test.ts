@@ -1,3 +1,5 @@
+import { Type } from '../../src/interfaces'
+import Node from '../../src/node'
 import string from './../../src/output/string'
 import parse from './../../src/parse'
 
@@ -54,4 +56,12 @@ it('converts a function with multiple parameters', () => {
 it('converts nested functions', () => {
     const tree = parse('func(2 * sin(4 + cos(7)), tan(3))')
     expect(string(tree)).toBe('func(2 * sin(4 + cos(7)), tan(3))')
+})
+
+it('adds brackets around powers when needed', () => {
+    const tree = new Node(Type.Operator, '^')
+    tree.addChild(new Node(Type.Number, -4))
+    tree.addChild(new Node(Type.Number, 2))
+
+    expect(string(tree)).toBe('(-4) ^ 2')
 })

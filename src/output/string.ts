@@ -19,6 +19,15 @@ export default function string(node: Node): string {
 }
 
 function shouldInsertBrackets(parent: Node, child: Node): boolean {
+    if (
+        child.type === Type.Number &&
+        Number(child.value) < 0 &&
+        parent.type === Type.Operator &&
+        parent.value === '^'
+    ) {
+        return true
+    }
+
     if (child.type !== Type.Operator) {
         return false
     }
