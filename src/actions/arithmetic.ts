@@ -59,6 +59,26 @@ const computePowers: Action = {
     handle: ({ a, b }) => (Number.isInteger(b) ? Math.pow(Number(a), Number(b)) : `(${a}) ^ (${b})`)
 }
 
+const computePowerOfFraction: Action = {
+    name: 'compute powers of fractions',
+    pattern: '(a / b)^c',
+    variables: { a: 'expression', b: 'expression', c: 'number' },
+    handle: ({ a, b, c }) => {
+        if (!Number.isInteger(c) || Number(c) <= 1) {
+            return `((${a}) / (${b})) ^ (${c})`
+        }
+
+        return Array(Number(c)).fill(`((${a}) / (${b}))`).join('*')
+    }
+}
+
+const fractionDividedByFraction: Action = {
+    name: 'fraction divided by fraction',
+    pattern: '(a / b) / (c / d)',
+    variables: { a: 'expression', b: 'expression', c: 'expression', d: 'expression' },
+    handle: ({ a, b, c, d }) => `((${a}) * (${d})) / ((${b}) * (${c}))`
+}
+
 export default [
     add,
     multiply,
@@ -67,5 +87,7 @@ export default [
     addFractionsAndNumbers,
     multiplyFractions,
     multiplyFractionsAndNumbers,
-    computePowers
+    computePowers,
+    computePowerOfFraction,
+    fractionDividedByFraction
 ]
