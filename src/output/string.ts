@@ -7,8 +7,8 @@ export default function string(node: Node): string {
         return node.children
             .map(child => (shouldInsertBrackets(node, child) ? `(${string(child)})` : string(child)))
             .join(` ${node.value.toString()} `)
-            .replace('+ -1 *', '-')
-            .replace('+ -', '- ')
+            .replace(/\+ -1 \*/, '-')
+            .replace(/\+ -/, '- ')
     }
 
     if (node.type === Type.Function) {

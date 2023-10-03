@@ -1,3 +1,5 @@
+import { Type } from '../../src/interfaces'
+import Node from '../../src/node'
 import latex from './../../src/output/latex'
 import parse from './../../src/parse'
 
@@ -64,4 +66,12 @@ it('converts subtraction correctly', () => {
 it('converts equality correctly', () => {
     const tree = parse('2 * x = 8')
     expect(latex(tree)).toBe('2 \\cdot x = 8')
+})
+
+it('adds brackets around powers when needed', () => {
+    const tree = new Node(Type.Operator, '^')
+    tree.addChild(new Node(Type.Number, -4))
+    tree.addChild(new Node(Type.Number, 2))
+
+    expect(latex(tree)).toBe('{(-4)} ^ {2}')
 })

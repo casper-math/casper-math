@@ -1,5 +1,5 @@
-import config from './../config'
-import { Type } from './../interfaces'
+import config from '../config'
+import { Type } from '../interfaces'
 import Node from './../node'
 
 export default function latex(node: Node): string {
@@ -11,71 +11,77 @@ export default function latex(node: Node): string {
         return value(node)
     }
 
-    if (node.value === '+') {
-        return brackets(
-            node.children
-                .map(child => latex(child))
-                .join(' + ')
-                .replace('+ -1 \\cdot', '-')
-                .replace('+ -', '- '),
-            node
-        )
-    }
-
-    if (node.value === '*') {
-        return brackets(node.children.map(child => latex(child)).join(' \\cdot '), node)
-    }
-
     if (node.value === '/') {
-        return `\\frac{${latex(node.children[0])}}{${latex(node.children[1])}}`
+        const numerator = latex(node.children[0])
+        const denominator = latex(node.children[1])
+
+        return `\\frac{${numerator}}{${denominator}}`
     }
 
     if (node.value === '^') {
-        return `{${latex(node.children[0])}} ^ {${latex(node.children[1])}}`
+        const base = latex(node.children[0])
+        const exponent = latex(node.children[1])
+
+        return shouldInsertBrackets(node, node.children[0])
+            ? `{(${base})} ^ {${exponent}}`
+            : `{${base}} ^ {${exponent}}`
     }
 
-    return brackets(node.children.map(child => latex(child)).join(` ${value(node)} `), node)
+    return node.children
+        .map(child => (shouldInsertBrackets(node, child) ? `(${latex(child)})` : latex(child)))
+        .join(` ${value(node)} `)
+        .replace(/-1 \\cdot /g, '-')
+        .replace(/\+ -/g, '- ')
 }
 
-function brackets(string: string, node: Node): string {
-    const parentPrecedence = config().operators.filter(operator => operator.symbol === node.parent?.value)[0]
-        ?.precedence
-    const childPrecedence = config().operators.filter(operator => operator.symbol === node.value)[0].precedence
-
-    if (node.parent?.value === '^') {
-        return string
+function shouldInsertBrackets(parent: Node, child: Node): boolean {
+    if (parent.value === '^' && child.type === Type.Number && Number(child.value) < 0) {
+        return true
     }
 
-    return parentPrecedence >= childPrecedence ? `(${string})` : string
+    if (child.type !== Type.Operator) {
+        return false
+    }
+
+    const parentPrecedence = config().operators.filter(operator => operator.symbol === parent.value)[0].precedence
+
+    const childPrecedence = config().operators.filter(operator => operator.symbol === child.value)[0].precedence
+
+    return parentPrecedence >= childPrecedence
 }
 
 function value(node: Node): string {
-    const greekLetters = [
-        'alpha',
-        'beta',
-        'gamma',
-        'delta',
-        'epsilon',
-        'zeta',
-        'eta',
-        'theta',
-        'iota',
-        'kappa',
-        'lambda',
-        'mu',
-        'nu',
-        'xi',
-        'omicron',
-        'pi',
-        'rho',
-        'sigma',
-        'tau',
-        'upsilon',
-        'phi',
-        'chi',
-        'psi',
-        'omega'
-    ]
+    const mappings: { [key: string]: string } = {
+        '*': '\\cdot',
+        alpha: '\\alpha',
+        beta: '\\beta',
+        gamma: '\\gamma',
+        delta: '\\delta',
+        epsilon: '\\epsion',
+        zeta: '\\zeta',
+        eta: '\\eta',
+        theta: '\\theta',
+        iota: '\\iota',
+        kappa: '\\kappa',
+        lambda: '\\lambda',
+        mu: '\\mu',
+        nu: '\\nu',
+        xi: '\\xi',
+        omicron: '\\omicron',
+        pi: '\\pi',
+        rho: '\\rho',
+        sigma: '\\sigma',
+        tau: '\\tau',
+        upsilon: '\\upsilon',
+        phi: '\\phi',
+        chi: '\\chi',
+        psi: '\\psi',
+        omega: '\\omega'
+    }
 
-    return greekLetters.includes(node.value.toString()) ? '\\' + node.value.toString() : node.value.toString()
+    if (Object.keys(mappings).includes(node.value.toString())) {
+        return mappings[node.value]
+    }
+
+    return node.value.toString()
 }
