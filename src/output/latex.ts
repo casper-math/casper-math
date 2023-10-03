@@ -12,7 +12,17 @@ export default function latex(node: Node): string {
     }
 
     if (node.type !== Type.Operator) {
-        return value(node)
+        if (!node.value.toString().includes('_')) {
+            return value(node)
+        }
+
+        return node.value
+            .toString()
+            .split(/_(.*)/s)
+            .slice(0, -1)
+            .map((text: string) => value(text))
+            .join('_{')
+            .concat('}')
     }
 
     if (node.value === '/') {
@@ -54,14 +64,14 @@ function shouldInsertBrackets(parent: Node, child: Node): boolean {
     return parentPrecedence >= childPrecedence
 }
 
-function value(node: Node): string {
+function value(text: Node | string): string {
     const mappings: { [key: string]: string } = {
         '*': '\\cdot',
         alpha: '\\alpha',
         beta: '\\beta',
         gamma: '\\gamma',
         delta: '\\delta',
-        epsilon: '\\epsion',
+        epsilon: '\\epsilon',
         zeta: '\\zeta',
         eta: '\\eta',
         theta: '\\theta',
@@ -83,9 +93,11 @@ function value(node: Node): string {
         omega: '\\omega'
     }
 
-    if (Object.keys(mappings).includes(node.value.toString())) {
-        return mappings[node.value]
+    const value = typeof text === 'string' ? text : text.value.toString()
+
+    if (Object.keys(mappings).includes(value)) {
+        return mappings[value]
     }
 
-    return node.value.toString()
+    return value
 }

@@ -80,3 +80,8 @@ it('converts square roots', () => {
     const tree = parse('sqrt(9)')
     expect(latex(tree)).toBe('\\sqrt{9}')
 })
+
+it('converts variable names with subscripts', () => {
+    const tree = parse('x_1 + x_12 + F_drag + alpha_epsilon')
+    expect(latex(tree)).toBe('x_{1} + x_{12} + F_{drag} + \\alpha_{\\epsilon}')
+})
