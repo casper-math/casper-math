@@ -228,3 +228,18 @@ it('can tokenize squares and subtraction', () => {
         { type: Type.Number, value: '2' }
     ])
 })
+
+it('can tokenize squares and multiplication', () => {
+    const input = '3 * -4^2'
+    const result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '3' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Number, value: '-1' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Number, value: '4' },
+        { type: Type.Operator, value: '^' },
+        { type: Type.Number, value: '2' }
+    ])
+})
