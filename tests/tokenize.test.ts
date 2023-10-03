@@ -222,9 +222,9 @@ it('can tokenize squares and subtraction', () => {
         { type: Type.Number, value: '2' },
         { type: Type.Operator, value: '+' },
         { type: Type.Number, value: '-1' },
-        { type: Type.Operator, value: '*' }
+        { type: Type.Operator, value: '*' },
         { type: Type.Number, value: '4' },
         { type: Type.Operator, value: '^' },
-        {type:Type.Number, value: '2'}
+        { type: Type.Number, value: '2' }
     ])
 })
