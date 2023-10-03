@@ -75,3 +75,8 @@ it('adds brackets around powers when needed', () => {
 
     expect(latex(tree)).toBe('{(-4)} ^ {2}')
 })
+
+it('converts square roots', () => {
+    const tree = parse('sqrt(9)')
+    expect(latex(tree)).toBe('\\sqrt{9}')
+})

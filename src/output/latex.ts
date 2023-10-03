@@ -4,6 +4,10 @@ import Node from './../node'
 
 export default function latex(node: Node): string {
     if (node.type === Type.Function) {
+        if (node.value === 'sqrt') {
+            return `\\sqrt{${latex(node.children[0])}}`
+        }
+
         return `\\text{${value(node)}}(${node.children.map(child => latex(child)).join(', ')})`
     }
 

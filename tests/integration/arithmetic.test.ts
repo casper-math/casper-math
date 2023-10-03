@@ -382,7 +382,37 @@ it.each([
     ['5 / 18 - (-1 / 3)^2', '1 / 6'],
     ['-(-8)^2 + 4 * -3^2', '-100'],
     ['-1 - 5 * (-2 / 5)^2', '-9 / 5']
-])('can compute powers and roots', (input: string, output: string) => {
+])('can compute powers', (input: string, output: string) => {
+    const result = casper().go(input)
+    expect(result.result).toBe(output)
+})
+
+it.each([
+    ['sqrt(9)', '3'],
+    ['sqrt(121)', '11'],
+    ['sqrt(1)', '1'],
+    ['sqrt(0)', '0'],
+    ['sqrt(256)', '16'],
+    ['sqrt(400)', '20'],
+    ['sqrt(625)', '25'],
+    ['sqrt(1 / 4)', '1 / 2'],
+    ['sqrt(4 / 25)', '2 / 5'],
+    ['sqrt(9) - sqrt(25)', '-2'],
+    ['sqrt(9) + sqrt(25)', '8'],
+    ['9 * sqrt(25)', '45'],
+    ['sqrt(9) * sqrt(25)', '15'],
+    ['2 * sqrt(9) + 3 * sqrt(25)', '21'],
+    ['sqrt(25)^2', '25'],
+    ['sqrt(16) - sqrt(49)', '-3'],
+    ['sqrt(25) + 1 / 2 * sqrt(36)', '8'],
+    ['sqrt(144) - 3 * sqrt(100)', '-18'],
+    ['sqrt(4) + sqrt(1) + sqrt(0)', '3'],
+    ['sqrt(4) * sqrt(1) * sqrt(0)', '0'],
+    ['3 * sqrt(625) - 2 * sqrt(900)', '15'],
+    ['sqrt(1 / 4) + 10 * sqrt(1 / 25)', '5 / 2'],
+    ['6 * sqrt(4 / 9) - 5 * sqrt(81 / 100)', '-1 / 2'],
+    ['sqrt(6 + 1 / 4) * sqrt(1 + 11 / 25)', '3']
+])('can compute roots', (input: string, output: string) => {
     const result = casper().go(input)
     expect(result.result).toBe(output)
 })

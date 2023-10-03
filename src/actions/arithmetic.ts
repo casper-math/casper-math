@@ -86,6 +86,20 @@ const dividedByFraction: Action = {
     handle: ({ a, b, c }) => `((${a}) * (${c})) / (${b})`
 }
 
+const squareRoot: Action = {
+    name: 'square root',
+    pattern: 'sqrt(a)',
+    variables: { a: 'number' },
+    handle: ({ a }) => (Number.isInteger(Math.sqrt(Number(a))) ? Math.sqrt(Number(a)) : `sqrt(${a})`)
+}
+
+const squareRootOfFraction: Action = {
+    name: 'square root of fraction',
+    pattern: 'sqrt(a / b)',
+    variables: { a: 'expression', b: 'expression' },
+    handle: ({ a, b }) => `sqrt(${a}) / sqrt(${b})`
+}
+
 export default [
     add,
     multiply,
@@ -97,5 +111,7 @@ export default [
     computePowers,
     computePowerOfFraction,
     fractionDividedByFraction,
-    dividedByFraction
+    dividedByFraction,
+    squareRoot,
+    squareRootOfFraction
 ]
