@@ -79,6 +79,13 @@ const fractionDividedByFraction: Action = {
     handle: ({ a, b, c, d }) => `((${a}) * (${d})) / ((${b}) * (${c}))`
 }
 
+const dividedByFraction: Action = {
+    name: 'divided by fraction',
+    pattern: 'a / (b / c)',
+    variables: { a: 'expression', b: 'expression', c: 'expression' },
+    handle: ({ a, b, c }) => `((${a}) * (${c})) / (${b})`
+}
+
 export default [
     add,
     multiply,
@@ -89,5 +96,6 @@ export default [
     multiplyFractionsAndNumbers,
     computePowers,
     computePowerOfFraction,
-    fractionDividedByFraction
+    fractionDividedByFraction,
+    dividedByFraction
 ]
