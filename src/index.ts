@@ -2,6 +2,7 @@ import config, { getConfig } from './config'
 import execute from './execute'
 import { Options, Result } from './interfaces'
 import { clearLogs, clearTemporarySteps, getLogs } from './logger'
+import Node from './node'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
@@ -24,14 +25,24 @@ class Casper {
         clearLogs()
 
         let tree = parse(expression)
-        let old
+        let old: Node | undefined
+        let newRun = true
 
-        while (!old?.equals(tree)) {
+        while (newRun) {
+            newRun = false
             old = tree.clone()
 
             config().actions.forEach(action => {
+                if (newRun) {
+                    return
+                }
+
                 tree = execute(action, tree)
-                clearTemporarySteps(string(tree))
+
+                if (!old?.equals(tree)) {
+                    newRun = true
+                    clearTemporarySteps(string(tree))
+                }
             })
         }
 
