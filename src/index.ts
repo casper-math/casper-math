@@ -37,6 +37,17 @@ class Casper {
 
         const result = config().output === 'string' ? string(tree) : latex(tree)
 
-        return { result: result, steps: getLogs() }
+        if (config().output === 'latex') {
+            var steps = getLogs().map(step => ({
+                name: step.name,
+                search: latex(parse(step.search)),
+                replace: latex(parse(step.replace)),
+                result: latex(parse(step.result))
+            }))
+        } else {
+            var steps = getLogs()
+        }
+
+        return { result, steps }
     }
 }
