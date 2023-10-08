@@ -42,6 +42,10 @@ const addLikeTerms: Action = {
                 return
             }
 
+            if (child.type === Type.Number) {
+                return
+            }
+
             node.removeChild(child)
             push(child, 1)
             return
