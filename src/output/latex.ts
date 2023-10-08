@@ -8,7 +8,7 @@ export default function latex(node: Node): string {
             return `\\sqrt{${latex(node.children[0])}}`
         }
 
-        return `\\text{${value(node)}}(${node.children.map(child => latex(child)).join(', ')})`
+        return `\\text{${value(node)}} \\left( ${node.children.map(child => latex(child)).join(', ')} \\right)`
     }
 
     if (node.type !== Type.Operator) {
@@ -37,12 +37,12 @@ export default function latex(node: Node): string {
         const exponent = latex(node.children[1])
 
         return shouldInsertBrackets(node, node.children[0])
-            ? `{(${base})} ^ {${exponent}}`
+            ? `{ \\left( ${base} \\right) } ^ {${exponent}}`
             : `{${base}} ^ {${exponent}}`
     }
 
     return node.children
-        .map(child => (shouldInsertBrackets(node, child) ? `(${latex(child)})` : latex(child)))
+        .map(child => (shouldInsertBrackets(node, child) ? `\\left( ${latex(child)} \\right)` : latex(child)))
         .join(` ${value(node)} `)
         .replace(/-1 \\cdot /g, '-')
         .replace(/\+ -/g, '- ')

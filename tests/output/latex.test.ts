@@ -30,7 +30,7 @@ it('doesnt add brackets when unnecessary', () => {
 
 it('adds brackets when necessary', () => {
     const tree = parse('3 * (4 + 5)')
-    expect(latex(tree)).toBe('3 \\cdot (4 + 5)')
+    expect(latex(tree)).toBe('3 \\cdot \\left( 4 + 5 \\right)')
 })
 
 it('can convert powers', () => {
@@ -50,12 +50,12 @@ it('can convert complex trees with fractions', () => {
 
 it('can convert functions and constants', () => {
     const tree = parse('func(2 * e, 5)')
-    expect(latex(tree)).toBe('\\text{func}(2 \\cdot e, 5)')
+    expect(latex(tree)).toBe('\\text{func} \\left( 2 \\cdot e, 5 \\right)')
 })
 
 it('converts greek constters', () => {
     const tree = parse('sin(pi + 2 * alpha)')
-    expect(latex(tree)).toBe('\\text{sin}(\\pi + 2 \\cdot \\alpha)')
+    expect(latex(tree)).toBe('\\text{sin} \\left( \\pi + 2 \\cdot \\alpha \\right)')
 })
 
 it('converts subtraction correctly', () => {
@@ -73,7 +73,7 @@ it('adds brackets around powers when needed', () => {
     tree.addChild(new Node(Type.Number, -4))
     tree.addChild(new Node(Type.Number, 2))
 
-    expect(latex(tree)).toBe('{(-4)} ^ {2}')
+    expect(latex(tree)).toBe('{ \\left( -4 \\right) } ^ {2}')
 })
 
 it('converts square roots', () => {
@@ -84,4 +84,9 @@ it('converts square roots', () => {
 it('converts variable names with subscripts', () => {
     const tree = parse('x_1 + x_12 + F_drag + alpha_epsilon')
     expect(latex(tree)).toBe('x_{1} + x_{12} + F_{drag} + \\alpha_{\\epsilon}')
+})
+
+it('wraps fractions in big brackets', () => {
+    const tree = parse('(2 / 5) ^ 3')
+    expect(latex(tree)).toBe('{ \\left( \\frac{2}{5} \\right) } ^ {3}')
 })
