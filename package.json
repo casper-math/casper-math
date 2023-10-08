@@ -14,7 +14,12 @@
         "test": "jest"
     },
     "keywords": [
-        "math"
+        "algebra",
+        "cas",
+        "computer algebra system",
+        "computer system",
+        "math",
+        "mathematics"
     ],
     "author": "Jeroen van Rensen",
     "license": "ISC",
