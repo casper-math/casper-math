@@ -1,9 +1,16 @@
-export interface Action {
-    name: string
-    pattern: string
-    variables: { [key: string]: VariableType }
-    handle: (variables: { [key: string]: string | number }) => string | number
-}
+import Node from './node'
+
+export type Action =
+    | {
+          name: string
+          pattern: string
+          variables: { [key: string]: VariableType }
+          handle: (variables: { [key: string]: string | number }) => string | number
+      }
+    | {
+          name: string
+          run: (node: Node) => Node | string | number
+      }
 
 export interface Operator {
     symbol: string

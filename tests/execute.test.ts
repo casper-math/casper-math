@@ -246,3 +246,40 @@ it('checks for functions', () => {
     const result = execute(func, tree)
     expect(result).toEqual(parse('func(6, 3)'))
 })
+
+const manual: Action = {
+    name: 'manual',
+    run: node => {
+        if (node.value === 3) {
+            return 4
+        }
+        if (node.value === 5) {
+            return '6 * 7'
+        }
+        return node
+    }
+}
+
+it('can execute a "manual" action', () => {
+    const tree = parse('3 + 7')
+    const result = execute(manual, tree)
+    expect(result).toEqual(parse('4 + 7'))
+})
+
+it('works from the root', () => {
+    const tree = parse('3')
+    const result = execute(manual, tree)
+    expect(result).toEqual(parse('4'))
+})
+
+it('can return expressions', () => {
+    const tree = parse('2 + 5')
+    const result = execute(manual, tree)
+    expect(result).toEqual(parse('2 + 6 * 7'))
+})
+
+it('handles associative operators', () => {
+    const tree = parse('2 * 5')
+    const result = execute(manual, tree)
+    expect(result).toEqual(parse('2 * 6 * 7'))
+})

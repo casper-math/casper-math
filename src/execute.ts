@@ -17,8 +17,6 @@ const matchers: { [key: string]: (node: Node) => boolean } = {
 }
 
 export default function execute(action: Action, node: Node, pattern?: Node): Node {
-    pattern ??= parse(action.pattern)
-
     const children = node.children
     node.setChildren([])
 
@@ -38,6 +36,20 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
             node.addChild(result)
         }
     })
+
+    return getResult(action, node)
+}
+
+function getResult(action: Action, node: Node, pattern?: Node) {
+    if (!('pattern' in action)) {
+        const result = action.run(node)
+
+        if (typeof result === 'string') return parse(result)
+        if (typeof result === 'number') return new Node(Type.Number, result)
+        return result
+    }
+
+    pattern ??= parse(action.pattern)
 
     variables = {}
     matchedNodes = []
@@ -73,6 +85,10 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
 }
 
 function findVariables(action: Action, node: Node, pattern: Node): null | void {
+    if (!('variables' in action)) {
+        return null
+    }
+
     if (pattern.type === Type.Variable) {
         return findVariable(action.variables[pattern.value], node, pattern, null)
     }
