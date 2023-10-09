@@ -41,6 +41,16 @@ test('negative numbers in both the numerator and denominator are simplified to l
     expect(fraction).toEqual(new Fraction(4, 3))
 })
 
+it('can instantiate fractions from floats', () => {
+    const fraction = new Fraction(2.5, 2)
+    expect(fraction).toEqual(new Fraction(5, 4))
+})
+
+it('can instantiate fractions from negative floats', () => {
+    const fraction = new Fraction(3.6, -2.2)
+    expect(fraction).toEqual(new Fraction(-18, 11))
+})
+
 it('can add fractions', () => {
     const fraction1 = new Fraction(2, 5)
     const fraction2 = new Fraction(4, 5)

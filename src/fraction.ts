@@ -12,6 +12,14 @@ export default class Fraction {
     }
 
     simplify(): void {
+        if (!Number.isInteger(this.numerator) || !Number.isInteger(this.denominator)) {
+            const numeratorDigits = this.numerator.toString().split('.')[1]?.length ?? 0
+            const denominatorDigits = this.denominator.toString().split('.')[1]?.length ?? 0
+
+            this.numerator *= Math.pow(10, Math.max(numeratorDigits, denominatorDigits))
+            this.denominator *= Math.pow(10, Math.max(numeratorDigits, denominatorDigits))
+        }
+
         const gcd: (a: number, b: number) => number = (a, b) => (!b ? a : gcd(b, a % b))
         let divisor = gcd(Math.abs(this.numerator), Math.abs(this.denominator))
 
