@@ -11,20 +11,33 @@ const addLikeTerms: Action = {
 
         const coefficients: { [key: string]: Fraction } = {}
 
-        function push(key: string | Node, value: number | Fraction = 1) {
+        function push(key: string | Node, value: Node | number = 1) {
             key = typeof key === 'string' ? key : string(key)
-            value = typeof value === 'number' ? new Fraction(value, 1) : value
+
+            let fraction: Fraction
+
+            if (typeof value === 'number') {
+                fraction = new Fraction(value, 1)
+            } else if (value.type === Type.Number) {
+                fraction = new Fraction(value.value, 1)
+            } else {
+                fraction = new Fraction(value.children[0].value, value.children[1].value)
+            }
 
             if (key in coefficients) {
-                coefficients[key] = Fraction.add(coefficients[key], value)
+                coefficients[key] = Fraction.add(coefficients[key], fraction)
             } else {
-                coefficients[key] = value
+                coefficients[key] = fraction
             }
         }
 
         node.children.forEach(child => {
             if (child.type === Type.Operator && child.value === '*') {
-                const numbers = child.children.filter(factor => factor.type === Type.Number)
+                const numbers = child.children.filter(factor => {
+                    if (factor.type === Type.Number) return true
+                    if (factor.type !== Type.Operator || factor.value !== '/') return false
+                    return factor.children[0].type === Type.Number && factor.children[1].type === Type.Number
+                })
 
                 if (numbers.length === 0) {
                     push(child, 1)
@@ -34,7 +47,7 @@ const addLikeTerms: Action = {
 
                 if (numbers.length === 1) {
                     child.removeChild(numbers[0])
-                    push(child, Number(numbers[0].value))
+                    push(child, numbers[0])
                     node.removeChild(child)
                     return
                 }
