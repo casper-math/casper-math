@@ -38,7 +38,15 @@ it.each([
     ['3x + 8', '8 + 3 * x'],
     ['2 * a * c + 6 * a * c', '8 * a * c'],
     ['2 * a * c + 8 * a * d', '2 * a * c + 8 * a * d'],
-    ['a + (1 + 1 / 2) * a', '(5 / 2) * a']
+    ['a + (1 + 1 / 2) * a', '(5 / 2) * a'],
+    ['(1 / 2) * a + (1 / 3) * b', '(1 / 2) * a + (1 / 3) * b'],
+    ['(3 + 1 / 2) * a + (1 + 1 / 2) * a', '5 * a'],
+    ['5a + 2b + 3a + 4b', '8 * a + 6 * b'],
+    ['8a + 6 + 2a + 9', '15 + 10 * a'],
+    ['6a + 14a + 3b', '20 * a + 3 * b'],
+    ['2 * a * b + 4b + 6 * a * b + 8b', '8 * a * b + 12 * b'],
+    ['3 * a * b + 2 * b * c + 8 * b * c + a * b', '4 * a * b + 10 * b * c'],
+    ['6a + 5b + 6b', '6 * a + 11 * b']
 ])('simplifies the expression', (input: string, output: string) => {
     const result = casper().go(input)
     expect(result.result).toBe(output)
