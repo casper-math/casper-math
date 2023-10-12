@@ -95,6 +95,13 @@ const multiplyByOne: Action = {
     handle: ({ x }) => x
 }
 
+const addZero: Action = {
+    name: 'add zero',
+    pattern: '0 + x',
+    variables: { x: 'expression' },
+    handle: ({ x }) => x
+}
+
 const square: Action = {
     name: 'square',
     pattern: 'x * x',
@@ -102,4 +109,4 @@ const square: Action = {
     handle: ({ x }) => `(${x}) ^ 2`
 }
 
-export default [addLikeTerms, multiplyByZero, multiplyByOne, square]
+export default [addLikeTerms, multiplyByZero, multiplyByOne, addZero, square]
