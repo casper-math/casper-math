@@ -1,6 +1,6 @@
 {
     "name": "casper-math",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "description": "Computer Algebra System in JavaScript",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
