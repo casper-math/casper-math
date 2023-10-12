@@ -65,8 +65,17 @@ const addLikeTerms: Action = {
         })
 
         Object.keys(coefficients).forEach(factor => {
-            node.addChild(parse(`${coefficients[factor].toString()} * (${factor})`))
+            if (coefficients[factor].numerator === 1 && coefficients[factor].denominator === 1) {
+                node.addChild(parse(factor))
+            } else {
+                node.addChild(parse(`${coefficients[factor].toString()} * (${factor})`))
+            }
         })
+
+        if (node.children.length === 1) {
+            node.children[0].setParent(null)
+            return node.children[0]
+        }
 
         return node
     }
@@ -74,14 +83,14 @@ const addLikeTerms: Action = {
 
 const multiplyByZero: Action = {
     name: 'multiply by zero',
-    pattern: 'x * 0',
+    pattern: '0 * x',
     variables: { x: 'expression' },
     handle: () => 0
 }
 
 const multiplyByOne: Action = {
     name: 'multiply by one',
-    pattern: 'x * 1',
+    pattern: '1 * x',
     variables: { x: 'expression' },
     handle: ({ x }) => x
 }

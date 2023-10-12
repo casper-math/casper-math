@@ -283,3 +283,22 @@ it('handles associative operators', () => {
     const result = execute(manual, tree)
     expect(result).toEqual(parse('2 * 6 * 7'))
 })
+
+const multiplyByZero: Action = {
+    name: 'multiply by zero',
+    pattern: '0 * x',
+    variables: { x: 'expression' },
+    handle: () => 0
+}
+
+it('can run the multiply by zero action', () => {
+    const tree = parse('2 * 0')
+    const result = execute(multiplyByZero, tree)
+    expect(result).toEqual(parse('0'))
+})
+
+it('can run the multiply by zero action with commutativity', () => {
+    const tree = parse('0 * 2')
+    const result = execute(multiplyByZero, tree)
+    expect(result).toEqual(parse('0'))
+})
