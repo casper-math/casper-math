@@ -85,28 +85,32 @@ const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
     variables: { x: 'expression' },
-    handle: () => 0
+    handle: () => 0,
+    log: () => 'multiply by zero'
 }
 
 const multiplyByOne: Action = {
     name: 'multiply by one',
     pattern: '1 * x',
     variables: { x: 'expression' },
-    handle: ({ x }) => x
+    handle: ({ x }) => x,
+    log: () => 'multiply by one'
 }
 
 const addZero: Action = {
     name: 'add zero',
     pattern: '0 + x',
     variables: { x: 'expression' },
-    handle: ({ x }) => x
+    handle: ({ x }) => x,
+    log: () => 'add zero'
 }
 
 const square: Action = {
     name: 'square',
     pattern: 'x * x',
     variables: { x: 'expression' },
-    handle: ({ x }) => `(${x}) ^ 2`
+    handle: ({ x }) => `(${x}) ^ 2`,
+    log: () => 'square'
 }
 
 export default [addLikeTerms, multiplyByZero, multiplyByOne, addZero, square]

@@ -78,7 +78,8 @@ function getResult(action: Action, node: Node, pattern?: Node) {
     log({
         name: action.name,
         search: searchStep(action.pattern, converted),
-        replace: string(result)
+        replace: string(result),
+        description: action.log(converted)
     })
 
     return result

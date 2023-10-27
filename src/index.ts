@@ -53,12 +53,33 @@ class Casper {
                 name: step.name,
                 search: latex(parse(step.search)),
                 replace: latex(parse(step.replace)),
+                description: this.description(step.description, true),
                 result: latex(parse(step.result))
             }))
         } else {
-            var steps = getLogs()
+            var steps = getLogs().map(step => ({
+                name: step.name,
+                search: step.search,
+                replace: step.replace,
+                description: this.description(step.description, false),
+                result: step.result
+            }))
         }
 
         return { result, steps }
+    }
+
+    private description(description: string, useLatex: boolean): string {
+        if (!useLatex) {
+            return description.replace(/\$ ?([^$ ]?[^$]*[^$ ]) ?\$/g, '$1').replace(/ {2,}/g, ' ')
+        }
+
+        const matches = description.match(/\$[^$]+\$/g)
+
+        matches?.forEach(match => {
+            description = description.replace(match, '$ ' + latex(parse(match.slice(1, -1))) + ' $')
+        })
+
+        return description
     }
 }
