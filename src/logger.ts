@@ -13,11 +13,15 @@ export function clearLogs(): void {
     Logger.getInstance().steps = []
 }
 
-export function clearTemporarySteps(result: string): void {
+export function setResult(result: string): void {
     Logger.getInstance().temporarySteps.forEach(step => {
         Logger.getInstance().steps.push({ ...step, result })
     })
 
+    Logger.getInstance().temporarySteps = []
+}
+
+export function clearTemporarySteps() {
     Logger.getInstance().temporarySteps = []
 }
 

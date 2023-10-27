@@ -25,7 +25,7 @@ const simplify: Action = {
     log({ a, b }) {
         const fraction = new Fraction(a, b)
         const divisor = Number(a) / fraction.numerator
-        return `Divide both the numerator (${a}) and the denominator (${b}) by the greatest common divisor, ${divisor}.`
+        return `Divide both the numerator ($ ${a} $) and the denominator ($ ${b} $) by the greatest common divisor, $ ${divisor} $.`
     }
 }
 
@@ -34,7 +34,8 @@ const addFractions: Action = {
     pattern: 'a / b + c / d',
     variables: { a: 'number', b: 'number', c: 'number', d: 'number' },
     handle: ({ a, b, c, d }) => Fraction.add(new Fraction(a, b), new Fraction(c, d)).toString(),
-    log: () => 'add fractions'
+    log: ({ b, d }) =>
+        `To add fractions, make equal denominator ($ ${Number(b) * Number(d)} $) and then add the numerators.`
 }
 
 const addFractionsAndNumbers: Action = {
@@ -42,7 +43,7 @@ const addFractionsAndNumbers: Action = {
     pattern: 'a / b + c',
     variables: { a: 'number', b: 'number', c: 'number' },
     handle: ({ a, b, c }) => Fraction.add(new Fraction(a, b), c).toString(),
-    log: () => 'add fractions and numbers'
+    log: ({ b }) => `To add a fraction to a number, make equal denominator ($ ${b} $) and then add the numerators.`
 }
 
 const multiplyFractions: Action = {

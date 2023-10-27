@@ -1,7 +1,7 @@
 import config, { getConfig } from './config'
 import execute from './execute'
 import { Options, Result } from './interfaces'
-import { clearLogs, clearTemporarySteps, getLogs } from './logger'
+import { clearLogs, clearTemporarySteps, getLogs, setResult } from './logger'
 import Node from './node'
 import latex from './output/latex'
 import string from './output/string'
@@ -41,7 +41,9 @@ class Casper {
 
                 if (!old?.equals(tree)) {
                     newRun = true
-                    clearTemporarySteps(string(tree))
+                    setResult(string(tree))
+                } else {
+                    clearTemporarySteps()
                 }
             })
         }
