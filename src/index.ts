@@ -6,6 +6,7 @@ import Node from './node'
 import latex from './output/latex'
 import string from './output/string'
 import parse from './parse'
+import sort from './sort'
 
 export default function casper() {
     return new Casper()
@@ -38,6 +39,7 @@ class Casper {
                 }
 
                 tree = execute(action, tree)
+                tree = sort(tree)
 
                 if (!old?.equals(tree)) {
                     newRun = true
