@@ -47,3 +47,13 @@ it('sorts terms inside powers', () => {
     const input = parse('c + a ^ 3')
     expect(sort(input)).toEqual(parse('a ^ 3 + c'))
 })
+
+it('checks the first letter', () => {
+    const input = parse('2 * y + 4 * x')
+    expect(sort(input)).toEqual(parse('4 * x + 2 * y'))
+})
+
+it('views fractions as numbers', () => {
+    const input = parse('(1 / 2) * y + 3 * x')
+    expect(sort(input)).toEqual(parse('3 * x + (1 / 2) * y'))
+})
