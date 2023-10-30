@@ -7,7 +7,7 @@ import parse from '../parse'
 const addLikeTerms: Action = {
     name: 'add like terms',
     run(node) {
-        if (node.value !== '+') return node
+        if (node.type !== Type.Operator || node.value !== '+') return node
 
         const coefficients: { [key: string]: Fraction } = {}
 
@@ -81,6 +81,56 @@ const addLikeTerms: Action = {
     }
 }
 
+const multiplyLikeFactors: Action = {
+    name: 'multiply like factors',
+    run(node) {
+        if (node.type !== Type.Operator || node.value !== '*') return node
+
+        const powers: { [key: string]: Node[] } = {}
+
+        function push(key: Node, value: Node) {
+            if (Object.keys(powers).includes(string(key))) {
+                powers[string(key)].push(value)
+            } else {
+                powers[string(key)] = [value]
+            }
+        }
+
+        node.children.forEach(child => {
+            if (child.type === Type.Number) return
+
+            if (child.type === Type.Operator && child.value === '^') {
+                push(child.children[0], child.children[1])
+            } else {
+                push(child, new Node(Type.Number, 1))
+            }
+
+            node.removeChild(child)
+        })
+
+        Object.keys(powers).forEach(base => {
+            if (powers[base].length === 1 && powers[base][0].type === Type.Number && powers[base][0].value === 1) {
+                node.addChild(parse(base))
+            } else if (powers[base].length === 1) {
+                const power = node.addChild(new Node(Type.Operator, '^'))
+                power.addChild(parse(base))
+                power.addChild(powers[base][0])
+            } else {
+                const power = node.addChild(new Node(Type.Operator, '^'))
+                power.addChild(parse(base))
+                const sum = power.addChild(new Node(Type.Operator, '+'))
+                powers[base].forEach(exponent => sum.addChild(exponent))
+            }
+        })
+
+        if (node.children.length === 1) {
+            return node.children[0]
+        }
+
+        return node
+    }
+}
+
 const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
@@ -105,12 +155,4 @@ const addZero: Action = {
     log: () => 'add zero'
 }
 
-const square: Action = {
-    name: 'square',
-    pattern: 'x * x',
-    variables: { x: 'expression' },
-    handle: ({ x }) => `(${x}) ^ 2`,
-    log: () => 'square'
-}
-
-export default [addLikeTerms, multiplyByZero, multiplyByOne, addZero, square]
+export default [addLikeTerms, multiplyLikeFactors, multiplyByZero, multiplyByOne, addZero]
