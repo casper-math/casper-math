@@ -65,8 +65,8 @@ function getResult(action: Action, node: Node, pattern?: Node) {
     }
 
     // In the case that only some operands of an associative operator are matched, the result should be added to the
-    // operator.For example, the program matches`x + y` in `2 + 3 + 4`.Instead of returning`5`(2 + 3) as the result,
-    // with this code it returns`5 + 4`.
+    // operator. For example, the program matches `x + y` in `2 + 3 + 4`. Instead of returning `(5) + 4` as the result,
+    // with this code it returns `5 + 4`.
     if (node.children.filter(child => !matchedNodes.includes(child)).length > 0) {
         matchedNodes.forEach(value => node.removeChild(value))
         node.addChild(parse(action.handle(converted).toString()))
