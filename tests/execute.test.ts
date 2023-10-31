@@ -6,8 +6,7 @@ const add: Action = {
     name: 'add',
     pattern: 'x + y',
     variables: { x: 'number', y: 'number' },
-    handle: ({ x, y }) => Number(x) + Number(y),
-    log: () => 'this is a log'
+    handle: ({ x, y }) => Number(x) + Number(y)
 }
 
 it('can run the add action', () => {
@@ -38,8 +37,7 @@ const double: Action = {
     name: 'double',
     pattern: 'x + x',
     variables: { x: 'expression' },
-    handle: ({ x }) => `2 * (${x})`,
-    log: () => 'this is a log'
+    handle: ({ x }) => `2 * (${x})`
 }
 
 it('can run the double action', () => {
@@ -70,8 +68,7 @@ const stupid: Action = {
     name: 'stupid',
     pattern: 'x * y',
     variables: { x: 'single', y: 'number' },
-    handle: ({ y }) => y,
-    log: () => 'this is a log'
+    handle: ({ y }) => y
 }
 
 it('handles commutative operators', () => {
@@ -90,8 +87,7 @@ const nonCommutative: Action = {
     name: 'non-commutative',
     pattern: 'x / y',
     variables: { x: 'expression', y: 'number' },
-    handle: ({ x }) => x,
-    log: () => 'this is a log'
+    handle: ({ x }) => x
 }
 
 it('can run a non-commutative action', () => {
@@ -110,8 +106,7 @@ const nested: Action = {
     name: 'nested',
     pattern: 'x * (x + y)',
     variables: { x: 'expression', y: 'number' },
-    handle: ({ x, y }) => `(${x} * ${y}) + (${x} * ${x})`,
-    log: () => 'this is a log'
+    handle: ({ x, y }) => `(${x} * ${y}) + (${x} * ${x})`
 }
 
 it('works with nested actions', () => {
@@ -136,8 +131,7 @@ const root: Action = {
     name: 'root',
     pattern: 'y',
     variables: { y: 'number' },
-    handle: () => 2,
-    log: () => 'this is a log'
+    handle: () => 2
 }
 
 it('matches typed roots', () => {
@@ -162,8 +156,7 @@ const timesOne: Action = {
     name: 'times one',
     pattern: '1 * x',
     variables: { x: 'expression' },
-    handle: ({ x }) => x,
-    log: () => 'this is a log'
+    handle: ({ x }) => x
 }
 
 it('can match the times-one pattern', () => {
@@ -194,8 +187,7 @@ const anotherNested: Action = {
     name: 'another nested',
     pattern: 'a / b + c',
     variables: { a: 'number', b: 'number', c: 'number' },
-    handle: ({ a, b, c }) => `${Number(a) + Number(b) * Number(c)} / ${b}`,
-    log: () => 'this is a log'
+    handle: ({ a, b, c }) => `${Number(a) + Number(b) * Number(c)} / ${b}`
 }
 
 it('can run the action', () => {
@@ -220,8 +212,7 @@ const division: Action = {
     name: 'division',
     pattern: '(x + y) / 6',
     variables: { x: 'number', y: 'number' },
-    handle: () => 1,
-    log: () => 'this is a log'
+    handle: () => 1
 }
 
 it('does not match the same variable with other inputs', () => {
@@ -234,8 +225,7 @@ const reversedDivision: Action = {
     name: 'reversed division',
     pattern: 'x / 3',
     variables: { x: 'number' },
-    handle: () => 2,
-    log: () => 'this is a log'
+    handle: () => 2
 }
 
 it('does not apply commutativity with constants if the operator is not commutative', () => {
@@ -248,8 +238,7 @@ const func: Action = {
     name: 'function',
     pattern: 'func(x, 6)',
     variables: { x: 'number' },
-    handle: () => 3,
-    log: () => 'this is a log'
+    handle: () => 3
 }
 
 it('checks for functions', () => {
@@ -299,8 +288,7 @@ const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
     variables: { x: 'expression' },
-    handle: () => 0,
-    log: () => 'this is a log'
+    handle: () => 0
 }
 
 it('can run the multiply by zero action', () => {

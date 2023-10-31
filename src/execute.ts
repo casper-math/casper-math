@@ -69,8 +69,7 @@ function getResult(action: Action, node: Node, pattern?: Node) {
     log({
         name: action.name,
         search: searchStep(action.pattern, converted),
-        replace: string(result),
-        description: action.log(converted)
+        replace: string(result)
     })
 
     // In the case that only some operands of an associative operator are matched, the result should be added to the

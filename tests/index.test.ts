@@ -10,14 +10,12 @@ it('can interact with the casper function', () => {
                 name: 'add numbers',
                 search: '2 + 4',
                 replace: '6',
-                description: 'Compute 2 + 4. The result is 6.',
                 result: '3 * 6'
             },
             {
                 name: 'multiply numbers',
                 search: '3 * 6',
                 replace: '18',
-                description: 'Compute 3 * 6. The result is 18.',
                 result: '18'
             }
         ]
@@ -48,14 +46,12 @@ it('can get latex output', () => {
         steps: [
             {
                 name: 'compute powers',
-                description: '$ {3} ^ {4} = 3 \\cdot 3 \\cdot 3 \\cdot 3 = 81 $.',
                 search: '{3} ^ {4}',
                 replace: '81',
                 result: '2 \\cdot 81'
             },
             {
                 name: 'multiply numbers',
-                description: 'Compute $ 2 \\cdot 81 $. The result is $ 162 $.',
                 search: '2 \\cdot 81',
                 replace: '162',
                 result: '162'

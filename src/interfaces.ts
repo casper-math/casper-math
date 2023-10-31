@@ -6,7 +6,6 @@ export type Action =
           pattern: string
           variables: { [key: string]: VariableType }
           handle: (variables: { [key: string]: string | number }) => string | number
-          log: (variables: { [key: string]: string | number }) => string
       }
     | {
           name: string
@@ -44,14 +43,12 @@ export interface TemporaryStep {
     name: string
     search: string
     replace: string
-    description: string
 }
 
 export interface Step {
     name: string
     search: string
     replace: string
-    description: string
     result: string
 }
 

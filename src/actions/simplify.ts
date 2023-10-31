@@ -135,24 +135,21 @@ const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
     variables: { x: 'expression' },
-    handle: () => 0,
-    log: () => 'multiply by zero'
+    handle: () => 0
 }
 
 const multiplyByOne: Action = {
     name: 'multiply by one',
     pattern: '1 * x',
     variables: { x: 'expression' },
-    handle: ({ x }) => x,
-    log: () => 'multiply by one'
+    handle: ({ x }) => x
 }
 
 const addZero: Action = {
     name: 'add zero',
     pattern: '0 + x',
     variables: { x: 'expression' },
-    handle: ({ x }) => x,
-    log: () => 'add zero'
+    handle: ({ x }) => x
 }
 
 export default [addLikeTerms, multiplyLikeFactors, multiplyByZero, multiplyByOne, addZero]
