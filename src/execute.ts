@@ -37,7 +37,19 @@ export default function execute(action: Action, node: Node, pattern?: Node): Nod
         }
     })
 
-    return getResult(action, node)
+    const search = node.clone()
+    const result = getResult(action, node)
+    const replace = result.clone()
+
+    if (!search.equals(result) && !('pattern' in action)) {
+        log({
+            name: action.name,
+            search: string(search),
+            replace: string(replace)
+        })
+    }
+
+    return result
 }
 
 function getResult(action: Action, node: Node, pattern?: Node) {
