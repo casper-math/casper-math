@@ -39,9 +39,9 @@ class Casper {
                 }
 
                 tree = execute(action, tree)
+                tree = sort(tree)
 
                 if (!old?.equals(tree)) {
-                    tree = sort(tree)
                     newRun = true
                     setResult(string(tree))
                 } else {
