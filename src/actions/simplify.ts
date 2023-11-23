@@ -131,6 +131,64 @@ const multiplyLikeFactors: Action = {
     }
 }
 
+const expandBrackets: Action = {
+    name: 'expand brackets',
+    run(node) {
+        if (node.type !== Type.Operator || node.value !== '*') return node
+
+        const factors: Node[] = []
+        const sums: Node[] = []
+
+        node.children.forEach(child => {
+            if (child.type === Type.Operator && child.value === '+') {
+                sums.push(child)
+            } else {
+                factors.push(child)
+            }
+        })
+
+        if (sums.length === 0) return node
+
+        const sum = new Node(Type.Operator, '+')
+
+        const counters = Array(sums.length).fill(0)
+
+        let allDone = false
+        while (!allDone) {
+            let index = counters.length - 1
+
+            const product = sum.addChild(new Node(Type.Operator, '*'))
+            counters.forEach((index, value) => {
+                product.addChild(sums[value].children[index].clone())
+            })
+            factors.forEach(factor => {
+                product.addChild(factor.clone())
+            })
+
+            let done = false
+            while (!done) {
+                if (sums[index].children.length - 1 === counters[index]) {
+                    index--
+                    if (index < 0) {
+                        allDone = true
+                        done = true
+                    }
+                } else {
+                    done = true
+                }
+            }
+
+            counters[index]++
+
+            for (let i = index + 1; i < counters.length; i++) {
+                counters[i] = 0
+            }
+        }
+
+        return sum
+    }
+}
+
 const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
@@ -152,4 +210,4 @@ const addZero: Action = {
     handle: ({ x }) => x
 }
 
-export default [addLikeTerms, multiplyLikeFactors, multiplyByZero, multiplyByOne, addZero]
+export default [addLikeTerms, expandBrackets, multiplyLikeFactors, multiplyByZero, multiplyByOne, addZero]

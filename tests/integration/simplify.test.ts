@@ -141,3 +141,23 @@ it.each([
     const result = casper().go(input)
     expect(result.result).toBe(output)
 })
+
+it.each([
+    ['(a + b) * (c + d)', 'a * c + a * d + b * c + b * d'],
+    [
+        '(a + b + c) * (d + e) * (f + g + h)',
+        'a * d * f + a * d * g + a * d * h + a * e * f + a * e * g + a * e * h + b * d * f + b * d * g + b * d * h + b * e * f + b * e * g + b * e * h + c * d * f + c * d * g + c * d * h + c * e * f + c * e * g + c * e * h'
+    ],
+    ['a * (b + c + d) * e', 'a * b * e + a * c * e + a * d * e']
+])('can expand crazy brackets', (input: string, output: string) => {
+    const result = casper().go(input)
+    expect(result.result).toBe(output)
+})
+
+it.each([
+    ['5(a + c)', '5 * a + 5 * c'],
+    ['8(2a + b)', '16 * a + 8 * b']
+])('can expand brackets', (input: string, output: string) => {
+    const result = casper().go(input)
+    expect(result.result).toBe(output)
+})
