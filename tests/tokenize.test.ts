@@ -243,3 +243,16 @@ it('can tokenize squares and multiplication', () => {
         { type: Type.Number, value: '2' }
     ])
 })
+
+it('can tokenize implicit products with brackets', () => {
+    const input = '2(3)'
+    const result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '2' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Number, value: '3' },
+        { type: Type.BracketClose, value: ')' }
+    ])
+})
