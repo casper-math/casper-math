@@ -143,6 +143,7 @@ it.each([
 })
 
 it.each([
+    ['a * (b + c)', 'a * b + a * c'],
     ['(a + b) * (c + d)', 'a * c + a * d + b * c + b * d'],
     [
         '(a + b + c) * (d + e) * (f + g + h)',
