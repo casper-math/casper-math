@@ -150,12 +150,11 @@ const expandBrackets: Action = {
         if (sums.length === 0) return node
 
         const sum = new Node(Type.Operator, '+')
-
         const counters = Array(sums.length).fill(0)
+        let index = 0
 
-        let allDone = false
-        while (!allDone) {
-            let index = counters.length - 1
+        while (index >= 0) {
+            index = counters.length - 1
 
             const product = sum.addChild(new Node(Type.Operator, '*'))
             counters.forEach((index, value) => {
@@ -169,10 +168,7 @@ const expandBrackets: Action = {
             while (!done) {
                 if (sums[index].children.length - 1 === counters[index]) {
                     index--
-                    if (index < 0) {
-                        allDone = true
-                        done = true
-                    }
+                    if (index < 0) done = true
                 } else {
                     done = true
                 }
