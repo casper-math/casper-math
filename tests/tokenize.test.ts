@@ -256,3 +256,16 @@ it('can tokenize implicit products with brackets', () => {
         { type: Type.BracketClose, value: ')' }
     ])
 })
+
+it('tokenizes powers and negative numbers correctly', () => {
+    const input = '-3 * x ^ 2'
+    const result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.Number, value: '-3' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.Variable, value: 'x' },
+        { type: Type.Operator, value: '^' },
+        { type: Type.Number, value: '2' }
+    ])
+})

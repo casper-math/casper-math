@@ -8,8 +8,7 @@ export default function tokenize(expression: string): Token[] {
         .replace(/-(?![0-9.])/g, '-1*')
         .replace(/(?<![a-zA-Z_])([0-9])([a-zA-Z_])/g, '$1*$2')
         .replace(/([0-9])\(/g, '$1*(')
-
-    if (expression.includes('^')) expression = expression.replace(/-/g, '-1*')
+        .replace(/-([0-9]+(\.[0-9]+)?|\.[0-9])\^/g, '-1*$1^')
 
     const tokens: Token[] = []
 
