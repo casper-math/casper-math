@@ -90,3 +90,8 @@ it('wraps fractions in big brackets', () => {
     const tree = parse('(2 / 5) ^ 3')
     expect(latex(tree)).toBe('{ \\left( \\frac{2}{5} \\right) } ^ {3}')
 })
+
+it('does not wrap fractions in brackets when being multiplied', () => {
+    const tree = parse('2 / 3 * 4')
+    expect(latex(tree)).toBe('\\frac{2}{3} \\cdot 4')
+})

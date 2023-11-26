@@ -61,7 +61,7 @@ function shouldInsertBrackets(parent: Node, child: Node): boolean {
 
     const childPrecedence = config().operators.filter(operator => operator.symbol === child.value)[0].precedence
 
-    return parentPrecedence >= childPrecedence
+    return parentPrecedence > childPrecedence
 }
 
 function value(text: Node | string): string {
