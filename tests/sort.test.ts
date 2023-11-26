@@ -14,12 +14,17 @@ it('sorts coefficients to the front', () => {
 
 it('sorts nested factors', () => {
     const input = parse('a + y * x')
-    expect(sort(input)).toEqual(parse('a + x * y'))
+    expect(sort(input)).toEqual(parse('x * y + a'))
 })
 
 it('sorts factors inside powers', () => {
     const input = parse('y^3 * x^2')
     expect(sort(input)).toEqual(parse('x^2 * y^3'))
+})
+
+it('sorts numbers from large to small', () => {
+    const input = parse('-3 + 0 + 10')
+    expect(sort(input)).toEqual(parse('10 + 0 - 3'))
 })
 
 it('sorts terms alphabetically', () => {
@@ -29,8 +34,7 @@ it('sorts terms alphabetically', () => {
 
 it('sorts constants to the back', () => {
     const input = parse('a + 3 + b')
-    const result = sort(input)
-    expect(result).toEqual(parse('a + b + 3'))
+    expect(sort(input)).toEqual(parse('a + b + 3'))
 })
 
 it('sorts nested terms', () => {
@@ -53,7 +57,12 @@ it('checks the first letter', () => {
     expect(sort(input)).toEqual(parse('4 * x + 2 * y'))
 })
 
-it('views fractions as numbers', () => {
+it('considers fractions as numbers', () => {
     const input = parse('(1 / 2) * y + 3 * x')
     expect(sort(input)).toEqual(parse('3 * x + (1 / 2) * y'))
+})
+
+it('sorts terms by the highest exponent', () => {
+    const input = parse('x^2 + 2x^4 + x^3')
+    expect(sort(input)).toEqual(parse('2x^4 + x^3 + x^2'))
 })

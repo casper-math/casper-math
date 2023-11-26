@@ -29,40 +29,85 @@ function compareProduct(a: Node, b: Node): number {
     return 0
 }
 
-function compareSum(a: Node, b: Node): number {
-    if (a.type === Type.Number && b.type === Type.Number) return Number(a.value) - Number(b.value)
-    if (a.type === Type.Number) return 1
-    if (b.type === Type.Number) return -1
-
-    const compareA = comparor(a)
-    const compareB = comparor(b)
-
-    if (compareA < compareB) return -1
-    if (compareA > compareB) return 1
-
-    return 0
+enum Priority {
+    Power = 0,
+    MixedProduct = 1,
+    Variable = 2,
+    Number = 3
 }
 
-function comparor(node: Node): string {
-    if (node.type === Type.Operator && node.value === '^') {
-        return node.children[0].value.toString()
+type Weight = { priority: Priority; value: number | string }
+
+function compareSum(a: Node, b: Node): number {
+    const aWeight = weight(a)
+    const bWeight = weight(b)
+
+    if (aWeight.priority !== bWeight.priority) {
+        return aWeight.priority - bWeight.priority
+    }
+
+    if (typeof aWeight.value === 'number' && typeof bWeight.value === 'number') {
+        return aWeight.value > bWeight.value ? -1 : 1
+    }
+
+    return aWeight.value > bWeight.value ? 1 : -1
+}
+
+function weight(node: Node): Weight {
+    if (node.type === Type.Number) {
+        return { priority: Priority.Number, value: node.value }
+    }
+
+    if (node.type === Type.Variable || node.type === Type.Constant) {
+        return { priority: Priority.Variable, value: node.value }
     }
 
     if (node.type === Type.Operator && node.value === '*') {
-        return (
-            node.children
-                .filter(child => {
-                    if (child.type === Type.Number) return false
-                    return !(
-                        child.type === Type.Operator &&
-                        child.value === '/' &&
-                        child.children[0].type === Type.Number &&
-                        child.children[1].type === Type.Number
-                    )
-                })[0]
-                ?.value.toString() ?? node.children[0].value.toString()
+        const powers = node.children.filter(child => child.type === Type.Operator && child.value === '^')
+        if (powers.length > 0) {
+            return powers.map(weight).sort((a, b) => {
+                if (a.priority !== b.priority) {
+                    return a.priority - b.priority
+                }
+
+                return a.value > b.value ? 1 : -1
+            })[0]
+        }
+
+        const notNumbers = node.children.filter(
+            child =>
+                child.type !== Type.Number &&
+                child.type !== Type.Operator &&
+                child.value !== '/' &&
+                child.children[0]?.type !== Type.Number &&
+                child.children[1]?.type !== Type.Number
         )
+
+        if (notNumbers.length >= 2) {
+            return {
+                priority: Priority.MixedProduct,
+                value: notNumbers.sort((a, b) => (a > b ? -1 : 1))[0].value
+            }
+        }
+
+        if (notNumbers.length === 1) {
+            return {
+                priority: Priority.Variable,
+                value: notNumbers[0].value
+            }
+        }
     }
 
-    return node.value.toString()
+    if (node.type === Type.Operator && node.value === '^') {
+        if (node.children[0].type === Type.Number && node.children[1].type === Type.Number) {
+            return {
+                priority: Priority.Number,
+                value: Math.pow(Number(node.children[0].value), Number(node.children[1].value))
+            }
+        }
+
+        return { priority: Priority.Power, value: weight(node.children[1]).value }
+    }
+
+    return { priority: Priority.Number, value: 3 }
 }
