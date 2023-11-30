@@ -1,5 +1,6 @@
 import { Type } from './interfaces'
 import Node from './node'
+import string from './output/string'
 
 export default function sort(tree: Node): Node {
     tree.setChildren(tree.children.map(child => sort(child)))
@@ -50,7 +51,11 @@ function compareSum(a: Node, b: Node): number {
         return aWeight.value > bWeight.value ? -1 : 1
     }
 
-    return aWeight.value > bWeight.value ? 1 : -1
+    if (aWeight.value !== bWeight.value) {
+        return aWeight.value > bWeight.value ? 1 : -1
+    }
+
+    return 0
 }
 
 function weight(node: Node): Weight {
@@ -70,6 +75,8 @@ function weight(node: Node): Weight {
                     return a.priority - b.priority
                 }
 
+                if (a.value === b.value) return 0
+
                 return a.value > b.value ? 1 : -1
             })[0]
         }
@@ -86,7 +93,13 @@ function weight(node: Node): Weight {
         if (notNumbers.length >= 2) {
             return {
                 priority: Priority.MixedProduct,
-                value: notNumbers.sort((a, b) => (a > b ? -1 : 1))[0].value
+                value: notNumbers
+                    .sort((a, b) => {
+                        if (a === b) return 0
+                        return a > b ? 1 : -1
+                    })
+                    .map(string)
+                    .join('')
             }
         }
 

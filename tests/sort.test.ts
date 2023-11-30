@@ -66,3 +66,8 @@ it('sorts terms by the highest exponent', () => {
     const input = parse('x^2 + 2x^4 + x^3')
     expect(sort(input)).toEqual(parse('2x^4 + x^3 + x^2'))
 })
+
+it('sorts dubble products by the first letter', () => {
+    const input = parse('b * c + a * d')
+    expect(sort(input)).toEqual(parse('a * d + b * c'))
+})
