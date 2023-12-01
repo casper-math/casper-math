@@ -26,7 +26,7 @@ class Casper {
         clearLogs()
 
         let tree = parse(expression)
-        let old: Node | undefined
+        let old: Node
         let newRun = true
 
         while (newRun) {
@@ -34,14 +34,12 @@ class Casper {
             old = tree.clone()
 
             config().actions.forEach(action => {
-                if (newRun) {
-                    return
-                }
+                if (newRun) return
 
                 tree = execute(action, tree)
-                tree = sort(tree)
+                sort(tree)
 
-                if (!old?.equals(tree)) {
+                if (!old.equals(tree)) {
                     newRun = true
                     setResult(string(tree))
                 } else {
