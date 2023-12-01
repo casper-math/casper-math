@@ -269,3 +269,22 @@ it('tokenizes powers and negative numbers correctly', () => {
         { type: Type.Number, value: '2' }
     ])
 })
+
+it('adds multiplication between brackets', () => {
+    const input = '(x + 3)(x - 2)'
+    const result = tokenize(input)
+
+    expect(result).toEqual([
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Variable, value: 'x' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '3' },
+        { type: Type.BracketClose, value: ')' },
+        { type: Type.Operator, value: '*' },
+        { type: Type.BracketOpen, value: '(' },
+        { type: Type.Variable, value: 'x' },
+        { type: Type.Operator, value: '+' },
+        { type: Type.Number, value: '-2' },
+        { type: Type.BracketClose, value: ')' }
+    ])
+})

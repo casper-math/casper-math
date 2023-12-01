@@ -9,6 +9,7 @@ export default function tokenize(expression: string): Token[] {
         .replace(/(?<![a-zA-Z_])([0-9])([a-zA-Z_])/g, '$1*$2')
         .replace(/([0-9])\(/g, '$1*(')
         .replace(/-([0-9]+(\.[0-9]+)?|\.[0-9])\^/g, '-1*$1^')
+        .replace(/\)\(/g, ')*(')
 
     const tokens: Token[] = []
 
