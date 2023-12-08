@@ -31,10 +31,12 @@ function compareProduct(a: Node, b: Node): number {
 }
 
 enum Priority {
-    Power = 0,
-    MixedProduct = 1,
-    Variable = 2,
-    Number = 3
+    Function = 0,
+    Power = 1,
+    MixedProduct = 2,
+    Operator = 3,
+    Variable = 4,
+    Number = 5
 }
 
 type Weight = { priority: Priority; value: number | string }
@@ -120,6 +122,14 @@ function weight(node: Node): Weight {
         }
 
         return { priority: Priority.Power, value: weight(node.children[1]).value }
+    }
+
+    if (node.type === Type.Operator) {
+        return { priority: Priority.Operator, value: node.value }
+    }
+
+    if (node.type === Type.Function) {
+        return { priority: Priority.Function, value: node.value }
     }
 
     return { priority: Priority.Number, value: 3 }

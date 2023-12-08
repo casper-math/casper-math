@@ -71,3 +71,8 @@ it('sorts dubble products by the first letter', () => {
     const input = parse('b * c + a * d')
     expect(sort(input)).toEqual(parse('a * d + b * c'))
 })
+
+it('sorts functions to the front', () => {
+    const input = parse('3 + sin(x) + cos(x)')
+    expect(sort(input)).toEqual(parse('cos(x) + sin(x) + 3'))
+})

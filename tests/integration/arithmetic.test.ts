@@ -449,7 +449,8 @@ it.each([
     ['3 * sqrt(625) - 2 * sqrt(900)', '15'],
     ['sqrt(1 / 4) + 10 * sqrt(1 / 25)', '5 / 2'],
     ['6 * sqrt(4 / 9) - 5 * sqrt(81 / 100)', '-1 / 2'],
-    ['sqrt(6 + 1 / 4) * sqrt(1 + 11 / 25)', '3']
+    ['sqrt(6 + 1 / 4) * sqrt(1 + 11 / 25)', '3'],
+    ['sqrt(4) + 3', '5']
 ])('can compute roots', (input: string, output: string) => {
     const result = casper().go(input)
     expect(result.result).toBe(output)
