@@ -214,7 +214,8 @@ it.each([
     ['(q + 4)(q - 5)', 'q ^ 2 - q - 20'],
     ['(p + 8)(p + 8)', 'p ^ 2 + 16 * p + 64'],
     ['(x + 6)(x - 1)', 'x ^ 2 + 5 * x - 6'],
-    ['(x - 1)(x - 9)', 'x ^ 2 - 10 * x + 9']
+    ['(x - 1)(x - 9)', 'x ^ 2 - 10 * x + 9'],
+    ['(x + 1)^3', 'x ^ 3 + 3 * x ^ 2 + 3 * x + 1']
 ])('can expand brackets', (input: string, output: string) => {
     const result = casper().go(input)
     expect(result.result).toBe(output)

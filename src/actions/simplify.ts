@@ -185,6 +185,20 @@ const expandBrackets: Action = {
     }
 }
 
+const powerToProduct: Action = {
+    name: 'power to product',
+    run(node) {
+        if (node.type !== Type.Operator || node.value !== '^') return node
+        if (node.children[0].type !== Type.Operator || node.children[0].value !== '+') return node
+        if (node.children[1].type !== Type.Number || !Number.isInteger(node.children[1].value)) return node
+        if (Number(node.children[1].value) <= 0) return node
+
+        return Array(Number(node.children[1].value))
+            .fill(`(${string(node.children[0])})`)
+            .join('*')
+    }
+}
+
 const multiplyByZero: Action = {
     name: 'multiply by zero',
     pattern: '0 * x',
@@ -206,4 +220,12 @@ const addZero: Action = {
     handle: ({ x }) => x
 }
 
-export default [addLikeTerms, expandBrackets, multiplyLikeFactors, multiplyByZero, multiplyByOne, addZero]
+export default [
+    addLikeTerms,
+    expandBrackets,
+    multiplyLikeFactors,
+    multiplyByZero,
+    multiplyByOne,
+    addZero,
+    powerToProduct
+]
